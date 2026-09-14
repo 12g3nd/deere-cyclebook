@@ -25,7 +25,7 @@
       "label-cell": { "displayName": "Cell Setting", "purpose": "Scenario key labels and strip cell settings (15px for basis points)." },
       "label-index": { "displayName": "Index and Control Label", "purpose": "Uppercase page names on stack index mini cards; captions above controls." },
       "body-chart": { "displayName": "Chart Text", "purpose": "Axes, legends, callouts." },
-      "label-point": { "displayName": "Point Label", "purpose": "Values beside chart points, on a paper backing." },
+      "label-point": { "displayName": "Axis Value Row", "purpose": "Series values in rows under the x-axis (SEGMENTS): 12px bold row headers, 12px regular values." },
       "body-note": { "displayName": "Note", "purpose": "Sources line, ledger notes, registry types and notes." },
       "label-tag": { "displayName": "Provenance Tag", "purpose": "ACTUAL, GUIDANCE, MODEL words. Type floor." }
     },
@@ -163,7 +163,7 @@
       { "name": "The Stipple Means Model Rule", "body": "Stipple marks the author's model and only the model: MODEL tag swatches, MODEL value panels and lead-figure mats, the bear-to-bull scenario band, the model steps and model total on the MODEL LAB bridge, and the outcome swatches on every test strip. The 50% checker dither is the desk and appears nowhere on the card.", "section": "colors" },
       { "name": "The Green Is Guidance Rule", "body": "Guidance Green appears only on management guidance. Every green element also carries the GUIDANCE word or a \"Guidance\" label, so the meaning never depends on color alone.", "section": "colors" },
       { "name": "The Yellow Moves the Argument Rule", "body": "Each card has at most one yellow button, and it leads to the next step. The only other yellow is the selected valuation point.", "section": "colors" },
-      { "name": "The Claim Then Evidence Rule", "body": "Every finding is two lines in one 1420x84 band: the claim in 24px bold, then its evidence in 22px regular. No card sets both lines bold or adds a third line.", "section": "typography" },
+      { "name": "The Claim Then Evidence Rule", "body": "Every finding is two lines in one 1420x84 band: the claim in 24px bold, then its evidence in 22px regular. No card sets both lines bold or adds a third line. When a claim depends on live data, the authored sentence shows only while its data condition holds; otherwise line one is computed as a judgement from the same data (THE CYCLE: \"Three of four demand drivers moved Deere's way over the past year; housing starts did not.\"). The card never falls back to a topic label.", "section": "typography" },
       { "name": "The Two Bitmap Slots Rule", "body": "Bitmap lettering is used only for the card title and each ledger's lead figure. Findings, labels, values and buttons are set in Verdana.", "section": "typography" },
       { "name": "The No Loaded Fonts Rule", "body": "No font is ever loaded. Anything that must look drawn is drawn as SVG rects from the Glyphs table; everything else is Verdana.", "section": "typography" },
       { "name": "The One Lift Rule", "body": "Every lift is solid ink, zero blur, 4px down-right. Soft, ambient, colored or differently sized shadows do not exist in this world.", "section": "elevation" },
@@ -176,7 +176,7 @@
       "Do separate chart series by line weight and dash pattern (5px solid; 3px 14/7; 3px 4/6), and use square point markers.",
       "Do build rounded controls as a painted SVG body with a native actionButton inset 3px or a transparent slicer laid on top.",
       "Do lift every pressable thing by exactly 4px, and invert pressed and selected states to ink fill with paper lettering while dropping the lift.",
-      "Do set chart labels that cross marks on a paper backing.",
+      "Do set chart labels that cross marks on a paper backing, and move values that would cover series lines into rows under the axis.",
       "Do put the figures behind a chart in a ruled table under it (3px, 1px, 2px).",
       "Do keep content inside the card's 40px inset and put the yellow button rightmost in the card foot."
     ],

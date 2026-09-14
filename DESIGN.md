@@ -242,14 +242,14 @@ A one-bit palette: ink and paper do all the work, and each of the two Deere colo
 - **Chart values** (Verdana 700, 15px): bar tops, bridge steps, series end labels and read-outs (14px on THE CYCLE panels and the valuation axis read-outs).
 - **Exhibit table** (Verdana 700 14px row labels and column heads; 400 14px cells).
 - **Chart text** (Verdana 400, 13px; 12px ticks on THE CYCLE panels): axes, legends and callouts.
-- **Point label** (Verdana 700, 12px, on a paper backing): values beside chart points on SEGMENTS.
+- **Axis value row** (Verdana 700 12px row header, 400 12px values): series values set in rows under the x-axis on SEGMENTS.
 - **Control label** (Verdana 700, 13px, sentence case): "Scenario", "P/E multiple" and the strip captions above their controls. Index card labels are 700 13px uppercase page names.
 - **Cell** (Verdana 700 17px setting, 15px for basis-point settings, over 400 14px outcome): test strip cells and scenario keys.
 - **Note** (Verdana 400, 12px): the sources line at the card foot, and registry types and notes.
 - **Tag** (Verdana 700, 10px, uppercase): the ACTUAL, GUIDANCE and MODEL provenance words. This is the smallest type in the system; nothing goes below it.
 
 ### Named Rules
-**The Claim Then Evidence Rule.** Every finding is two lines in one 1420x84 band: the claim in 24px bold, then its evidence in 22px regular. No card sets both lines bold or adds a third line.
+**The Claim Then Evidence Rule.** Every finding is two lines in one 1420x84 band: the claim in 24px bold, then its evidence in 22px regular. No card sets both lines bold or adds a third line. When a claim depends on live data, the authored sentence shows only while its data condition holds; otherwise line one is computed as a judgement from the same data (THE CYCLE: "Three of four demand drivers moved Deere's way over the past year; housing starts did not."). The card never falls back to a topic label.
 
 **The Two Bitmap Slots Rule.** Bitmap lettering is used only for the card title and each ledger's lead figure. Findings, labels, values and buttons are set in Verdana.
 
@@ -322,6 +322,7 @@ Tactile and literal: a painted HyperCard button you can press.
 
 ### Finding
 - A 1420x84 SVG band on every card: the claim in 24px bold on the first baseline, the evidence in 22px regular on the second. Live cards (MODEL LAB, VALUATION) rebuild both lines from the current settings; the standard does not change.
+- Data-conditioned claims (SEGMENTS, THE CYCLE) show the authored sentence while the data supports it. Otherwise line one is recomputed as a judgement: THE CYCLE counts how many of the four demand drivers moved in Deere's favour (crop prices up, rates down, housing starts up) and names the ones that did not. It never degrades to a topic label.
 
 ### Ledger (signature component)
 - **Structure:** a 3px top rule, a lead row (15px bold label, tag, 13px note, bitmap figure right-aligned), then 76px rows (14px bold label, tag with a 12px note beside it, 22px bold value right-aligned), each divided by a 1px rule, and a 2px closing rule.
@@ -346,7 +347,8 @@ Tactile and literal: a painted HyperCard button you can press.
 - Series end in a 14px bold value label. Annual data is drawn as solid ink bars at mid-year; where a series stops early, an 11px note says "no data after" the last year.
 
 ### Chart Labels
-- Values next to chart points are 12px bold on a paper backing rect, placed above the upper point and below the lower one so they never collide with the lines.
+- Labels that cross marks sit on a paper backing: the MODEL LAB bridge step and total labels (15px bold) and the VALUATION axis read-outs (14px bold).
+- Values that would cover series lines are not placed on the chart. They move to rows under the x-axis: on SEGMENTS, the FY2026 SAT and PPA operating profit sit in two rows (y 592 and 610) with 12px bold row headers ("SAT, $M", "PPA, $M") right-aligned left of the first FY2026 quarter and 12px regular values centred under each quarter.
 - A fiscal-year span is marked by the bracket in Shapes, labelled at its right end in 14px bold, drawn only while the claim it supports is true. Fiscal-year names sit under the quarter labels in 14px bold, with dotted 1px dividers between years.
 
 ### Scenario Keys (input)
@@ -377,7 +379,7 @@ One pattern for three controls: the P/E strip (VALUATION) and the sales and marg
 - **Do** separate chart series by line weight and dash pattern (5px solid; 3px 14/7; 3px 4/6), and use square point markers.
 - **Do** build rounded controls as a painted SVG body with a native actionButton inset 3px or a transparent slicer laid on top.
 - **Do** lift every pressable thing by exactly 4px, and invert pressed and selected states to ink fill with paper lettering while dropping the lift.
-- **Do** set chart labels that cross marks on a paper backing.
+- **Do** set chart labels that cross marks on a paper backing, and move values that would cover series lines into rows under the axis.
 - **Do** put the figures behind a chart in a ruled table under it (3px, 1px, 2px).
 - **Do** keep content inside the card's 40px inset and put the yellow button rightmost in the card foot.
 
