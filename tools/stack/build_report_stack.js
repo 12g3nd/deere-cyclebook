@@ -2,6 +2,8 @@
 const fs = require("fs");
 const path = require("path");
 const R = require("./report_lib");
+const A = require("./stack_measures_a");
+const B = require("./stack_measures_b");
 
 const DEF = path.resolve(__dirname, "../../DEERE_CYCLEBOOK.Report/definition");
 const PAGES = path.join(DEF, "pages");
@@ -23,13 +25,13 @@ const header = (m, title) => R.image({ x: 256, y: 64, w: 1420, h: 96, z: 100 }, 
 const pulse = [
   desk(),
   header("SVG Header PULSE", "PULSE"),
-  R.textbox({ x: 256, y: 176, w: 1420, h: 84, z: 110 }, [{ text: "Large agriculture is still contracting, but the rest of the portfolio is turning first.", size: 26, bold: true }], "Finding"),
-  R.image({ x: 256, y: 272, w: 960, h: 600, z: 120 }, "SVG Pulse Divergence", "Segment net sales growth versus the same quarter a year earlier, last seven fiscal quarters"),
-  R.image({ x: 1236, y: 272, w: 440, h: 600, z: 130 }, "SVG Pulse Ledger", "Latest-quarter actuals, fiscal 2026 guidance and share price"),
-  R.button({ x: 836, y: 896, w: 220, h: 60, z: 300 }, "The segments", { page: KEEP.segments }),
-  R.button({ x: 1076, y: 896, w: 220, h: 60, z: 301 }, "The cycle", { page: KEEP.cycle }),
-  R.button({ x: 1316, y: 896, w: 360, h: 60, z: 302 }, "What the price assumes", { page: NEW.valuation }, "go"),
-  R.textbox({ x: 256, y: 976, w: 560, h: 24, z: 140 }, [{ text: "Sources: Deere Q3 FY2026 news release (20 Aug 2026); Nasdaq daily close.", size: 12 }], "Sources"),
+  R.textbox({ x: 256, y: 176, w: 1420, h: 60, z: 110 }, [{ text: "Large ag is shrinking again; small ag and construction still grow, just more slowly.", size: 26, bold: true }], "Finding"),
+  R.image({ x: 256, y: 250, w: 960, h: 640, z: 120 }, "SVG Pulse Divergence", "Segment net sales growth versus the same quarter a year earlier, last seven fiscal quarters"),
+  R.image({ x: 1236, y: 250, w: 440, h: A.pulseLedgerHeight, z: 130 }, "SVG Pulse Ledger", "Latest-quarter actuals, fiscal 2026 guidance and share price"),
+  R.button({ x: 836, y: 912, w: 220, h: 52, z: 300 }, "The segments", { page: KEEP.segments }),
+  R.button({ x: 1076, y: 912, w: 220, h: 52, z: 301 }, "The cycle", { page: KEEP.cycle }),
+  R.button({ x: 1316, y: 912, w: 360, h: 52, z: 302 }, "What the price assumes", { page: NEW.valuation }, "go"),
+  R.textbox({ x: 256, y: 926, w: 560, h: 24, z: 140 }, [{ text: "Sources: Deere Q3 FY2026 news release (20 Aug 2026); Nasdaq daily close.", size: 12 }], "Sources"),
   ...stackIndex(NEW.pulse),
 ];
 
@@ -38,7 +40,7 @@ const valuation = [
   header("SVG Header VALUATION", "VALUATION"),
   R.image({ x: 256, y: 172, w: 1420, h: 84, z: 110 }, "SVG Valuation Finding", "Finding: EPS today's price requires at the selected multiple, against the record"),
   R.image({ x: 256, y: 264, w: 1000, h: 540, z: 120 }, "SVG Valuation Ladder", "EPS the latest close requires at each P/E multiple, against the FY2023 record, management guidance and CYCLEBOOK scenarios"),
-  R.image({ x: 1276, y: 264, w: 400, h: 540, z: 130 }, "SVG Valuation Ledger", "Share price, market cap, trailing P/E and scenario outputs"),
+  R.image({ x: 1276, y: 264, w: 400, h: B.valuationLedgerHeight, z: 130 }, "SVG Valuation Ledger", "Share price, market cap, trailing P/E and scenario outputs"),
   R.textbox({ x: 256, y: 818, w: 200, h: 26, z: 140 }, [{ text: "Scenario", size: 13, bold: true }]),
   R.image({ x: 256, y: 844, w: 372, h: 64, z: 145 }, "SVG Scenario Keys", "Scenario keys: Bear, Base, Bull"),
   R.buttonSlicer({ x: 256, y: 844, w: 372, h: 64, z: 310 }, "Scenario", "Scenario", 3, "overlay"),
@@ -47,7 +49,7 @@ const valuation = [
   R.buttonSlicer({ x: 640, y: 848, w: 1036, h: 80, z: 320 }, "PE Multiple", "P/E Multiple", 11, "overlay"),
   R.button({ x: 1076, y: 948, w: 220, h: 52, z: 330 }, "Back to PULSE", { page: NEW.pulse }),
   R.button({ x: 1316, y: 948, w: 360, h: 52, z: 331 }, "Change the assumptions", { page: KEEP.modelLab }, "go"),
-  R.textbox({ x: 256, y: 968, w: 780, h: 44, z: 142 }, [{ text: "Sources: Deere Q3 FY2026 news release; Nasdaq daily close. Green = management guidance. Dotted fill = CYCLEBOOK model.", size: 12 }], "Sources and legend"),
+  R.textbox({ x: 256, y: 968, w: 780, h: 44, z: 142 }, [{ text: "Sources: Deere Q3 FY2026 news release (20 Aug 2026); Nasdaq daily close. Green = management guidance. Stipple = CYCLEBOOK model.", size: 12 }], "Sources and legend"),
   ...stackIndex(NEW.valuation),
 ];
 

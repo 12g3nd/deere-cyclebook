@@ -11,9 +11,10 @@ fs.mkdirSync(out, { recursive: true });
 const all = [...A.measures, ...B.measures];
 const glyphs = glyphRows().map(([c, b]) => `{${c}, "${b}"}`).join(", ");
 
+// The model already carries the Glyphs calculated table; pass --define-glyphs only against a model without it.
 const define = [
   "DEFINE",
-  `TABLE Glyphs = DATATABLE("Code", INTEGER, "Bits", STRING, {${glyphs}})`,
+  ...(process.argv.includes("--define-glyphs") ? [`TABLE Glyphs = DATATABLE("Code", INTEGER, "Bits", STRING, {${glyphs}})`] : []),
   ...all.map((m) => `MEASURE _Measures[${m.name}] = ${m.expr.trim()}`),
 ].join("\n");
 

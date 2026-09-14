@@ -4,7 +4,7 @@
 
 **OWN-WORLD.** One-bit ink on paper (#0E0E0C on #F4F4F0). Stipple dither marks anything modeled. 5×7 bitmap lettering is drawn in SVG; Verdana carries the body. Cards have 3px ink rules and hard one-bit shadows, stacked on a dithered desk. Rounded painted buttons invert when pressed. Deere green appears only on management guidance; Deere yellow only on the button that advances the argument and on the selected valuation point.
 
-**STORY.** An executive reads PULSE's one finding, follows the yellow button to VALUATION, sees that $675.74 already prices a return to record EPS, and turns the P/E and scenario keys to test it.
+**STORY.** An executive reads PULSE's one finding, follows the yellow button to VALUATION, and sees what $675.74 assumes: 37x base-case FY2026 earnings, or a return to record EPS before the multiple looks ordinary. They turn the P/E and scenario keys to test it.
 
 **FIRST VIEWPORT.** A 3:2 card (1500×1000) on a dithered desk, with the stack index as mini cards at left. Bitmap "PULSE" at top left and the as-of line at top right. The finding sentence, then the segment-growth divergence exhibit running to the card edge, with the Q3 ledger at right. Painted buttons at bottom right; the yellow one leads to VALUATION.
 

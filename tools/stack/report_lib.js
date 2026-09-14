@@ -90,7 +90,10 @@ function button(pos, label, link, variant = "plain") {
       })),
       fill: perState((bg) => ({ show: bool(true), fillColor: color(bg), transparency: num(0) })),
       outline: perState((bg, fg, id) => ({ show: bool(true), lineColor: color(C.inkHex), transparency: num(0), weight: num(id === "hover" ? 4 : 3) })),
-      shape: [props({ tileShape: str("rectangleRounded"), rectangleRoundedCurve: int(12) })],
+      // Painted buttons are rounded; the index mini cards stay square because they are cards.
+      shape: small
+        ? [props({ tileShape: str("rectangle") })]
+        : [props({ tileShape: str("rectangleRounded"), roundEdge: int(12), rectangleRoundedCurve: int(12) })],
       shadow: dual({ show: bool(true), color: color(C.inkHex), transparency: num(0), shadowBlur: num(0), shadowPositionPreset: str("bottomRight"), shadowDistance: num(4) }),
     },
     visualContainerObjects: bareContainer({ visualLink }),

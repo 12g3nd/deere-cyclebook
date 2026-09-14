@@ -24,10 +24,12 @@ Page layouts are about to change, so some lines may move. The wording carries ov
 
 Yours:
 
-### P2 · headline signal
-> Large agriculture is still contracting, but the rest of the portfolio is turning first. Q3 FY26 sales: PPA -6% YoY, Small Ag & Turf +12%, Construction & Forestry +18%.
+### P2 · headline signal (now on the PULSE card)
+> Large ag is shrinking again; small ag and construction still grow, just more slowly.
 
-Numbers are Deere-reported. Keep them.
+The old line ("still contracting… turning first") misread the chart: PPA sales went +10%, +3%, −14%, −6% over the last four quarters, and SAT and C&F have grown for four quarters but are slowing from peaks of +24% and +34%. Whatever you write has to match that.
+
+Yours:
 
 Yours:
 
@@ -183,10 +185,11 @@ Yours:
 
 New lines I write for PULSE and VALUATION will land here as they're written, so you can rewrite those too.
 
-### N1 · VALUATION finding (live sentence)
-> At 28x, today's price of $675.74 needs EPS of $24.13, 30% below the FY2023 record of $34.63.
+### N1 · VALUATION finding (live, two lines)
+> At $675.74, Deere trades at 37.4x base-case FY2026 EPS of $18.07.
+> At 28x the price needs $24.13 (+34% vs base case); record EPS justifies it only at 19.5x.
 
-The numbers update with the P/E and scenario you pick. Rewrite the words around them; keep the four slots (multiple, price, required EPS, gap to record).
+The numbers update with the P/E and scenario you pick. Rewrite the words around them; keep the slots (price, multiple on the scenario, scenario EPS, chosen multiple, required EPS, gap to the scenario, multiple at record EPS). The earlier version compared required EPS to the record and argued against the thesis.
 
 Yours:
 

@@ -104,7 +104,7 @@ const svgOpen = (w, h) =>
   `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>`;
 
 // Dither (50% checker) and stipple (sparse) fills; '#' must be %23 inside the data URI.
-const svgDefs = `<defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='${C.ink}'/><rect x='2' y='2' width='2' height='2' fill='${C.ink}'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='${C.ink}'/></pattern></defs>`;
+const svgDefs = `<defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='${C.ink}'/><rect x='2' y='2' width='2' height='2' fill='${C.ink}'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='${C.ink}'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='${C.ink}'/><rect x='4' y='4' width='2' height='2' fill='${C.ink}'/></pattern></defs>`;
 
 const daxStr = (s) => `"${s.replace(/"/g, '""')}"`;
 
