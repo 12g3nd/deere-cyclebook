@@ -12,7 +12,7 @@ const P = require("./card_sources");
 
 const DEF = path.resolve(__dirname, "../../DEERE_CYCLEBOOK.Report/definition");
 const PAGES = path.join(DEF, "pages");
-// Pre-Stack pages stay in the file, hidden, so nothing is deleted.
+// Pre-Stack pages, retired with the author's approval on 2026-09-14; the build removes any that remain.
 const OLD = ["85e801881afa98c3cc2d", "a656be65e12870af248f", "2f2c922a6f3436a46dd5", "d91eaac0343ef21a4cd9", "65721da987f3a5fa0c79", "a24fb8747b56660faf1b", "aa26ab00db387bbd7409"];
 const NEW = { pulse: "stack_pulse", financials: "stack_financials", segments: "stack_segments", cycle: "stack_cycle", modelLab: "stack_modellab", valuation: "stack_valuation", sources: "stack_sources" };
 const SYNC = { scenario: "cbScenario", sales: "cbSales", margin: "cbMargin" };
@@ -135,13 +135,10 @@ writePage(NEW.valuation, "VALUATION", valuation);
 writePage(NEW.sources, "SOURCES", sources);
 
 for (const id of OLD) {
-  const f = path.join(PAGES, id, "page.json");
-  const p = JSON.parse(fs.readFileSync(f, "utf8"));
-  if (p.visibility !== "HiddenInViewMode") {
-    p.visibility = "HiddenInViewMode";
-    p.displayName = `${p.displayName} (v1)`;
-    fs.writeFileSync(f, JSON.stringify(p, null, 2), "utf8");
-    log.push(`hidden old page ${id}`);
+  const dir = path.join(PAGES, id);
+  if (fs.existsSync(dir)) {
+    fs.rmSync(dir, { recursive: true });
+    log.push(`deleted old page ${id}`);
   }
 }
 
@@ -154,7 +151,7 @@ fs.writeFileSync(reportFile, JSON.stringify(reportJson, null, 2), "utf8");
 
 const pagesFile = path.join(PAGES, "pages.json");
 const meta = JSON.parse(fs.readFileSync(pagesFile, "utf8"));
-meta.pageOrder = [...Object.values(NEW), ...OLD];
+meta.pageOrder = Object.values(NEW);
 meta.activePageName = NEW.pulse;
 fs.writeFileSync(pagesFile, JSON.stringify(meta, null, 2), "utf8");
 log.push("pages.json updated");
