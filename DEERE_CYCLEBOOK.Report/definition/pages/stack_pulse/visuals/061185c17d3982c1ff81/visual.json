@@ -25,7 +25,7 @@
             "sourceUrl": {
               "expr": {
                 "Literal": {
-                  "Value": "'data:image/svg+xml;utf8,<svg xmlns=''http://www.w3.org/2000/svg'' width=''220'' height=''56'' viewBox=''0 0 220 56'' font-family=''Verdana,Geneva,sans-serif''><rect x=''4.5'' y=''4.5'' width=''214'' height=''50'' rx=''12'' fill=''%230E0E0C''/><rect x=''1.5'' y=''1.5'' width=''214'' height=''50'' rx=''12'' fill=''%23F4F4F0'' stroke=''%230E0E0C'' stroke-width=''3''/><text x=''108.5'' y=''33'' text-anchor=''middle'' font-size=''17'' font-weight=''bold'' fill=''%230E0E0C''>The cycle</text></svg>'"
+                  "Value": "'data:image/svg+xml;utf8,<svg xmlns=''http://www.w3.org/2000/svg'' width=''220'' height=''56'' viewBox=''0 0 220 56''><rect x=''4.5'' y=''4.5'' width=''214'' height=''50'' rx=''12'' fill=''%230E0E0C''/><rect x=''1.5'' y=''1.5'' width=''214'' height=''50'' rx=''12'' fill=''%23F4F4F0'' stroke=''%230E0E0C'' stroke-width=''3''/></svg>'"
                 }
               }
             }

@@ -101,15 +101,15 @@ function button(pos, label, link, variant = "plain") {
   });
 }
 
-// Painted button drawn as a static SVG (true rounded corners, hard one-bit shadow), with an invisible
-// action button on top that owns the click and darkens slightly on hover and press.
+// Painted button: the rounded body and hard one-bit shadow are a static SVG; a native action button laid
+// exactly over the body owns the label and the click. Hover underlines the label; press inverts the body
+// (ink fill, paper lettering), as a HyperCard button does.
 function paintedButton(pos, label, link, variant = "plain") {
   const w = pos.w, h = pos.h;
   const fill = variant === "go" ? C.yellow : C.paper;
-  const svg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}' font-family='Verdana,Geneva,sans-serif'>` +
+  const svg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}'>` +
     `<rect x='4.5' y='4.5' width='${w - 6}' height='${h - 6}' rx='12' fill='${C.ink}'/>` +
-    `<rect x='1.5' y='1.5' width='${w - 6}' height='${h - 6}' rx='12' fill='${fill}' stroke='${C.ink}' stroke-width='3'/>` +
-    `<text x='${(w - 6) / 2 + 1.5}' y='${(h - 6) / 2 + 8}' text-anchor='middle' font-size='17' font-weight='bold' fill='${C.ink}'>${label}</text></svg>`;
+    `<rect x='1.5' y='1.5' width='${w - 6}' height='${h - 6}' rx='12' fill='${fill}' stroke='${C.ink}' stroke-width='3'/></svg>`;
   const img = container({ ...pos, z: pos.z }, {
     visualType: "image",
     objects: {
@@ -118,20 +118,26 @@ function paintedButton(pos, label, link, variant = "plain") {
     },
     visualContainerObjects: bareContainer({ general: [props({ altText: str(label) })] }),
   });
-  const states = { default: 100, hover: 88, selected: 70 };
+  // Per state: [ink fill transparency, lettering color, underline].
+  const states = { default: [100, C.inkHex, false], hover: [100, C.inkHex, true], selected: [0, C.paperHex, false] };
   const perState = (fn) => {
-    const entries = Object.entries(states).map(([id, t]) => props(fn(t, id), id));
+    const entries = Object.entries(states).map(([id, s]) => props(fn(...s), id));
     return [{ properties: entries[0].properties }, ...entries];
   };
   const dual = (p) => [props(p), props(p, "default")];
   const visualLink = link.type === "Back"
     ? [props({ show: bool(true), type: str("Back") })]
     : [props({ show: bool(true), type: str("PageNavigation"), navigationSection: str(link.page) })];
-  const hit = container({ ...pos, z: pos.z + 1 }, {
+  // actionButton ignores rounded shapes, so the hit area is inset 3px, onto the inner edge of the painted
+  // outline: pressed, its square ink fill merges with the rounded ink stroke instead of poking past it.
+  const hit = container({ x: pos.x + 3, y: pos.y + 3, w: w - 9, h: h - 9, z: pos.z + 1 }, {
     visualType: "actionButton",
     objects: {
       icon: dual({ shapeType: str("blank") }),
-      text: perState(() => ({ show: bool(false) })),
+      text: perState((t, fg, underline) => ({
+        show: bool(true), text: str(label), fontColor: color(fg), fontFamily: lit(FONT), fontSize: num(16),
+        bold: bool(true), underline: bool(underline), horizontalAlignment: str("center"), verticalAlignment: str("middle"),
+      })),
       fill: perState((t) => ({ show: bool(true), fillColor: color(C.inkHex), transparency: num(t) })),
       outline: perState(() => ({ show: bool(false) })),
       shadow: dual({ show: bool(false) }),
