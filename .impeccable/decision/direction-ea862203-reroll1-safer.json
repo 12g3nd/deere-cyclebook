@@ -1,0 +1,95 @@
+{
+  "title": "Choose CYCLEBOOK's visual world",
+  "question": "Your steer leads: the research note, with Deere green and yellow used sparingly. Build it, pick another, or re-roll.",
+  "options": [
+    {
+      "id": "steer-coverage-deere-signals",
+      "label": "Initiation of Coverage, Deere-signaled",
+      "kicker": "YOUR STEER",
+      "lineage": "Sell-side initiation notes, marked up the way analysts actually read them",
+      "thesis": "A research note on Deere where green appears only when Deere itself is speaking (guidance) and yellow is the analyst's highlighter on the one finding per page.",
+      "palette": ["#FBFBF9", "#14171C", "#367C2B", "#FFDE00", "#C9CCD1"],
+      "materials": ["research-note front page", "numbered exhibits with source lines", "highlighter band", "price box"],
+      "viewport": "PULSE as the note's front page: DE masthead and price box, the investment view with one yellow-highlighted finding, a key-data table with guidance figures set in Deere green, and Exhibits 1 and 2 at right.",
+      "risk": "Familiar grammar; the green and yellow have to stay rare, or the note turns into a Deere press release.",
+      "wireframe": {
+        "cols": 12,
+        "rows": 10,
+        "regions": [
+          { "label": "DE masthead + price box", "x": 0, "y": 0, "w": 12, "h": 2 },
+          { "label": "investment view (one highlighted finding)", "x": 0, "y": 2, "w": 5, "h": 7, "accent": true },
+          { "label": "key data (guidance in green)", "x": 5, "y": 2, "w": 3, "h": 7 },
+          { "label": "Exhibit 1", "x": 8, "y": 2, "w": 4, "h": 4 },
+          { "label": "Exhibit 2", "x": 8, "y": 6, "w": 4, "h": 3 },
+          { "label": "sources · actual / guidance / model key", "x": 0, "y": 9, "w": 12, "h": 1 }
+        ]
+      }
+    },
+    {
+      "id": "grounded-graphics-desk",
+      "label": "The Graphics Desk",
+      "lineage": "Financial-press markets graphics (FT, WSJ)",
+      "thesis": "Every chart is titled with its finding, labeled on the line instead of in a legend, and sourced underneath; Deere green marks the one series that matters.",
+      "palette": ["#FCFCFA", "#1A1A1A", "#367C2B", "#FFDE00", "#9AA0A6"],
+      "materials": ["finding-first chart titles", "direct labels", "on-line annotations", "source lines"],
+      "viewport": "PULSE as a markets page: the headline finding across the top, one large revenue chart with Q3 FY26 annotated on the line, three small charts beneath.",
+      "risk": "Reads as a news article more than an analyst's instrument, and gives the MODEL LAB controls a weaker home.",
+      "wireframe": {
+        "cols": 12,
+        "rows": 10,
+        "regions": [
+          { "label": "headline finding", "x": 0, "y": 0, "w": 12, "h": 2 },
+          { "label": "annotated revenue chart", "x": 0, "y": 2, "w": 8, "h": 5, "accent": true },
+          { "label": "key figures", "x": 8, "y": 2, "w": 4, "h": 5 },
+          { "label": "small chart", "x": 0, "y": 7, "w": 4, "h": 3 },
+          { "label": "small chart", "x": 4, "y": 7, "w": 4, "h": 3 },
+          { "label": "small chart", "x": 8, "y": 7, "w": 4, "h": 3 }
+        ]
+      }
+    },
+    {
+      "id": "grounded-statistical-release",
+      "label": "The Statistical Release",
+      "lineage": "USDA WASDE and crop production reports",
+      "thesis": "Deere's numbers set like a government statistical release: dense fiscal-period tables, change-since-last-report columns, footnoted sources.",
+      "palette": ["#F6F6F3", "#111418", "#5C6670", "#367C2B", "#FFDE00"],
+      "materials": ["dense ruled tables", "revision columns", "footnote markers"],
+      "viewport": "PULSE as a release page: fiscal-quarter columns and segment rows, a change-versus-prior column, and guidance revisions marked in green and yellow.",
+      "risk": "Dense tables can feel dry to a hiring manager skimming for ten minutes; charts take a back seat.",
+      "wireframe": {
+        "cols": 12,
+        "rows": 10,
+        "regions": [
+          { "label": "release header", "x": 0, "y": 0, "w": 12, "h": 1 },
+          { "label": "segment x quarter table", "x": 0, "y": 1, "w": 8, "h": 6, "accent": true },
+          { "label": "change vs prior", "x": 8, "y": 1, "w": 4, "h": 6 },
+          { "label": "one supporting chart", "x": 0, "y": 7, "w": 8, "h": 3 },
+          { "label": "footnotes + sources", "x": 8, "y": 7, "w": 4, "h": 3 }
+        ]
+      }
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "buildPath": { "value": "code", "toggle": false },
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "A company-snapshot dashboard at the craft level of FactSet Company Snapshot, Koyfin and Morningstar's stock pages.",
+    "palette": ["#FFFFFF", "#1B1F24", "#367C2B", "#E6E8EB"],
+    "materials": ["ticker header", "KPI tiles", "price chart with range selector", "financials table"],
+    "viewport": "A ticker header with price and daily change, KPI tiles, a price chart, and financial and segment tables below.",
+    "risk": "Looks like the tools a hiring manager already uses every day, so it proves craft but not a point of view.",
+    "wireframe": {
+      "cols": 12,
+      "rows": 10,
+      "regions": [
+        { "label": "ticker header", "x": 0, "y": 0, "w": 12, "h": 1 },
+        { "label": "KPI tiles", "x": 0, "y": 1, "w": 12, "h": 2 },
+        { "label": "price chart", "x": 0, "y": 3, "w": 8, "h": 4 },
+        { "label": "segment mix", "x": 8, "y": 3, "w": 4, "h": 4 },
+        { "label": "financials table", "x": 0, "y": 7, "w": 12, "h": 3 }
+      ]
+    }
+  },
+  "steer": true
+}

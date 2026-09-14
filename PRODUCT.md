@@ -45,7 +45,7 @@ Every figure declares where it came from: ACTUAL (reported), GUIDANCE (managemen
 - Name: DEERE // CYCLEBOOK.
 - Voice: every narrative sentence is rewritten by the author (`_brief/VOICE_REWRITES.md`). Do not ship generated-sounding prose.
 - Must not read as AI-generated. Author-named taste references: teenage.engineering, aesop.com, vacation.inc, oatly.com (signals, not templates).
-- Identity (Deere-adjacent vs independent analyst publication): delegated to the design direction round.
+- Identity: an analyst publication about Deere, not Deere-branded. Deere green and yellow make occasional, purposeful appearances; never a full livery (author's steer, 2026-09-14).
 - Deere is the subject, not the publisher: no Deere logos or marks.
 
 ## Evidence on Hand
