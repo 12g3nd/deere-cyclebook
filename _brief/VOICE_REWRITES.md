@@ -108,9 +108,11 @@ Yours:
 Yours:
 
 ### V2 · method note
-> Valuation is intentionally transparent: scenario net income ÷ 270.8mm assumed diluted shares = projected EPS; projected EPS × selected P/E = implied value per share. There is no hidden AI forecast and no fake precision.
+> Valuation is intentionally transparent: scenario net income ÷ 269.8mm diluted shares = projected EPS; projected EPS × selected P/E = implied value per share. There is no hidden AI forecast and no fake precision.
 
 **tell:** the last sentence is defensive, and it mentions AI, which draws attention to exactly what you don't want.
+
+Share count corrected from 270.8M to 269.8M (Q3 FY2026 diluted average, per the release).
 
 Yours:
 
@@ -201,9 +203,9 @@ Yours:
 Yours:
 
 ### N4 · valuation exhibit labels
-> FY2023 record · FY2025 reported · Management guidance, FY2026 · CYCLEBOOK scenarios, bear to bull
+> Close $675.74 · FY2023 record, $34.63 · Management guidance, FY2026 · CYCLEBOOK scenarios, bear to bull · 19.5x = FY2023 record EPS · 37.4x = base-case FY2026 EPS
 
-Short labels drawn on the chart. Keep them short.
+Short labels drawn on the chart; the numbers update live. Keep them short.
 
 Yours:
 

@@ -57,6 +57,8 @@ function writePage(id, displayName, visuals) {
   fs.mkdirSync(path.join(dir, "visuals"), { recursive: true });
   fs.writeFileSync(path.join(dir, "page.json"), JSON.stringify(R.page(id, displayName), null, 2), "utf8");
   for (const v of visuals) {
+    // Stable names (page + z-order + type) keep git diffs readable across rebuilds.
+    v.name = require("crypto").createHash("sha1").update(`${id}:${v.position.z}:${v.visual.visualType}`).digest("hex").slice(0, 20);
     fs.mkdirSync(path.join(dir, "visuals", v.name));
     fs.writeFileSync(path.join(dir, "visuals", v.name, "visual.json"), JSON.stringify(v, null, 2), "utf8");
   }
