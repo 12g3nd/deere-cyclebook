@@ -1,0 +1,155 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-14T00:00:00Z",
+  "title": "Design System: DEERE // CYCLEBOOK",
+  "extensions": {
+    "colorMeta": {
+      "ink": { "role": "primary", "displayName": "Stack Ink", "canonical": "#0E0E0C", "tonalRamp": ["#0E0E0C", "#2A2A27", "#454541", "#5E5E5A", "#8A8A85", "#B3B3AE", "#D6D6D1", "#F4F4F0"], "note": "Ramp is reference only; the system is one-bit and uses patterns, never tints." },
+      "guidance-green": { "role": "secondary", "displayName": "Guidance Green", "canonical": "#367C2B", "tonalRamp": ["#12290E", "#1E4618", "#2A6122", "#367C2B", "#4F9A43", "#78B86C", "#A9D4A0", "#DCEED8"], "note": "Management guidance only. Ramp is reference only." },
+      "advance-yellow": { "role": "tertiary", "displayName": "Advance Yellow", "canonical": "#FFDE00", "tonalRamp": ["#3D3500", "#6B5D00", "#A38D00", "#D9BC00", "#FFDE00", "#FFE84D", "#FFF199", "#FFFAD6"], "note": "The advancing button and the selected valuation point only. Ramp is reference only." },
+      "paper": { "role": "neutral", "displayName": "Card Paper", "canonical": "#F4F4F0", "tonalRamp": ["#0E0E0C", "#2A2A27", "#454541", "#5E5E5A", "#8A8A85", "#B3B3AE", "#D6D6D1", "#F4F4F0"], "note": "Ramp is reference only." },
+      "outspace": { "role": "neutral", "displayName": "Outspace Table", "canonical": "#5E5E5A", "tonalRamp": ["#1A1A18", "#2E2E2B", "#45453F", "#5E5E5A", "#7A7A75", "#9A9A95", "#C0C0BB", "#E4E4E0"], "note": "Outside the 1920x1080 page only. Ramp is reference only." }
+    },
+    "typographyMeta": {
+      "display-title": { "displayName": "Bitmap Title", "purpose": "Card name, top left of the header. 5x7 glyphs, 10px pixel." },
+      "display-figure": { "displayName": "Bitmap Lead Figure", "purpose": "First figure of each ledger, right-aligned, in the row's provenance color. 5px pixel." },
+      "headline-finding": { "displayName": "Finding", "purpose": "The card's one finding sentence." },
+      "body-finding": { "displayName": "Finding Support", "purpose": "Evidence line under the finding (PULSE)." },
+      "title-exhibit": { "displayName": "Exhibit Title", "purpose": "Exhibit titles and the company line in the header." },
+      "value-row": { "displayName": "Ledger Value", "purpose": "Right-aligned values in ledger rows after the lead." },
+      "label-row": { "displayName": "Ledger Label", "purpose": "Ledger row labels (lead label is 15px)." },
+      "label-button": { "displayName": "Button Label", "purpose": "Painted button labels." },
+      "label-index": { "displayName": "Index Label", "purpose": "Uppercase page names on stack index mini cards; control labels above slicers." },
+      "body-chart": { "displayName": "Chart Text", "purpose": "Axes, legends, callouts." },
+      "label-tag": { "displayName": "Provenance Tag", "purpose": "ACTUAL, GUIDANCE, MODEL words. Type floor." },
+      "body-note": { "displayName": "Note", "purpose": "Sources line and ledger notes." }
+    },
+    "patterns": [
+      { "name": "desk-dither", "value": "4px tile, 2px ink squares at (0,0) and (2,2)", "purpose": "The desk under the card stack only." },
+      { "name": "stipple-sparse", "value": "6px tile, one 2px ink square", "purpose": "Model marker: MODEL tag swatch, scenario band, P/E strip swatches." },
+      { "name": "stipple-panel", "value": "8px tile, 2px ink squares at (0,0) and (4,4)", "purpose": "Model marker: ledger MODEL value panels." }
+    ],
+    "shadows": [
+      { "name": "painted-button-lift", "value": "3px 3px 0 0 #0E0E0C", "purpose": "Painted navigation buttons (same 12px radius as the body)." },
+      { "name": "key-index-lift", "value": "4px 4px 0 0 #0E0E0C", "purpose": "Scenario keys and stack index mini cards." },
+      { "name": "card-stack", "value": "sheets at 10px and 20px offsets, 3px ink outlines, over a solid ink sheet at 26px", "purpose": "The card resting on the desk." }
+    ],
+    "motion": [
+      { "name": "instant-state", "value": "none", "purpose": "Power BI state changes are immediate; hover, press and selection swap without transition." }
+    ],
+    "breakpoints": [
+      { "name": "canvas", "value": "1920x1080 fixed, FitToPage" }
+    ],
+    "rollout": {
+      "system": ["stack_pulse (PULSE)", "stack_valuation (VALUATION)"],
+      "pendingRollout": ["FINANCIALS", "SEGMENTS", "THE CYCLE", "MODEL LAB", "SOURCES"],
+      "retired": ["PULSE (v1)", "VALUATION (v1)"]
+    }
+  },
+  "components": [
+    {
+      "name": "Painted Button",
+      "kind": "button",
+      "refersTo": "button-painted",
+      "description": "Rounded painted HyperCard button: paper body, 3px ink outline, hard 3px shadow; hover underlines, press inverts.",
+      "html": "<button class=\"ds-btn-painted\">The segments</button>",
+      "css": ".ds-btn-painted { width: 220px; height: 56px; background: #F4F4F0; color: #0E0E0C; border: 3px solid #0E0E0C; border-radius: 12px; box-shadow: 3px 3px 0 0 #0E0E0C; font-family: Verdana, Geneva, sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; } .ds-btn-painted:hover, .ds-btn-painted:focus-visible { text-decoration: underline; outline: none; } .ds-btn-painted:active { background: #0E0E0C; color: #F4F4F0; text-decoration: none; }"
+    },
+    {
+      "name": "Painted Go Button",
+      "kind": "button",
+      "refersTo": "button-painted-go",
+      "description": "The one yellow button per card that advances the argument; always rightmost.",
+      "html": "<button class=\"ds-btn-go\">What the price assumes</button>",
+      "css": ".ds-btn-go { width: 360px; height: 56px; background: #FFDE00; color: #0E0E0C; border: 3px solid #0E0E0C; border-radius: 12px; box-shadow: 3px 3px 0 0 #0E0E0C; font-family: Verdana, Geneva, sans-serif; font-size: 16px; font-weight: 700; cursor: pointer; } .ds-btn-go:hover, .ds-btn-go:focus-visible { text-decoration: underline; outline: none; } .ds-btn-go:active { background: #0E0E0C; color: #F4F4F0; text-decoration: none; }"
+    },
+    {
+      "name": "Stack Index",
+      "kind": "nav",
+      "refersTo": "index-card",
+      "description": "Square mini cards on the desk, one per page; the current card is inverted.",
+      "html": "<nav class=\"ds-index\"><a class=\"ds-index-card ds-current\">PULSE</a><a class=\"ds-index-card\">FINANCIALS</a><a class=\"ds-index-card\">VALUATION</a></nav>",
+      "css": ".ds-index { display: flex; flex-direction: column; gap: 26px; padding: 8px; background-color: #F4F4F0; background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='2' height='2' fill='%230E0E0C'/%3E%3Crect x='2' y='2' width='2' height='2' fill='%230E0E0C'/%3E%3C/svg%3E\"); } .ds-index-card { display: flex; align-items: center; justify-content: center; width: 160px; height: 107px; box-sizing: border-box; background: #F4F4F0; color: #0E0E0C; border: 3px solid #0E0E0C; box-shadow: 4px 4px 0 0 #0E0E0C; font-family: Verdana, Geneva, sans-serif; font-size: 13px; font-weight: 700; cursor: pointer; } .ds-index-card:hover, .ds-index-card:focus-visible { border-width: 4px; outline: none; } .ds-index-card.ds-current { background: #0E0E0C; color: #F4F4F0; }"
+    },
+    {
+      "name": "Provenance Tags",
+      "kind": "chip",
+      "refersTo": "tag-actual",
+      "description": "ACTUAL solid ink, GUIDANCE green, MODEL outlined with a stipple swatch.",
+      "html": "<span class=\"ds-tag ds-tag-actual\">ACTUAL</span> <span class=\"ds-tag ds-tag-guidance\">GUIDANCE</span> <span class=\"ds-tag ds-tag-model\"><i></i>MODEL</span>",
+      "css": ".ds-tag { display: inline-flex; align-items: center; justify-content: center; gap: 4px; height: 16px; box-sizing: border-box; padding: 0 5px; font-family: Verdana, Geneva, sans-serif; font-size: 10px; font-weight: 700; } .ds-tag-actual { background: #0E0E0C; color: #F4F4F0; } .ds-tag-guidance { background: #367C2B; color: #F4F4F0; } .ds-tag-model { background: #F4F4F0; color: #0E0E0C; border: 1.5px solid #0E0E0C; } .ds-tag-model i { width: 8px; height: 8px; background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Crect width='2' height='2' fill='%230E0E0C'/%3E%3C/svg%3E\"); }"
+    },
+    {
+      "name": "Ledger Row",
+      "kind": "custom",
+      "refersTo": "tag-model",
+      "description": "Ledger rows: label, provenance tag and note, right-aligned value; MODEL values sit on a stipple panel with a paper halo.",
+      "html": "<div class=\"ds-ledger\"><div class=\"ds-row\"><div><b>Trailing P/E</b><small><span class=\"ds-t ds-t-a\">ACTUAL</span> on $18.00 last-four-quarter EPS</small></div><strong>37.5x</strong></div><div class=\"ds-row\"><div><b>FY2026 EPS, base case</b><small><span class=\"ds-t ds-t-m\">MODEL</span> net income $4.88B</small></div><strong class=\"ds-model\">$18.07</strong></div><div class=\"ds-row\"><div><b>Net income guidance, FY2026</b><small><span class=\"ds-t ds-t-g\">GUIDANCE</span> Management range</small></div><strong class=\"ds-green\">$4.75B-5.00B</strong></div></div>",
+      "css": ".ds-ledger { width: 400px; border-top: 3px solid #0E0E0C; border-bottom: 2px solid #0E0E0C; background: #F4F4F0; color: #0E0E0C; font-family: Verdana, Geneva, sans-serif; } .ds-row { display: flex; justify-content: space-between; align-items: center; height: 76px; border-bottom: 1px solid #0E0E0C; } .ds-row b { display: block; font-size: 14px; } .ds-row small { font-size: 12px; } .ds-t { display: inline-block; font-size: 10px; font-weight: 700; padding: 1px 5px; margin: 6px 6px 0 0; } .ds-t-a { background: #0E0E0C; color: #F4F4F0; } .ds-t-g { background: #367C2B; color: #F4F4F0; } .ds-t-m { border: 1.5px solid #0E0E0C; } .ds-row strong { font-size: 22px; } .ds-green { color: #367C2B; } .ds-model { width: 150px; height: 56px; box-sizing: border-box; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; paint-order: stroke; -webkit-text-stroke: 0; text-shadow: 0 0 3px #F4F4F0, 0 0 3px #F4F4F0, 0 0 3px #F4F4F0; background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Crect width='2' height='2' fill='%230E0E0C'/%3E%3Crect x='4' y='4' width='2' height='2' fill='%230E0E0C'/%3E%3C/svg%3E\"); }"
+    },
+    {
+      "name": "Scenario Keys",
+      "kind": "custom",
+      "refersTo": "scenario-key",
+      "description": "Painted rounded keys with a 4px hard shadow; the selected key moves into its shadow and inverts.",
+      "html": "<div class=\"ds-keys\"><button class=\"ds-key\">Bear</button><button class=\"ds-key ds-on\">Base</button><button class=\"ds-key\">Bull</button></div>",
+      "css": ".ds-keys { display: flex; gap: 15px; } .ds-key { width: 109px; height: 53px; background: #F4F4F0; color: #0E0E0C; border: 3px solid #0E0E0C; border-radius: 12px; box-shadow: 4px 4px 0 0 #0E0E0C; font-family: Verdana, Geneva, sans-serif; font-size: 17px; font-weight: 700; cursor: pointer; } .ds-key:hover, .ds-key:focus-visible { outline: 2px solid #0E0E0C; outline-offset: 2px; } .ds-key.ds-on, .ds-key:active { background: #0E0E0C; color: #F4F4F0; box-shadow: none; transform: translate(4px, 4px); }"
+    },
+    {
+      "name": "P/E Test Strip",
+      "kind": "custom",
+      "refersTo": "pe-step",
+      "description": "Square cells of multiple over implied value with a stipple model swatch; the selected cell inverts.",
+      "html": "<div class=\"ds-strip\"><button class=\"ds-step\"><b>26x</b><span>$470</span><i></i></button><button class=\"ds-step ds-on\"><b>28x</b><span>$506</span></button><button class=\"ds-step\"><b>30x</b><span>$542</span><i></i></button></div>",
+      "css": ".ds-strip { display: flex; gap: 9px; } .ds-step { position: relative; width: 86px; height: 77px; background: #F4F4F0; color: #0E0E0C; border: 3px solid #0E0E0C; border-radius: 0; font-family: Verdana, Geneva, sans-serif; display: flex; flex-direction: column; align-items: center; padding-top: 8px; cursor: pointer; } .ds-step b { font-size: 17px; } .ds-step span { font-size: 14px; margin-top: 4px; } .ds-step i { position: absolute; left: 6px; right: 6px; bottom: 5px; height: 12px; background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='6' height='6'%3E%3Crect width='2' height='2' fill='%230E0E0C'/%3E%3C/svg%3E\"); } .ds-step:hover, .ds-step:focus-visible { outline: 2px solid #0E0E0C; outline-offset: 2px; } .ds-step.ds-on { background: #0E0E0C; color: #F4F4F0; }"
+    },
+    {
+      "name": "Card on the Desk",
+      "kind": "card",
+      "refersTo": "index-card",
+      "description": "The paper card with its 4px outline, stacked sheets and bitmap-titled header on the dithered desk.",
+      "html": "<div class=\"ds-desk\"><div class=\"ds-card\"><header class=\"ds-head\"><span class=\"ds-bitmap\">PULSE</span><span class=\"ds-asof\"><b>Deere &amp; Company &middot; NYSE: DE</b><br>Close $675.74 on 11 Sep 2026</span></header><p class=\"ds-finding\">Large ag is shrinking again; small ag and construction still grow, just more slowly.</p></div></div>",
+      "css": ".ds-desk { padding: 24px 48px 48px 24px; background-color: #F4F4F0; background-image: url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='2' height='2' fill='%230E0E0C'/%3E%3Crect x='2' y='2' width='2' height='2' fill='%230E0E0C'/%3E%3C/svg%3E\"); } .ds-card { background: #F4F4F0; color: #0E0E0C; border: 4px solid #0E0E0C; padding: 28px 40px 40px; box-shadow: 10px 10px 0 -3px #F4F4F0, 10px 10px 0 0 #0E0E0C, 20px 20px 0 -3px #F4F4F0, 20px 20px 0 0 #0E0E0C, 26px 26px 0 0 #0E0E0C; font-family: Verdana, Geneva, sans-serif; } .ds-head { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 4px solid #0E0E0C; padding-bottom: 6px; } .ds-bitmap { font-family: Verdana, Geneva, sans-serif; font-size: 64px; font-weight: 700; letter-spacing: 10px; line-height: 1; } .ds-asof { text-align: right; font-size: 15px; line-height: 1.7; } .ds-finding { font-size: 24px; font-weight: 700; margin: 20px 0 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Stack",
+    "overview": "Each report page is one card in an analyst's HyperCard stack: a 3:2 card of paper resting on a dithered desk, carrying one step of the argument, one dominant exhibit, a ledger of the figures behind it, and a painted button to the next step. The world is one-bit. Ink sits on paper, and the only other marks are patterns (dither, stipple) and two sparingly used Deere colors that each carry exactly one meaning. It rejects the KPI-tile dashboard grid.\n\nThe medium is Power BI, with no HTML or CSS of its own. Every visible surface is a DAX-generated SVG with shape-rendering='crispEdges', drawn onto native visuals whose containers are fully bare (no background, border, title, header, shadow or padding). Interaction is added by laying native visuals over the painting: an action button over a painted button body, a transparent slicer over painted keys and strips. Display lettering is a 5x7 bitmap drawn as SVG rects because the Power BI Service cannot load custom fonts. Verdana, a screen face built on the pixel grid that renders on Windows and macOS, carries everything else.\n\nThe medium grammar is HyperCard's own: cards, painted buttons, the stack trail, dither and bitmap lettering. There is no imitation OS: no Mac title bar, close box, menu bar or window chrome.",
+    "keyCharacteristics": [
+      "One-bit ink (#0E0E0C) on paper (#F4F4F0), crisp-edged, no anti-aliased decoration.",
+      "Provenance is drawn, not colored: solid ink ACTUAL, green GUIDANCE, stipple-marked MODEL.",
+      "Bitmap lettering in exactly two slots; Verdana everywhere else.",
+      "Hard, blurless one-bit shadows and 3px ink rules.",
+      "Rounded painted buttons that invert when pressed; square cards.",
+      "A fixed 1920x1080 canvas with one 1500x1000 card on a dithered desk."
+    ],
+    "rules": [
+      { "name": "The One-Bit Rule", "body": "Surfaces are ink or paper. Mid-tones are patterns of ink on paper (dither, stipple), never tints, greys or transparency.", "section": "colors" },
+      { "name": "The Stipple Means Model Rule", "body": "Stipple marks the author's model and only the model: MODEL tag swatches, MODEL value panels, the bear-to-bull scenario band, and the implied-value swatches on the P/E strip. The 50% checker dither is the desk and appears nowhere on the card.", "section": "colors" },
+      { "name": "The Green Is Guidance Rule", "body": "Guidance Green appears only on management guidance. Every green element also carries the GUIDANCE word or a \"Guidance\" label, so the meaning never depends on color alone.", "section": "colors" },
+      { "name": "The Yellow Moves the Argument Rule", "body": "Each card has at most one yellow button, and it leads to the next step. The only other yellow is the selected valuation point.", "section": "colors" },
+      { "name": "The Two Bitmap Slots Rule", "body": "Bitmap lettering is used only for the card title and each ledger's lead figure. Findings, labels, values and buttons are set in Verdana.", "section": "typography" },
+      { "name": "The No Loaded Fonts Rule", "body": "No font is ever loaded. Anything that must look drawn is drawn as SVG rects from the Glyphs table; everything else is Verdana.", "section": "typography" },
+      { "name": "The Hard Shadow Rule", "body": "Every shadow is solid ink with zero blur and a small down-right offset of 3-4px. Soft, ambient or colored shadows do not exist in this world.", "section": "elevation" },
+      { "name": "The Pressed Goes Flat Rule", "body": "A pressed or selected control loses its lift. Painted buttons fill with ink and letter in paper. A selected scenario key moves into its shadow position and fills with ink. A selected P/E step inverts.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do draw every visible surface as crisp-edged SVG and keep native containers bare (no background, border, title, header, drop shadow or padding).",
+      "Do tag every figure ACTUAL, GUIDANCE or MODEL, and put MODEL values on a stipple panel.",
+      "Do separate chart series by line weight and dash pattern (5px solid; 3px 14/7; 3px 4/6), and use square point markers.",
+      "Do build rounded controls as a painted SVG body with a native actionButton inset 3px or a transparent slicer laid on top.",
+      "Do invert pressed and selected states to ink fill with paper lettering, and drop the lift.",
+      "Do keep content inside the card's 40px inset and put the yellow button rightmost in the card foot."
+    ],
+    "donts": [
+      "Don't use soft, blurred or colored shadows, gradients, tints or visible transparency. Mid-tones are ink patterns.",
+      "Don't use dither on the card. The 50% checker belongs to the desk; stipple belongs to the model.",
+      "Don't use Guidance Green for anything but management guidance, or Advance Yellow for anything but the one advancing button and the selected valuation point.",
+      "Don't use bitmap lettering outside the card title and the ledger lead figure, and don't load or reference any font other than Verdana.",
+      "Don't add OS costume: Mac title bars, close boxes, menu bars or window chrome.",
+      "Don't round cards, index mini cards, tags or P/E steps. Only pressable painted buttons and keys are rounded (12px).",
+      "Don't set type below 10px, or put Outspace grey on the card.",
+      "Don't take guidance from FINANCIALS, SEGMENTS, THE CYCLE, MODEL LAB or SOURCES until they are rolled onto the Stack."
+    ]
+  }
+}
