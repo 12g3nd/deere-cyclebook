@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Annual Segment Sales"
+                  "Property": "Annual Segment Sales Bn"
                 }
               },
-              "queryRef": "_Measures.Annual Segment Sales",
-              "nativeQueryRef": "Annual Segment Sales"
+              "queryRef": "_Measures.Annual Segment Sales Bn",
+              "nativeQueryRef": "Annual Segment Sales Bn"
             }
           ]
         },

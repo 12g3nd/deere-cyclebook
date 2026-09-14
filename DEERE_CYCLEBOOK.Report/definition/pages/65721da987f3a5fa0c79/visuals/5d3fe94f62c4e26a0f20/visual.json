@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Model Segment Operating Profit"
+                  "Property": "Model Segment Operating Profit Bn"
                 }
               },
-              "queryRef": "_Measures.Model Segment Operating Profit",
-              "nativeQueryRef": "Model Segment Operating Profit"
+              "queryRef": "_Measures.Model Segment Operating Profit Bn",
+              "nativeQueryRef": "Model Segment Operating Profit Bn"
             }
           ]
         }

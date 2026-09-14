@@ -87,6 +87,11 @@ table _Measures
 		formatString: $#,##0 "mm"
 		lineageTag: d2ef3b20-e89a-4349-a2c2-f69c705b8019
 
+	/// Latest-quarter segment net sales in USD billions.
+	measure 'Latest Segment Sales Bn' = DIVIDE([Latest Segment Sales], 1000)
+		formatString: $0.0B
+		lineageTag: 6b4d4585-eba9-4710-a966-351c8bfe46e4
+
 	/// Latest-quarter segment operating margin.
 	measure 'Latest Segment Margin' = VAR p=[Latest Period Key] RETURN CALCULATE([Segment Operating Margin], REMOVEFILTERS('Period'), 'Period'[Period Key]=p)
 		formatString: 0.0%
@@ -157,6 +162,11 @@ table _Measures
 		formatString: $#,##0 "mm"
 		lineageTag: b184ff99-4cb3-4d7c-832f-171b91270a97
 
+	/// Annual equipment-segment net sales in USD billions.
+	measure 'Annual Segment Sales Bn' = DIVIDE([Annual Segment Sales], 1000)
+		formatString: $0.0B
+		lineageTag: 13984def-706f-4300-83db-d56755eb1a78
+
 	/// Annual segment operating profit.
 	measure 'Annual Segment Operating Profit' = SUM('Annual Segments'[Operating Profit])
 		formatString: $#,##0 "mm"
@@ -192,6 +202,11 @@ table _Measures
 		formatString: $#,##0 "mm"
 		lineageTag: a945b598-8a3a-4ed1-b9a0-57d70bcdc5d4
 
+	/// Modeled FY2026 segment sales in USD billions.
+	measure 'Model Segment Sales Bn' = DIVIDE([Model Segment Sales], 1000)
+		formatString: $0.0B
+		lineageTag: 9c517b2f-4ab9-457d-b6fd-ffc49273687c
+
 	/// Scenario segment operating margin plus margin sensitivity.
 	measure 'Model Segment Margin' = VAR s=SELECTEDVALUE('Segment'[Segment Code]) VAR b=[Selected Margin Adjustment Bps]/10000 RETURN SWITCH(s, "PPA",SELECTEDVALUE('Scenario'[PPA Margin],0.13)+b, "SAT",SELECTEDVALUE('Scenario'[SAT Margin],0.18)+b, "CF",SELECTEDVALUE('Scenario'[CF Margin],0.12)+b)
 		formatString: 0.0%
@@ -201,6 +216,11 @@ table _Measures
 	measure 'Model Segment Operating Profit' = [Model Segment Sales] * [Model Segment Margin]
 		formatString: $#,##0 "mm"
 		lineageTag: 09407d3a-02ce-480f-af7d-bfe1b01361bb
+
+	/// Modeled FY2026 segment operating profit in USD billions.
+	measure 'Model Segment Operating Profit Bn' = DIVIDE([Model Segment Operating Profit], 1000)
+		formatString: $0.0B
+		lineageTag: d6305f9b-f312-4c83-9d3d-232aa7ebaf56
 
 	/// Modeled aggregate equipment net sales across three operating segments.
 	measure 'Model Equipment Sales' = SUMX(VALUES('Segment'[Segment Code]), [Model Segment Sales])
@@ -261,6 +281,11 @@ table _Measures
 	measure 'Q4 Net Income Needed' = [Scenario Net Income] - 3808
 		formatString: $#,##0 "mm"
 		lineageTag: 8a0ec737-937a-44ea-b263-32d7162ffea0
+
+	/// FY2026 Q4 net income needed to reach the selected scenario, in USD billions.
+	measure 'Q4 Net Income Needed Bn' = DIVIDE([Q4 Net Income Needed], 1000)
+		formatString: $0.00B
+		lineageTag: 50fd02f4-d208-48a2-a0b3-8d35c8a659a0
 
 	/// Midpoint of Deere Q3 FY2026 net-income guidance of $4.75B-$5.00B.
 	measure 'Mgmt Guidance Midpoint Bn' = 4.875

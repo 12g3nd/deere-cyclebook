@@ -5,6 +5,7 @@ table 'PE Multiple'
 	column 'P/E Multiple'
 		dataType: double
 		lineageTag: 69e3beed-f6f5-4235-a79d-a0a18ee59137
+		formatString: 0"x"
 		summarizeBy: none
 		sourceColumn: Multiple
 

@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Model Segment Sales"
+                  "Property": "Model Segment Sales Bn"
                 }
               },
-              "queryRef": "_Measures.Model Segment Sales",
-              "nativeQueryRef": "Model Segment Sales"
+              "queryRef": "_Measures.Model Segment Sales Bn",
+              "nativeQueryRef": "Model Segment Sales Bn"
             }
           ]
         }

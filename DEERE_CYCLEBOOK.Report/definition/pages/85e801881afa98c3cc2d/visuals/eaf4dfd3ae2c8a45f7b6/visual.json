@@ -42,11 +42,11 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "Latest Segment Sales"
+                  "Property": "Latest Segment Sales Bn"
                 }
               },
-              "queryRef": "_Measures.Latest Segment Sales",
-              "nativeQueryRef": "Latest Segment Sales"
+              "queryRef": "_Measures.Latest Segment Sales Bn",
+              "nativeQueryRef": "Latest Segment Sales Bn"
             }
           ]
         }
