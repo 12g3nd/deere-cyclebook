@@ -10,6 +10,8 @@ web
 
 Primary: finance hiring managers (equity research, investment banking, corporate finance) evaluating the author as an analyst candidate. They open a published Power BI web link on their own, with no presenter, usually on a laptop between other work. They read research notes, 10-Ks and valuation models every day. Their job: decide within minutes whether the author thinks like an analyst: the numbers are right, the thesis is clear, the assumptions are labeled.
 
+The bar is set by the most senior reader: a high-finance executive who has seen every pitch book and research deck. It has to wow them, not merely look competent (author's steer, 2026-09-14).
+
 Secondary: prospects of the author's company, fi99.ca, judging build quality. Lower priority than hiring managers.
 
 ## Product Purpose

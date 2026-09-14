@@ -1,0 +1,152 @@
+{
+  "title": "Choose CYCLEBOOK's visual world",
+  "question": "The bolder hand is in. Build one, or re-roll.",
+  "options": [
+    {
+      "id": "lead-hypercard-stack",
+      "label": "The Stack",
+      "kicker": "THE ROLL",
+      "lineage": "HyperCard stacks: one-bit cards linked by painted buttons",
+      "thesis": "CYCLEBOOK as a stack of one-bit cards you walk through by button, each card one step of the argument, with Deere yellow and green the only color allowed in.",
+      "palette": ["#F4F4F0", "#0E0E0C", "#8C8C88", "#FFDE00", "#367C2B"],
+      "materials": ["one-bit dither", "hand-drawn card borders", "painted buttons", "stack trail"],
+      "viewport": "PULSE as the first card: Q3 FY26 in huge numerals, a dithered revenue exhibit running to the card edge, and painted buttons that walk the argument to the trough and the valuation.",
+      "risk": "Mac nostalgia can read as a gimmick to an executive, and Power BI has no bitmap fonts or dissolves, so the world must live in dither, borders and buttons.",
+      "raised": [
+        { "from": "challenger-darkroom", "raise": "Every assumption control previews its outcome at each step, like a test strip, before you commit." },
+        { "from": "challenger-sneaker-wall", "raise": "Every figure block shares one label anatomy: name, period, provenance, value." },
+        { "from": "challenger-guide-map", "raise": "Each card commits to one dominant exhibit that runs to the card's edge." }
+      ],
+      "hero": "https://impeccable.style/worlds/cards/medium-native-hypercard-stack-shoebox-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/medium-native-hypercard-stack-shoebox.webp",
+      "wireframe": {
+        "cols": 12,
+        "rows": 10,
+        "regions": [
+          { "label": "card title bar + back trail", "x": 0, "y": 0, "w": 12, "h": 1 },
+          { "label": "Q3 FY26 numerals", "x": 0, "y": 1, "w": 5, "h": 3 },
+          { "label": "dithered exhibit, to the edge", "x": 5, "y": 1, "w": 7, "h": 6, "accent": true },
+          { "label": "label anatomy: name · period · provenance", "x": 0, "y": 4, "w": 5, "h": 3 },
+          { "label": "painted buttons to the next card", "x": 0, "y": 7, "w": 12, "h": 2 },
+          { "label": "source line", "x": 0, "y": 9, "w": 12, "h": 1 }
+        ]
+      }
+    },
+    {
+      "id": "challenger-hardware-instrument",
+      "label": "The Instrument",
+      "verdict": "wins",
+      "lineage": "Creator-hardware desk instruments: keycaps, knobs and a small amber screen",
+      "thesis": "CYCLEBOOK as a desk instrument an analyst plays: scenario keys, a P/E knob, an amber screen that reads out one value at a time, and one Deere-yellow key that runs the case.",
+      "palette": ["#2E3236", "#D9D4C7", "#B7B1A3", "#17191B", "#F2A33A", "#FFDE00", "#367C2B"],
+      "materials": ["gunmetal chassis", "bone and putty keycaps", "mono legends", "amber status screen"],
+      "viewport": "PULSE as the instrument's face: the amber screen reading $675.74 against implied value, page keys along the top, Q3 readout modules below, guidance lit in Deere green.",
+      "case": "Beats the leader on both: color-coded function keys are the Bloomberg keyboard's lineage, and keys and knobs map one-to-one onto the model's inputs.",
+      "risk": "Keycap physics in Power BI are shadows and states, not real travel; if the chassis gets too literal it becomes a skeuomorphic toy.",
+      "hero": "https://impeccable.style/worlds/cards/design-canon-creator-hardware-bench-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/design-canon-creator-hardware-bench.webp",
+      "wireframe": {
+        "cols": 12,
+        "rows": 10,
+        "regions": [
+          { "label": "amber screen: price vs implied value", "x": 0, "y": 0, "w": 7, "h": 3, "accent": true },
+          { "label": "page keys", "x": 7, "y": 0, "w": 5, "h": 3 },
+          { "label": "BEAR · BASE · BULL keycaps", "x": 0, "y": 3, "w": 6, "h": 3 },
+          { "label": "P/E knob · margin knob", "x": 6, "y": 3, "w": 6, "h": 3 },
+          { "label": "Q3 readout modules", "x": 0, "y": 6, "w": 12, "h": 3 },
+          { "label": "legend strip · sources", "x": 0, "y": 9, "w": 12, "h": 1 }
+        ]
+      }
+    },
+    {
+      "id": "challenger-cyclorama",
+      "label": "The Cyclorama",
+      "verdict": "wins",
+      "lineage": "Theater cycloramas lit from night through dawn into day",
+      "thesis": "The Deere cycle staged as light: day at the FY2023 peak, night at the FY2026 trough, and today's share price as the first light on the horizon.",
+      "palette": ["#07080C", "#1C3FA8", "#D9738F", "#F3F1EC", "#FFDE00", "#367C2B"],
+      "materials": ["hard-edged horizon bands", "lighting-plot stencil caps", "cue timeline"],
+      "viewport": "A black stage with FY2022–FY2026 earnings drawn as a horizon band, the trough at night, and the latest close as a yellow first-light marker.",
+      "case": "Beats the leader on both: the trough-to-dawn metaphor is the thesis itself (management calls 2026 the bottom of the cycle), and a lit stage reads as premium to an executive.",
+      "risk": "A dark stage with cobalt and rose sits close to the dark-mode neon look models default to; the bands must be hard-edged light, never soft aurora gradients.",
+      "hero": "https://impeccable.style/worlds/cards/stagecraft-theater-lighting-cyclorama-dawn-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/stagecraft-theater-lighting-cyclorama-dawn.webp",
+      "wireframe": {
+        "cols": 12,
+        "rows": 10,
+        "regions": [
+          { "label": "stage title", "x": 0, "y": 0, "w": 12, "h": 1 },
+          { "label": "horizon band: FY22 day to FY26 night", "x": 0, "y": 1, "w": 9, "h": 5, "accent": true },
+          { "label": "first light: latest close", "x": 9, "y": 1, "w": 3, "h": 5 },
+          { "label": "cue list: peak · compression · trough · dawn", "x": 0, "y": 6, "w": 12, "h": 3 },
+          { "label": "source line", "x": 0, "y": 9, "w": 12, "h": 1 }
+        ]
+      }
+    },
+    {
+      "id": "challenger-darkroom",
+      "label": "Safelight",
+      "verdict": "declined",
+      "lineage": "Printing darkrooms under amber safelight",
+      "thesis": "The model developed like a print: stepped test strips of implied value at every P/E.",
+      "palette": ["#C8611A", "#1A1310", "#8A8A84", "#EDEBE4"],
+      "materials": ["test strips", "timer digits", "grease pencil"],
+      "viewport": "A developer tray of stepped test strips under amber.",
+      "case": "Loses both: amber safelight muddies chart colors and provenance, and no finance reader lives in a darkroom.",
+      "kept": "Test strips: preview every step of an outcome before committing.",
+      "risk": "Amber washes out every color distinction the report depends on.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-darkroom-safelight-bay-hero.webp"
+    },
+    {
+      "id": "challenger-sneaker-wall",
+      "label": "Archive Wall",
+      "verdict": "declined",
+      "lineage": "Sneaker archive walls of labeled boxes",
+      "thesis": "Segments and quarters as boxes on a wall, indexed by their end labels.",
+      "palette": ["#D9632B", "#141414", "#F4F1EA", "#367C2B"],
+      "materials": ["box board", "end labels", "monospaced runs"],
+      "viewport": "A wall of end labels with the selected box pulled half out.",
+      "case": "Loses both: a streetwear archive reads as retail, and box walls hide the trends a finance reader compares.",
+      "kept": "One label anatomy on every figure block.",
+      "risk": "Retail energy undercuts a research piece.",
+      "hero": "https://impeccable.style/worlds/cards/textiles-weave-drape-fashion-sneaker-box-stacks-hero.webp"
+    },
+    {
+      "id": "challenger-guide-map",
+      "label": "Guide Map",
+      "verdict": "declined",
+      "lineage": "Zoo and garden guide maps of flat color lobes",
+      "thesis": "Deere's segments as land lobes on a guide map.",
+      "palette": ["#8ED462", "#F5F1E4", "#2C2E2A", "#F5E211", "#FF705D"],
+      "materials": ["flat color lobes", "capsule labels"],
+      "viewport": "Three segment lobes sized by sales, one swelling past the frame.",
+      "case": "Loses both: area lobes distort quantities, and a leisure map undercuts high-finance credibility.",
+      "kept": "One dominant exhibit per screen, running to the edge.",
+      "risk": "Playful map energy reads as consumer, not capital markets.",
+      "hero": "https://impeccable.style/worlds/cards/aww2-zoo-gardens-guide-map-hero.webp"
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "buildPath": { "value": "code", "toggle": false },
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "A company-snapshot dashboard at the craft level of FactSet Company Snapshot, Koyfin and Morningstar's stock pages.",
+    "palette": ["#FFFFFF", "#1B1F24", "#367C2B", "#E6E8EB"],
+    "materials": ["ticker header", "KPI tiles", "price chart with range selector", "financials table"],
+    "viewport": "A ticker header with price and daily change, KPI tiles, a price chart, and financial and segment tables below.",
+    "risk": "Looks like the tools a hiring manager already uses every day, so it proves craft but not a point of view.",
+    "wireframe": {
+      "cols": 12,
+      "rows": 10,
+      "regions": [
+        { "label": "ticker header", "x": 0, "y": 0, "w": 12, "h": 1 },
+        { "label": "KPI tiles", "x": 0, "y": 1, "w": 12, "h": 2 },
+        { "label": "price chart", "x": 0, "y": 3, "w": 8, "h": 4 },
+        { "label": "segment mix", "x": 8, "y": 3, "w": 4, "h": 4 },
+        { "label": "financials table", "x": 0, "y": 7, "w": 12, "h": 3 }
+      ]
+    }
+  },
+  "steer": true
+}
