@@ -841,7 +841,7 @@
             "navigationSection": {
               "expr": {
                 "Literal": {
-                  "Value": "'aa26ab00db387bbd7409'"
+                  "Value": "'stack_sources'"
                 }
               }
             }

@@ -841,7 +841,7 @@
             "navigationSection": {
               "expr": {
                 "Literal": {
-                  "Value": "'d91eaac0343ef21a4cd9'"
+                  "Value": "'stack_cycle'"
                 }
               }
             }

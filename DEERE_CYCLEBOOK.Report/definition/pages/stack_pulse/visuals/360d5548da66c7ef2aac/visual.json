@@ -25,7 +25,7 @@
             "sourceUrl": {
               "expr": {
                 "Literal": {
-                  "Value": "'data:image/svg+xml;utf8,<svg xmlns=''http://www.w3.org/2000/svg'' width=''360'' height=''56'' viewBox=''0 0 360 56''><rect x=''4.5'' y=''4.5'' width=''354'' height=''50'' rx=''12'' fill=''%230E0E0C''/><rect x=''1.5'' y=''1.5'' width=''354'' height=''50'' rx=''12'' fill=''%23FFDE00'' stroke=''%230E0E0C'' stroke-width=''3''/></svg>'"
+                  "Value": "'data:image/svg+xml;utf8,<svg xmlns=''http://www.w3.org/2000/svg'' width=''360'' height=''56'' viewBox=''0 0 360 56''><rect x=''5.5'' y=''5.5'' width=''353'' height=''49'' rx=''12'' fill=''%230E0E0C'' stroke=''%230E0E0C'' stroke-width=''3''/><rect x=''1.5'' y=''1.5'' width=''353'' height=''49'' rx=''12'' fill=''%23FFDE00'' stroke=''%230E0E0C'' stroke-width=''3''/></svg>'"
                 }
               }
             }

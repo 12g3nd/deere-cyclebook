@@ -841,7 +841,7 @@
             "navigationSection": {
               "expr": {
                 "Literal": {
-                  "Value": "'2f2c922a6f3436a46dd5'"
+                  "Value": "'stack_segments'"
                 }
               }
             }

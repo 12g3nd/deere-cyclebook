@@ -112,7 +112,7 @@ RETURN
       return `
         & IF(_sel = "${name}",
             "<rect x='${x + 5.5}' y='5.5' width='109' height='53' rx='12' fill='${C.ink}' stroke='${C.ink}' stroke-width='3'/><text x='${x + 60}' y='38' text-anchor='middle' font-size='17' font-weight='bold' fill='${C.paper}'>${name}</text>",
-            "<rect x='${x + 5.5}' y='5.5' width='109' height='53' rx='12' fill='${C.ink}'/><rect x='${x + 1.5}' y='1.5' width='109' height='53' rx='12' fill='${C.paper}' stroke='${C.ink}' stroke-width='3'/><text x='${x + 56}' y='34' text-anchor='middle' font-size='17' font-weight='bold' fill='${C.ink}'>${name}</text>")`;
+            "<rect x='${x + 5.5}' y='5.5' width='109' height='53' rx='12' fill='${C.ink}' stroke='${C.ink}' stroke-width='3'/><rect x='${x + 1.5}' y='1.5' width='109' height='53' rx='12' fill='${C.paper}' stroke='${C.ink}' stroke-width='3'/><text x='${x + 56}' y='34' text-anchor='middle' font-size='17' font-weight='bold' fill='${C.ink}'>${name}</text>")`;
     }).join("")}
         & "</svg>"`;
 
@@ -134,7 +134,7 @@ const findingSvg = `${findingParts}
 RETURN
     ${daxStr(svgOpen(1420, 84))}
         & "<text x='0' y='30' font-size='24' font-weight='bold' fill='${C.ink}'>" & _l1 & "</text>"
-        & "<text x='0' y='70' font-size='24' font-weight='bold' fill='${C.ink}'>" & SUBSTITUTE(_l2, "%", "%25") & "</text>"
+        & "<text x='0' y='70' font-size='22' fill='${C.ink}'>" & SUBSTITUTE(_l2, "%", "%25") & "</text>"
         & "</svg>"`;
 
 module.exports = {

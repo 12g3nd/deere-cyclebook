@@ -216,3 +216,64 @@ Yours:
 > Change the assumptions
 
 Yours:
+
+---
+
+## Added with the five new cards
+
+FINANCIALS, SEGMENTS, THE CYCLE, MODEL LAB and SOURCES are now Stack cards. The old page lines above (F1, S1, S2, C1, C2, M1, M2, R1, R2) no longer appear anywhere; rewrite them only if you want one back. Numbers in these lines are live: rewrite the words around them and keep the slots.
+
+### N6 · FINANCIALS finding (live, two lines)
+> Through Q3, fiscal 2026 sales are up 7% on a year earlier and net income is down 4%.
+> Net income peaked at $10.17B in FY2023; FY2026 guidance of $4.75B-5.00B is below FY2025's $5.03B.
+
+Yours:
+
+### N7 · SEGMENTS finding (live, two lines)
+> Small ag and turf has out-earned large ag in every quarter of fiscal 2026 so far.
+> Operating profit through Q3: SAT $1,538M, PPA $1,372M, C&F $1,134M. In FY2023, PPA earned $6,996M, 58% of the total.
+
+If a later quarter breaks the streak, line one switches to "out-earned large ag in N of M quarters".
+
+Yours:
+
+### N8 · THE CYCLE finding (two lines)
+> Over the past year crop prices rose and interest rates fell, while housing starts kept dropping.
+> July 2026 vs a year earlier: corn +11%, soybeans +18%, fed funds 3.63% (was 4.33%), housing starts -13%.
+
+Line one only shows while the FRED data still says it; after a refresh that changes the direction of any of the four, the card falls back to a neutral lead. Line two is live.
+
+Yours:
+
+### N9 · MODEL LAB finding (live, two lines)
+> In the base case, equipment operating profit reaches $5.78B, up 18% on FY2025.
+> That implies FY2026 net income of $4.88B and EPS of $18.07, inside management's $4.75B-5.00B range.
+
+Yours:
+
+### N10 · SOURCES finding
+> Every number in this stack carries a tag that says where it came from.
+> ACTUAL: reported by Deere, FRED or Nasdaq. GUIDANCE: management's outlook. MODEL: an assumption made here.
+
+Yours:
+
+### N11 · exhibit titles
+> Net income by fiscal year, against FY2026 guidance · Segment operating profit by quarter · Crop prices, farm income, interest rates and housing · Equipment operating profit, FY2025 reported to FY2026 model · Where every figure comes from
+
+Yours:
+
+### N12 · card buttons
+> FINANCIALS: Back to PULSE · Profit by segment
+> SEGMENTS: Financials · What drives demand
+> THE CYCLE: Segments · Model fiscal 2026
+> MODEL LAB: The cycle · What the price assumes
+> SOURCES: Back to PULSE
+
+The second label on each card is the yellow one. Keep them short enough for one line.
+
+Yours:
+
+### N13 · MODEL LAB note
+> Scenario, sales and margin settings are CYCLEBOOK assumptions and carry over to VALUATION. FY2025 actuals from Deere's annual report. Stipple = model.
+
+Yours:

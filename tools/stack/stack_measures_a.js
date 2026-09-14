@@ -128,8 +128,18 @@ VAR _period = [Latest Period Label]
 RETURN
     ${ledger(440, pulseRows, "pl")}`;
 
+// A card finding (1420x84): the claim in 24px bold, the evidence under it in 22px regular.
+// vars is a DAX VAR block; l1 and l2 are DAX text expressions with % already escaped.
+const finding2 = (vars, l1, l2) => `
+${vars}
+RETURN
+    ${daxStr(svgOpen(1420, 84))}
+        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='${C.ink}'>" & ${l1} & "</text>"
+        & "<text x='0' y='70' font-size='22' fill='${C.ink}'>" & ${l2} & "</text>"
+        & "</svg>"`;
+
 module.exports = {
-  pct, esc, ledger, ledgerHeight,
+  pct, esc, ledger, ledgerHeight, header, finding2, tag,
   pulseLedgerHeight: ledgerHeight(pulseRows),
   measures: [
     { name: "Latest Period Label", doc: "Latest fiscal quarter as Q# FY####.", expr: `VAR p = [Latest Period Key] RETURN LOOKUPVALUE('Period'[Fiscal Quarter], 'Period'[Period Key], p) & " FY" & LOOKUPVALUE('Period'[Fiscal Year], 'Period'[Period Key], p)` },

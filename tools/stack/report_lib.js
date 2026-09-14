@@ -108,8 +108,8 @@ function paintedButton(pos, label, link, variant = "plain") {
   const w = pos.w, h = pos.h;
   const fill = variant === "go" ? C.yellow : C.paper;
   const svg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}'>` +
-    `<rect x='4.5' y='4.5' width='${w - 6}' height='${h - 6}' rx='12' fill='${C.ink}'/>` +
-    `<rect x='1.5' y='1.5' width='${w - 6}' height='${h - 6}' rx='12' fill='${fill}' stroke='${C.ink}' stroke-width='3'/></svg>`;
+    `<rect x='5.5' y='5.5' width='${w - 7}' height='${h - 7}' rx='12' fill='${C.ink}' stroke='${C.ink}' stroke-width='3'/>` +
+    `<rect x='1.5' y='1.5' width='${w - 7}' height='${h - 7}' rx='12' fill='${fill}' stroke='${C.ink}' stroke-width='3'/></svg>`;
   const img = container({ ...pos, z: pos.z }, {
     visualType: "image",
     objects: {
@@ -130,7 +130,7 @@ function paintedButton(pos, label, link, variant = "plain") {
     : [props({ show: bool(true), type: str("PageNavigation"), navigationSection: str(link.page) })];
   // actionButton ignores rounded shapes, so the hit area is inset 3px, onto the inner edge of the painted
   // outline: pressed, its square ink fill merges with the rounded ink stroke instead of poking past it.
-  const hit = container({ x: pos.x + 3, y: pos.y + 3, w: w - 9, h: h - 9, z: pos.z + 1 }, {
+  const hit = container({ x: pos.x + 3, y: pos.y + 3, w: w - 10, h: h - 10, z: pos.z + 1 }, {
     visualType: "actionButton",
     objects: {
       icon: dual({ shapeType: str("blank") }),
@@ -168,10 +168,11 @@ function textCard(pos, measureName, size) {
 }
 
 // Button slicer. "keys" = visible one-bit keycaps; "overlay" = invisible tiles laid over an SVG strip.
-function buttonSlicer(pos, entity, column, columns, variant) {
+// opts.sync names a sync group so a choice carries across cards; opts.hidden keeps a synced slicer off the canvas.
+function buttonSlicer(pos, entity, column, columns, variant, opts = {}) {
   const overlay = variant === "overlay";
-  const tile = (id, bg, fg) => props({ show: bool(!overlay), fillColor: color(bg), transparency: num(overlay ? 100 : 0) }, id);
-  return container(pos, {
+  const out = container(pos, {
+    ...(opts.sync ? { syncGroup: { groupName: opts.sync, fieldChanges: true, filterChanges: true } } : {}),
     visualType: "advancedSlicerVisual",
     query: { queryState: { Values: { projections: [{ field: { Column: { Expression: { SourceRef: { Entity: entity } }, Property: column } }, queryRef: `${entity}.${column}`, nativeQueryRef: column, active: true }] } } },
     objects: {
@@ -195,6 +196,8 @@ function buttonSlicer(pos, entity, column, columns, variant) {
     visualContainerObjects: bareContainer(),
     drillFilterOtherVisuals: true,
   });
+  if (opts.hidden) out.isHidden = true;
+  return out;
 }
 
 const page = (id, displayName) => ({

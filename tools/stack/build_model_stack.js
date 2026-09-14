@@ -5,6 +5,7 @@ const crypto = require("crypto");
 const { glyphRows } = require("./stack_lib");
 const A = require("./stack_measures_a");
 const B = require("./stack_measures_b");
+const cards = ["card_financials", "card_segments", "card_cycle", "card_modellab", "card_sources"].map((n) => require(`./${n}`));
 
 const SM = path.resolve(__dirname, "../../DEERE_CYCLEBOOK.SemanticModel/definition");
 const measuresFile = path.join(SM, "tables", "_Measures.tmdl");
@@ -12,11 +13,23 @@ const log = [];
 
 let text = fs.readFileSync(measuresFile, "utf8");
 const EOL = text.includes("\r\n") ? "\r\n" : "\n";
-const all = [...A.measures, ...B.measures];
+const every = [...A.measures, ...B.measures, ...cards.flatMap((c) => c.measures)];
+const all = every.filter((m) => !m.inPlace);
+
+// Model measures a card changes (inPlace) keep their place, folder and lineage tag; only the expression is swapped.
+let lines = text.split(EOL);
+for (const m of every.filter((x) => x.inPlace)) {
+  const start = lines.findIndex((l) => l.startsWith(`\tmeasure '${m.name}' =`));
+  if (start < 0) throw new Error(`in-place measure not found: ${m.name}`);
+  let end = start + 1;
+  while (end < lines.length && lines[end].startsWith("\t\t\t")) end++;
+  const expr = m.expr.trim().split(/\r?\n/).filter((l) => l.trim() !== "").map((l) => `\t\t\t${l}`);
+  lines.splice(start, end - start, `\tmeasure '${m.name}' =`, ...expr);
+  log.push(`updated in place: ${m.name}`);
+}
 
 // Remove earlier runs of these measures, keeping their lineage tags stable.
 const keepTags = {};
-let lines = text.split(EOL);
 for (const m of all) {
   const start = lines.findIndex((l) => l.startsWith(`\tmeasure '${m.name}' =`));
   if (start < 0) continue;

@@ -228,7 +228,12 @@ table _Measures
 		lineageTag: 2f69784a-eaba-4027-a918-c07f4f0d2393
 
 	/// Analyst FY2026 net-income scenario. Base equals the midpoint of current management guidance.
-	measure 'Scenario Net Income' = SELECTEDVALUE('Scenario'[Net Income],4875)
+	measure 'Scenario Net Income' =
+			VAR _base = SELECTEDVALUE('Scenario'[Net Income], 4875)
+			VAR _op = [Model Equipment Operating Profit]
+			VAR _op0 = CALCULATE([Model Equipment Operating Profit], REMOVEFILTERS('Sales Adjustment'), REMOVEFILTERS('Margin Adjustment'))
+			VAR _tax = DIVIDE(-CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 6), CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 7) - CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 6))
+			RETURN _base + (_op - _op0) * (1 - _tax)
 		formatString: $#,##0 "mm"
 		lineageTag: 59ce36ec-cf13-4d4d-b405-d58852afc079
 
@@ -567,7 +572,7 @@ table _Measures
 			RETURN
 			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='84' viewBox='0 0 1420 84' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
 			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & _l1 & "</text>"
-			        & "<text x='0' y='70' font-size='24' font-weight='bold' fill='%230E0E0C'>" & SUBSTITUTE(_l2, "%", "%25") & "</text>"
+			        & "<text x='0' y='70' font-size='22' fill='%230E0E0C'>" & SUBSTITUTE(_l2, "%", "%25") & "</text>"
 			        & "</svg>"
 		dataCategory: ImageUrl
 		displayFolder: The Stack
@@ -706,17 +711,795 @@ table _Measures
 			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='372' height='64' viewBox='0 0 372 64' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
 			        & IF(_sel = "Bear",
 			            "<rect x='5.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C' stroke='%230E0E0C' stroke-width='3'/><text x='60' y='38' text-anchor='middle' font-size='17' font-weight='bold' fill='%23F4F4F0'>Bear</text>",
-			            "<rect x='5.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C'/><rect x='1.5' y='1.5' width='109' height='53' rx='12' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='3'/><text x='56' y='34' text-anchor='middle' font-size='17' font-weight='bold' fill='%230E0E0C'>Bear</text>")
+			            "<rect x='5.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C' stroke='%230E0E0C' stroke-width='3'/><rect x='1.5' y='1.5' width='109' height='53' rx='12' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='3'/><text x='56' y='34' text-anchor='middle' font-size='17' font-weight='bold' fill='%230E0E0C'>Bear</text>")
 			        & IF(_sel = "Base",
 			            "<rect x='129.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C' stroke='%230E0E0C' stroke-width='3'/><text x='184' y='38' text-anchor='middle' font-size='17' font-weight='bold' fill='%23F4F4F0'>Base</text>",
-			            "<rect x='129.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C'/><rect x='125.5' y='1.5' width='109' height='53' rx='12' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='3'/><text x='180' y='34' text-anchor='middle' font-size='17' font-weight='bold' fill='%230E0E0C'>Base</text>")
+			            "<rect x='129.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C' stroke='%230E0E0C' stroke-width='3'/><rect x='125.5' y='1.5' width='109' height='53' rx='12' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='3'/><text x='180' y='34' text-anchor='middle' font-size='17' font-weight='bold' fill='%230E0E0C'>Base</text>")
 			        & IF(_sel = "Bull",
 			            "<rect x='253.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C' stroke='%230E0E0C' stroke-width='3'/><text x='308' y='38' text-anchor='middle' font-size='17' font-weight='bold' fill='%23F4F4F0'>Bull</text>",
-			            "<rect x='253.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C'/><rect x='249.5' y='1.5' width='109' height='53' rx='12' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='3'/><text x='304' y='34' text-anchor='middle' font-size='17' font-weight='bold' fill='%230E0E0C'>Bull</text>")
+			            "<rect x='253.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C' stroke='%230E0E0C' stroke-width='3'/><rect x='249.5' y='1.5' width='109' height='53' rx='12' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='3'/><text x='304' y='34' text-anchor='middle' font-size='17' font-weight='bold' fill='%230E0E0C'>Bull</text>")
 			        & "</svg>"
 		dataCategory: ImageUrl
 		displayFolder: The Stack
 		lineageTag: d853f741-d7b7-4ab8-a2e7-029f3ee383b3
+
+	/// The Stack: FINANCIALS card header.
+	measure 'SVG Header FINANCIALS' =
+			VAR _price = [Latest Price]
+			VAR _date = [Latest Price Date]
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='96' viewBox='0 0 1420 96' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><g fill='%230E0E0C'><rect x='0' y='8' width='10' height='10'/><rect x='10' y='8' width='10' height='10'/><rect x='20' y='8' width='10' height='10'/><rect x='30' y='8' width='10' height='10'/><rect x='40' y='8' width='10' height='10'/><rect x='0' y='18' width='10' height='10'/><rect x='0' y='28' width='10' height='10'/><rect x='0' y='38' width='10' height='10'/><rect x='10' y='38' width='10' height='10'/><rect x='20' y='38' width='10' height='10'/><rect x='30' y='38' width='10' height='10'/><rect x='0' y='48' width='10' height='10'/><rect x='0' y='58' width='10' height='10'/><rect x='0' y='68' width='10' height='10'/><rect x='70' y='8' width='10' height='10'/><rect x='80' y='8' width='10' height='10'/><rect x='90' y='8' width='10' height='10'/><rect x='80' y='18' width='10' height='10'/><rect x='80' y='28' width='10' height='10'/><rect x='80' y='38' width='10' height='10'/><rect x='80' y='48' width='10' height='10'/><rect x='80' y='58' width='10' height='10'/><rect x='70' y='68' width='10' height='10'/><rect x='80' y='68' width='10' height='10'/><rect x='90' y='68' width='10' height='10'/><rect x='120' y='8' width='10' height='10'/><rect x='160' y='8' width='10' height='10'/><rect x='120' y='18' width='10' height='10'/><rect x='160' y='18' width='10' height='10'/><rect x='120' y='28' width='10' height='10'/><rect x='130' y='28' width='10' height='10'/><rect x='160' y='28' width='10' height='10'/><rect x='120' y='38' width='10' height='10'/><rect x='140' y='38' width='10' height='10'/><rect x='160' y='38' width='10' height='10'/><rect x='120' y='48' width='10' height='10'/><rect x='150' y='48' width='10' height='10'/><rect x='160' y='48' width='10' height='10'/><rect x='120' y='58' width='10' height='10'/><rect x='160' y='58' width='10' height='10'/><rect x='120' y='68' width='10' height='10'/><rect x='160' y='68' width='10' height='10'/><rect x='190' y='8' width='10' height='10'/><rect x='200' y='8' width='10' height='10'/><rect x='210' y='8' width='10' height='10'/><rect x='180' y='18' width='10' height='10'/><rect x='220' y='18' width='10' height='10'/><rect x='180' y='28' width='10' height='10'/><rect x='220' y='28' width='10' height='10'/><rect x='180' y='38' width='10' height='10'/><rect x='190' y='38' width='10' height='10'/><rect x='200' y='38' width='10' height='10'/><rect x='210' y='38' width='10' height='10'/><rect x='220' y='38' width='10' height='10'/><rect x='180' y='48' width='10' height='10'/><rect x='220' y='48' width='10' height='10'/><rect x='180' y='58' width='10' height='10'/><rect x='220' y='58' width='10' height='10'/><rect x='180' y='68' width='10' height='10'/><rect x='220' y='68' width='10' height='10'/><rect x='240' y='8' width='10' height='10'/><rect x='280' y='8' width='10' height='10'/><rect x='240' y='18' width='10' height='10'/><rect x='280' y='18' width='10' height='10'/><rect x='240' y='28' width='10' height='10'/><rect x='250' y='28' width='10' height='10'/><rect x='280' y='28' width='10' height='10'/><rect x='240' y='38' width='10' height='10'/><rect x='260' y='38' width='10' height='10'/><rect x='280' y='38' width='10' height='10'/><rect x='240' y='48' width='10' height='10'/><rect x='270' y='48' width='10' height='10'/><rect x='280' y='48' width='10' height='10'/><rect x='240' y='58' width='10' height='10'/><rect x='280' y='58' width='10' height='10'/><rect x='240' y='68' width='10' height='10'/><rect x='280' y='68' width='10' height='10'/><rect x='310' y='8' width='10' height='10'/><rect x='320' y='8' width='10' height='10'/><rect x='330' y='8' width='10' height='10'/><rect x='300' y='18' width='10' height='10'/><rect x='340' y='18' width='10' height='10'/><rect x='300' y='28' width='10' height='10'/><rect x='300' y='38' width='10' height='10'/><rect x='300' y='48' width='10' height='10'/><rect x='300' y='58' width='10' height='10'/><rect x='340' y='58' width='10' height='10'/><rect x='310' y='68' width='10' height='10'/><rect x='320' y='68' width='10' height='10'/><rect x='330' y='68' width='10' height='10'/><rect x='370' y='8' width='10' height='10'/><rect x='380' y='8' width='10' height='10'/><rect x='390' y='8' width='10' height='10'/><rect x='380' y='18' width='10' height='10'/><rect x='380' y='28' width='10' height='10'/><rect x='380' y='38' width='10' height='10'/><rect x='380' y='48' width='10' height='10'/><rect x='380' y='58' width='10' height='10'/><rect x='370' y='68' width='10' height='10'/><rect x='380' y='68' width='10' height='10'/><rect x='390' y='68' width='10' height='10'/><rect x='430' y='8' width='10' height='10'/><rect x='440' y='8' width='10' height='10'/><rect x='450' y='8' width='10' height='10'/><rect x='420' y='18' width='10' height='10'/><rect x='460' y='18' width='10' height='10'/><rect x='420' y='28' width='10' height='10'/><rect x='460' y='28' width='10' height='10'/><rect x='420' y='38' width='10' height='10'/><rect x='430' y='38' width='10' height='10'/><rect x='440' y='38' width='10' height='10'/><rect x='450' y='38' width='10' height='10'/><rect x='460' y='38' width='10' height='10'/><rect x='420' y='48' width='10' height='10'/><rect x='460' y='48' width='10' height='10'/><rect x='420' y='58' width='10' height='10'/><rect x='460' y='58' width='10' height='10'/><rect x='420' y='68' width='10' height='10'/><rect x='460' y='68' width='10' height='10'/><rect x='480' y='8' width='10' height='10'/><rect x='480' y='18' width='10' height='10'/><rect x='480' y='28' width='10' height='10'/><rect x='480' y='38' width='10' height='10'/><rect x='480' y='48' width='10' height='10'/><rect x='480' y='58' width='10' height='10'/><rect x='480' y='68' width='10' height='10'/><rect x='490' y='68' width='10' height='10'/><rect x='500' y='68' width='10' height='10'/><rect x='510' y='68' width='10' height='10'/><rect x='520' y='68' width='10' height='10'/><rect x='550' y='8' width='10' height='10'/><rect x='560' y='8' width='10' height='10'/><rect x='570' y='8' width='10' height='10'/><rect x='580' y='8' width='10' height='10'/><rect x='540' y='18' width='10' height='10'/><rect x='540' y='28' width='10' height='10'/><rect x='550' y='38' width='10' height='10'/><rect x='560' y='38' width='10' height='10'/><rect x='570' y='38' width='10' height='10'/><rect x='580' y='48' width='10' height='10'/><rect x='580' y='58' width='10' height='10'/><rect x='540' y='68' width='10' height='10'/><rect x='550' y='68' width='10' height='10'/><rect x='560' y='68' width='10' height='10'/><rect x='570' y='68' width='10' height='10'/></g>"
+			        & "<text x='1420' y='36' text-anchor='end' font-size='16' font-weight='bold' fill='%230E0E0C'>Deere &amp; Company &%23183; NYSE: DE</text>"
+			        & "<text x='1420' y='62' text-anchor='end' font-size='15' fill='%230E0E0C'>Close " & FORMAT(_price, "$#,##0.00") & " on " & FORMAT(_date, "d mmm yyyy") & " &%23183; reported through " & [Latest Period Label] & "</text>"
+			        & "<rect x='0' y='86' width='1420' height='4' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 3c2b8d42-dff0-4c88-a6c9-662e94c04597
+
+	/// The Stack: FINANCIALS finding, year-to-date sales and net income against a year earlier, then the peak and guidance.
+	measure 'SVG Financials Finding' =
+			VAR _k = [Latest Period Key]
+			VAR _fy = INT(_k / 100)
+			VAR _q = MOD(_k, 100)
+			VAR _ni = CALCULATE(SUM('Quarterly Financials'[Net Income]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 0, 'Quarterly Financials'[Period Key] <= _k - 0)
+			VAR _niP = CALCULATE(SUM('Quarterly Financials'[Net Income]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 1, 'Quarterly Financials'[Period Key] <= _k - 100)
+			VAR _rev = CALCULATE(SUM('Quarterly Financials'[Net Sales & Revenues]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 0, 'Quarterly Financials'[Period Key] <= _k - 0)
+			VAR _revP = CALCULATE(SUM('Quarterly Financials'[Net Sales & Revenues]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 1, 'Quarterly Financials'[Period Key] <= _k - 100)
+			VAR _eps = CALCULATE(SUM('Quarterly Financials'[Diluted EPS]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 0, 'Quarterly Financials'[Period Key] <= _k - 0)
+			VAR _peak = CALCULATE(MAX('Annual Financials'[Net Income]), REMOVEFILTERS('Annual Financials'))
+			VAR _peakYr = CALCULATE(MAX('Annual Financials'[Fiscal Year]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Net Income] = _peak)
+			VAR _lastYr = CALCULATE(MAX('Annual Financials'[Fiscal Year]), REMOVEFILTERS('Annual Financials'))
+			VAR _lastNi = CALCULATE(SUM('Annual Financials'[Net Income]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Fiscal Year] = _lastYr)
+			VAR _lastEps = CALCULATE(SUM('Annual Financials'[Diluted EPS]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Fiscal Year] = _lastYr)
+			VAR _peakEps = CALCULATE(SUM('Annual Financials'[Diluted EPS]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Fiscal Year] = _peakYr)
+			VAR _lastQ4 = CALCULATE(SUM('Quarterly Financials'[Net Income]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Period Key] = _lastYr * 100 + 4)
+			VAR _gLo = 4750
+			VAR _gHi = 5000
+			VAR _thru = "FY" & _fy & " through Q" & _q
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='84' viewBox='0 0 1420 84' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
+			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & "Through Q" & _q & ", fiscal " & _fy & " sales are " & IF(DIVIDE(_rev, _revP) - 1 >= 0, "up ", "down ") & SUBSTITUTE(FORMAT(ABS(DIVIDE(_rev, _revP) - 1), "0%"), "%", "%25") & " on a year earlier and net income is " & IF(DIVIDE(_ni, _niP) - 1 >= 0, "up ", "down ") & SUBSTITUTE(FORMAT(ABS(DIVIDE(_ni, _niP) - 1), "0%"), "%", "%25") & "." & "</text>"
+			        & "<text x='0' y='70' font-size='22' fill='%230E0E0C'>" & "Net income peaked at " & FORMAT(_peak / 1000, "$0.00") & "B in FY" & _peakYr & "; FY" & _fy & " guidance of $4.75B-5.00B " & IF(_gHi < _lastNi, "is below", IF(_gLo > _lastNi, "is above", "brackets")) & " FY" & _lastYr & "'s " & FORMAT(_lastNi / 1000, "$0.00") & "B." & "</text>"
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: c90974e9-1a5f-4709-b50f-8c476a1a1e6b
+
+	/// The Stack: net income by fiscal year with the current year to date, what Q4 still needs, and the guidance range.
+	measure 'SVG Financials Exhibit' =
+			VAR _k = [Latest Period Key]
+			VAR _fy = INT(_k / 100)
+			VAR _q = MOD(_k, 100)
+			VAR _ni = CALCULATE(SUM('Quarterly Financials'[Net Income]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 0, 'Quarterly Financials'[Period Key] <= _k - 0)
+			VAR _niP = CALCULATE(SUM('Quarterly Financials'[Net Income]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 1, 'Quarterly Financials'[Period Key] <= _k - 100)
+			VAR _rev = CALCULATE(SUM('Quarterly Financials'[Net Sales & Revenues]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 0, 'Quarterly Financials'[Period Key] <= _k - 0)
+			VAR _revP = CALCULATE(SUM('Quarterly Financials'[Net Sales & Revenues]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 1, 'Quarterly Financials'[Period Key] <= _k - 100)
+			VAR _eps = CALCULATE(SUM('Quarterly Financials'[Diluted EPS]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 0, 'Quarterly Financials'[Period Key] <= _k - 0)
+			VAR _peak = CALCULATE(MAX('Annual Financials'[Net Income]), REMOVEFILTERS('Annual Financials'))
+			VAR _peakYr = CALCULATE(MAX('Annual Financials'[Fiscal Year]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Net Income] = _peak)
+			VAR _lastYr = CALCULATE(MAX('Annual Financials'[Fiscal Year]), REMOVEFILTERS('Annual Financials'))
+			VAR _lastNi = CALCULATE(SUM('Annual Financials'[Net Income]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Fiscal Year] = _lastYr)
+			VAR _lastEps = CALCULATE(SUM('Annual Financials'[Diluted EPS]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Fiscal Year] = _lastYr)
+			VAR _peakEps = CALCULATE(SUM('Annual Financials'[Diluted EPS]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Fiscal Year] = _peakYr)
+			VAR _lastQ4 = CALCULATE(SUM('Quarterly Financials'[Net Income]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Period Key] = _lastYr * 100 + 4)
+			VAR _gLo = 4750
+			VAR _gHi = 5000
+			VAR _thru = "FY" & _fy & " through Q" & _q
+			VAR _y0 = MINX(ALL('Annual Financials'), 'Annual Financials'[Fiscal Year])
+			VAR _cx = 153 + (_fy - _y0) * 166
+			VAR _top = ROUND(470 - (_ni) / 1000 * 36.36, 1)
+			VAR _gTop = ROUND(470 - (_gHi) / 1000 * 36.36, 1)
+			VAR _gBot = ROUND(470 - (_gLo) / 1000 * 36.36, 1)
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='960' height='620' viewBox='0 0 960 620' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><text x='0' y='22' font-size='16' font-weight='bold' fill='%230E0E0C'>Net income by fiscal year, against FY2026 guidance</text><g font-size='13' fill='%230E0E0C'><rect x='0' y='35' width='14' height='14' fill='%230E0E0C'/><text x='22' y='47'>Reported</text><rect x='120' y='36' width='13' height='13' fill='none' stroke='%230E0E0C' stroke-width='2' stroke-dasharray='4 3'/><text x='142' y='47'>Still to earn in Q4 to reach guidance</text><rect x='430' y='35' width='14' height='14' fill='%23367C2B'/><text x='452' y='47'>Management guidance</text></g><line x1='70' y1='397.28' x2='900' y2='397.28' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='402.28' text-anchor='end' font-size='13' fill='%230E0E0C'>$2B</text><line x1='70' y1='324.56' x2='900' y2='324.56' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='329.56' text-anchor='end' font-size='13' fill='%230E0E0C'>$4B</text><line x1='70' y1='251.84' x2='900' y2='251.84' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='256.84000000000003' text-anchor='end' font-size='13' fill='%230E0E0C'>$6B</text><line x1='70' y1='179.12' x2='900' y2='179.12' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='184.12' text-anchor='end' font-size='13' fill='%230E0E0C'>$8B</text><line x1='70' y1='106.39999999999998' x2='900' y2='106.39999999999998' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='111.39999999999998' text-anchor='end' font-size='13' fill='%230E0E0C'>$10B</text><rect x='70' y='469' width='830' height='3' fill='%230E0E0C'/><rect x='0' y='508' width='960' height='3' fill='%230E0E0C'/><rect x='0' y='546' width='960' height='1' fill='%230E0E0C'/><rect x='0' y='580' width='960' height='2' fill='%230E0E0C'/><g font-size='14' font-weight='bold' fill='%230E0E0C'><text x='0' y='533'>Sales</text><text x='0' y='569'>EPS</text></g>"
+			        & CONCATENATEX(ALL('Annual Financials'),
+			            VAR _x = 153 + ('Annual Financials'[Fiscal Year] - _y0) * 166
+			            VAR _t = ROUND(470 - ('Annual Financials'[Net Income]) / 1000 * 36.36, 1)
+			            RETURN
+			                "<rect x='" & (_x - 50) & "' y='" & _t & "' width='100' height='" & (470 - _t) & "' fill='%230E0E0C'/>"
+			                & "<text x='" & _x & "' y='" & (_t - 10) & "' text-anchor='middle' font-size='15' font-weight='bold' fill='%230E0E0C'>" & FORMAT('Annual Financials'[Net Income] / 1000, "$0.00") & "B</text>"
+			                & "<text x='" & _x & "' y='496' text-anchor='middle' font-size='14' font-weight='bold' fill='%230E0E0C'>FY" & 'Annual Financials'[Fiscal Year] & "</text>"
+			                & "<text x='" & _x & "' y='533' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & FORMAT('Annual Financials'[Net Sales & Revenues] / 1000, "$0.0") & "B</text>"
+			                & "<text x='" & _x & "' y='569' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & FORMAT('Annual Financials'[Diluted EPS], "$0.00") & "</text>",
+			            "", 'Annual Financials'[Fiscal Year], ASC)
+			        & "<rect x='" & (_cx - 50) & "' y='" & _top & "' width='100' height='" & (470 - _top) & "' fill='%230E0E0C'/>"
+			        & "<text x='" & _cx & "' y='" & (_top + 24) & "' text-anchor='middle' font-size='15' font-weight='bold' fill='%23F4F4F0'>" & FORMAT(_ni / 1000, "$0.00") & "B</text>"
+			        & "<text x='" & _cx & "' y='" & (_top + 42) & "' text-anchor='middle' font-size='12' fill='%23F4F4F0'>to Q" & _q & "</text>"
+			        & "<rect x='" & (_cx - 49) & "' y='" & _gBot & "' width='98' height='" & (_top - _gBot) & "' fill='none' stroke='%230E0E0C' stroke-width='2' stroke-dasharray='6 4'/>"
+			        & "<rect x='" & (_cx - 50) & "' y='" & _gTop & "' width='100' height='" & (_gBot - _gTop) & "' fill='%23367C2B'/>"
+			        & "<rect x='" & (_cx - 90) & "' y='" & (_gTop - 46) & "' width='180' height='40' fill='%23F4F4F0'/>"
+			        & "<text x='" & _cx & "' y='" & (_gTop - 30) & "' text-anchor='middle' font-size='13' font-weight='bold' fill='%23367C2B'>Guidance $4.75B-5.00B</text>"
+			        & "<text x='" & _cx & "' y='" & (_gTop - 12) & "' text-anchor='middle' font-size='13' fill='%230E0E0C'>Q4 needs " & FORMAT((_gLo - _ni) / 1000, "$0.00") & "B-" & FORMAT((_gHi - _ni) / 1000, "0.00") & "B</text>"
+			        & "<text x='" & _cx & "' y='496' text-anchor='middle' font-size='14' font-weight='bold' fill='%230E0E0C'>FY" & _fy & "</text>"
+			        & "<text x='" & _cx & "' y='533' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & FORMAT(_rev / 1000, "$0.0") & "B to Q" & _q & "</text>"
+			        & "<text x='" & _cx & "' y='569' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & FORMAT(_eps, "$0.00") & " to Q" & _q & "</text>"
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 99db969e-944f-4828-a343-7d920770e5ee
+
+	/// The Stack: FINANCIALS ledger of year-to-date actuals, prior years and guidance.
+	measure 'SVG Financials Ledger' =
+			VAR _k = [Latest Period Key]
+			VAR _fy = INT(_k / 100)
+			VAR _q = MOD(_k, 100)
+			VAR _ni = CALCULATE(SUM('Quarterly Financials'[Net Income]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 0, 'Quarterly Financials'[Period Key] <= _k - 0)
+			VAR _niP = CALCULATE(SUM('Quarterly Financials'[Net Income]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 1, 'Quarterly Financials'[Period Key] <= _k - 100)
+			VAR _rev = CALCULATE(SUM('Quarterly Financials'[Net Sales & Revenues]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 0, 'Quarterly Financials'[Period Key] <= _k - 0)
+			VAR _revP = CALCULATE(SUM('Quarterly Financials'[Net Sales & Revenues]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 1, 'Quarterly Financials'[Period Key] <= _k - 100)
+			VAR _eps = CALCULATE(SUM('Quarterly Financials'[Diluted EPS]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Fiscal Year] = _fy - 0, 'Quarterly Financials'[Period Key] <= _k - 0)
+			VAR _peak = CALCULATE(MAX('Annual Financials'[Net Income]), REMOVEFILTERS('Annual Financials'))
+			VAR _peakYr = CALCULATE(MAX('Annual Financials'[Fiscal Year]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Net Income] = _peak)
+			VAR _lastYr = CALCULATE(MAX('Annual Financials'[Fiscal Year]), REMOVEFILTERS('Annual Financials'))
+			VAR _lastNi = CALCULATE(SUM('Annual Financials'[Net Income]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Fiscal Year] = _lastYr)
+			VAR _lastEps = CALCULATE(SUM('Annual Financials'[Diluted EPS]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Fiscal Year] = _lastYr)
+			VAR _peakEps = CALCULATE(SUM('Annual Financials'[Diluted EPS]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Fiscal Year] = _peakYr)
+			VAR _lastQ4 = CALCULATE(SUM('Quarterly Financials'[Net Income]), REMOVEFILTERS('Quarterly Financials'), REMOVEFILTERS('Period'), 'Quarterly Financials'[Period Key] = _lastYr * 100 + 4)
+			VAR _gLo = 4750
+			VAR _gHi = 5000
+			VAR _thru = "FY" & _fy & " through Q" & _q
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='440' height='572' viewBox='0 0 440 572' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			        & "<rect x='0' y='0' width='440' height='3' fill='%230E0E0C'/><rect x='0' y='38' width='54' height='16' fill='%230E0E0C'/><text x='27' y='50' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='26' font-size='15' font-weight='bold' fill='%230E0E0C'>" & "Net income, " & _thru & "</text>"
+			        & "<text x='62' y='51' font-size='13' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_ni, _niP) - 1, "+0%;-0%;0%"), "%", "%25") & " vs the same quarters of FY" & (_fy - 1) & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptfl0 = "$" & FORMAT(_ni, "#,##0") & "M"
+			        VAR _pxfl0 = (440 - (LEN("$" & FORMAT(_ni, "#,##0") & "M") * 30 - 5))
+			        VAR _pyfl0 = 66
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptfl0), 1), "cifl0", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptfl0, [cifl0], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellfl0", [Value]), MID(_bits, [cellfl0] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxfl0 + ([cifl0] - 1) * 30 + MOD([cellfl0], 5) * 5) & "' y='" & (_pyfl0 + INT([cellfl0] / 5) * 5) & "' width='5' height='5'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<rect x='0' y='112' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='146' width='54' height='16' fill='%230E0E0C'/><text x='27' y='158' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='136' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Net sales and revenues, " & _thru & "</text>"
+			        & "<text x='62' y='159' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_rev, _revP) - 1, "+0%;-0%;0%"), "%", "%25") & " vs a year earlier" & "</text>"
+			        & "<text x='440' y='157' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_rev, "#,##0") & "M" & "</text>"
+			        & "<rect x='0' y='188' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='222' width='54' height='16' fill='%230E0E0C'/><text x='27' y='234' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='212' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Net margin, " & _thru & "</text>"
+			        & "<text x='62' y='235' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_niP, _revP), "0.0%"), "%", "%25") & " a year earlier" & "</text>"
+			        & "<text x='440' y='233' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_ni, _rev), "0.0%"), "%", "%25") & "</text>"
+			        & "<rect x='0' y='264' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='298' width='54' height='16' fill='%230E0E0C'/><text x='27' y='310' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='288' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Net income, FY" & _lastYr & "</text>"
+			        & "<text x='62' y='311' font-size='12' fill='%230E0E0C'>" & "Diluted EPS " & FORMAT(_lastEps, "$0.00") & "</text>"
+			        & "<text x='440' y='309' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_lastNi, "#,##0") & "M" & "</text>"
+			        & "<rect x='0' y='340' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='374' width='54' height='16' fill='%230E0E0C'/><text x='27' y='386' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='364' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Net income, FY" & _peakYr & " record" & "</text>"
+			        & "<text x='62' y='387' font-size='12' fill='%230E0E0C'>" & "Diluted EPS " & FORMAT(_peakEps, "$0.00") & "</text>"
+			        & "<text x='440' y='385' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_peak, "#,##0") & "M" & "</text>"
+			        & "<rect x='0' y='416' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='450' width='72' height='16' fill='%23367C2B'/><text x='36' y='462' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>GUIDANCE</text>"
+			        & "<text x='0' y='440' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Net income guidance, FY" & _fy & "</text>"
+			        & "<text x='80' y='463' font-size='12' fill='%230E0E0C'>" & "Management range" & "</text>"
+			        & "<text x='440' y='461' text-anchor='end' font-size='22' font-weight='bold' fill='%23367C2B'>" & "$4.75B-5.00B" & "</text>"
+			        & "<rect x='0' y='492' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='526' width='72' height='16' fill='%23367C2B'/><text x='36' y='538' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>GUIDANCE</text>"
+			        & "<text x='0' y='516' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Q4 net income implied by guidance" & "</text>"
+			        & "<text x='80' y='539' font-size='12' fill='%230E0E0C'>" & "Q4 FY" & _lastYr & ": $" & FORMAT(_lastQ4, "#,##0") & "M" & "</text>"
+			        & "<text x='440' y='537' text-anchor='end' font-size='22' font-weight='bold' fill='%23367C2B'>" & "$" & FORMAT(_gLo - _ni, "#,##0") & "M-" & FORMAT(_gHi - _ni, "#,##0") & "M" & "</text>"
+			        & "<rect x='0' y='569' width='440' height='2' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: a1baf714-1981-41bd-b48f-cea8162e2b5a
+
+	/// The Stack: SEGMENTS card header.
+	measure 'SVG Header SEGMENTS' =
+			VAR _price = [Latest Price]
+			VAR _date = [Latest Price Date]
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='96' viewBox='0 0 1420 96' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><g fill='%230E0E0C'><rect x='10' y='8' width='10' height='10'/><rect x='20' y='8' width='10' height='10'/><rect x='30' y='8' width='10' height='10'/><rect x='40' y='8' width='10' height='10'/><rect x='0' y='18' width='10' height='10'/><rect x='0' y='28' width='10' height='10'/><rect x='10' y='38' width='10' height='10'/><rect x='20' y='38' width='10' height='10'/><rect x='30' y='38' width='10' height='10'/><rect x='40' y='48' width='10' height='10'/><rect x='40' y='58' width='10' height='10'/><rect x='0' y='68' width='10' height='10'/><rect x='10' y='68' width='10' height='10'/><rect x='20' y='68' width='10' height='10'/><rect x='30' y='68' width='10' height='10'/><rect x='60' y='8' width='10' height='10'/><rect x='70' y='8' width='10' height='10'/><rect x='80' y='8' width='10' height='10'/><rect x='90' y='8' width='10' height='10'/><rect x='100' y='8' width='10' height='10'/><rect x='60' y='18' width='10' height='10'/><rect x='60' y='28' width='10' height='10'/><rect x='60' y='38' width='10' height='10'/><rect x='70' y='38' width='10' height='10'/><rect x='80' y='38' width='10' height='10'/><rect x='90' y='38' width='10' height='10'/><rect x='60' y='48' width='10' height='10'/><rect x='60' y='58' width='10' height='10'/><rect x='60' y='68' width='10' height='10'/><rect x='70' y='68' width='10' height='10'/><rect x='80' y='68' width='10' height='10'/><rect x='90' y='68' width='10' height='10'/><rect x='100' y='68' width='10' height='10'/><rect x='130' y='8' width='10' height='10'/><rect x='140' y='8' width='10' height='10'/><rect x='150' y='8' width='10' height='10'/><rect x='120' y='18' width='10' height='10'/><rect x='160' y='18' width='10' height='10'/><rect x='120' y='28' width='10' height='10'/><rect x='120' y='38' width='10' height='10'/><rect x='140' y='38' width='10' height='10'/><rect x='150' y='38' width='10' height='10'/><rect x='160' y='38' width='10' height='10'/><rect x='120' y='48' width='10' height='10'/><rect x='160' y='48' width='10' height='10'/><rect x='120' y='58' width='10' height='10'/><rect x='160' y='58' width='10' height='10'/><rect x='130' y='68' width='10' height='10'/><rect x='140' y='68' width='10' height='10'/><rect x='150' y='68' width='10' height='10'/><rect x='160' y='68' width='10' height='10'/><rect x='180' y='8' width='10' height='10'/><rect x='220' y='8' width='10' height='10'/><rect x='180' y='18' width='10' height='10'/><rect x='190' y='18' width='10' height='10'/><rect x='210' y='18' width='10' height='10'/><rect x='220' y='18' width='10' height='10'/><rect x='180' y='28' width='10' height='10'/><rect x='200' y='28' width='10' height='10'/><rect x='220' y='28' width='10' height='10'/><rect x='180' y='38' width='10' height='10'/><rect x='200' y='38' width='10' height='10'/><rect x='220' y='38' width='10' height='10'/><rect x='180' y='48' width='10' height='10'/><rect x='220' y='48' width='10' height='10'/><rect x='180' y='58' width='10' height='10'/><rect x='220' y='58' width='10' height='10'/><rect x='180' y='68' width='10' height='10'/><rect x='220' y='68' width='10' height='10'/><rect x='240' y='8' width='10' height='10'/><rect x='250' y='8' width='10' height='10'/><rect x='260' y='8' width='10' height='10'/><rect x='270' y='8' width='10' height='10'/><rect x='280' y='8' width='10' height='10'/><rect x='240' y='18' width='10' height='10'/><rect x='240' y='28' width='10' height='10'/><rect x='240' y='38' width='10' height='10'/><rect x='250' y='38' width='10' height='10'/><rect x='260' y='38' width='10' height='10'/><rect x='270' y='38' width='10' height='10'/><rect x='240' y='48' width='10' height='10'/><rect x='240' y='58' width='10' height='10'/><rect x='240' y='68' width='10' height='10'/><rect x='250' y='68' width='10' height='10'/><rect x='260' y='68' width='10' height='10'/><rect x='270' y='68' width='10' height='10'/><rect x='280' y='68' width='10' height='10'/><rect x='300' y='8' width='10' height='10'/><rect x='340' y='8' width='10' height='10'/><rect x='300' y='18' width='10' height='10'/><rect x='340' y='18' width='10' height='10'/><rect x='300' y='28' width='10' height='10'/><rect x='310' y='28' width='10' height='10'/><rect x='340' y='28' width='10' height='10'/><rect x='300' y='38' width='10' height='10'/><rect x='320' y='38' width='10' height='10'/><rect x='340' y='38' width='10' height='10'/><rect x='300' y='48' width='10' height='10'/><rect x='330' y='48' width='10' height='10'/><rect x='340' y='48' width='10' height='10'/><rect x='300' y='58' width='10' height='10'/><rect x='340' y='58' width='10' height='10'/><rect x='300' y='68' width='10' height='10'/><rect x='340' y='68' width='10' height='10'/><rect x='360' y='8' width='10' height='10'/><rect x='370' y='8' width='10' height='10'/><rect x='380' y='8' width='10' height='10'/><rect x='390' y='8' width='10' height='10'/><rect x='400' y='8' width='10' height='10'/><rect x='380' y='18' width='10' height='10'/><rect x='380' y='28' width='10' height='10'/><rect x='380' y='38' width='10' height='10'/><rect x='380' y='48' width='10' height='10'/><rect x='380' y='58' width='10' height='10'/><rect x='380' y='68' width='10' height='10'/><rect x='430' y='8' width='10' height='10'/><rect x='440' y='8' width='10' height='10'/><rect x='450' y='8' width='10' height='10'/><rect x='460' y='8' width='10' height='10'/><rect x='420' y='18' width='10' height='10'/><rect x='420' y='28' width='10' height='10'/><rect x='430' y='38' width='10' height='10'/><rect x='440' y='38' width='10' height='10'/><rect x='450' y='38' width='10' height='10'/><rect x='460' y='48' width='10' height='10'/><rect x='460' y='58' width='10' height='10'/><rect x='420' y='68' width='10' height='10'/><rect x='430' y='68' width='10' height='10'/><rect x='440' y='68' width='10' height='10'/><rect x='450' y='68' width='10' height='10'/></g>"
+			        & "<text x='1420' y='36' text-anchor='end' font-size='16' font-weight='bold' fill='%230E0E0C'>Deere &amp; Company &%23183; NYSE: DE</text>"
+			        & "<text x='1420' y='62' text-anchor='end' font-size='15' fill='%230E0E0C'>Close " & FORMAT(_price, "$#,##0.00") & " on " & FORMAT(_date, "d mmm yyyy") & " &%23183; reported through " & [Latest Period Label] & "</text>"
+			        & "<rect x='0' y='86' width='1420' height='4' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: eda2761e-4aa6-4f99-8eca-3ce745c81060
+
+	/// The Stack: SEGMENTS finding, which segment earns more this fiscal year, then year-to-date profit against the peak-year mix.
+	measure 'SVG Segments Finding' =
+			VAR _k = [Latest Period Key]
+			VAR _fy = INT(_k / 100)
+			VAR _q = MOD(_k, 100)
+			VAR _ppa = CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 1)
+			VAR _sat = CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 2)
+			VAR _cf = CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 3)
+			VAR _prior = CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "PPA", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100) + CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "SAT", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100) + CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "CF", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100)
+			VAR _quarters = FILTER(ALL('Period'[Period Key]), 'Period'[Period Key] > _fy * 100 && 'Period'[Period Key] <= _k)
+			VAR _satAhead = COUNTROWS(FILTER(_quarters, LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT") > LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA")))
+			VAR _peakYr = [Peak EPS Year]
+			VAR _peakPpa = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = _peakYr, 'Annual Segments'[Segment Code] = "PPA")
+			VAR _peakAll = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = _peakYr)
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='84' viewBox='0 0 1420 84' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
+			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & IF(_satAhead = _q, "Small ag and turf has out-earned large ag in every quarter of fiscal " & _fy & " so far.", "Small ag and turf out-earned large ag in " & _satAhead & " of " & _q & " quarters of fiscal " & _fy & ".") & "</text>"
+			        & "<text x='0' y='70' font-size='22' fill='%230E0E0C'>" & "Operating profit through Q" & _q & ": SAT $" & FORMAT(_sat, "#,##0") & "M, PPA $" & FORMAT(_ppa, "#,##0") & "M, C&amp;F $" & FORMAT(_cf, "#,##0") & "M. In FY" & _peakYr & ", PPA earned $" & FORMAT(_peakPpa, "#,##0") & "M, " & SUBSTITUTE(FORMAT(DIVIDE(_peakPpa, _peakAll), "0%"), "%", "%25") & " of the total." & "</text>"
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: f5ce2075-487d-4e88-ad22-8b28c7e04db6
+
+	/// The Stack: segment operating profit by quarter over the last eleven quarters.
+	measure 'SVG Segments Exhibit' =
+			VAR _k = [Latest Period Key]
+			VAR _fy = INT(_k / 100)
+			VAR _q = MOD(_k, 100)
+			VAR _ppa = CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 1)
+			VAR _sat = CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 2)
+			VAR _cf = CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 3)
+			VAR _prior = CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "PPA", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100) + CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "SAT", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100) + CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "CF", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100)
+			VAR _quarters = FILTER(ALL('Period'[Period Key]), 'Period'[Period Key] > _fy * 100 && 'Period'[Period Key] <= _k)
+			VAR _satAhead = COUNTROWS(FILTER(_quarters, LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT") > LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA")))
+			VAR _peakYr = [Peak EPS Year]
+			VAR _peakPpa = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = _peakYr, 'Annual Segments'[Segment Code] = "PPA")
+			VAR _peakAll = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = _peakYr)
+			VAR _last = TOPN(11, ALL('Period'[Period Key], 'Period'[Period Sort], 'Period'[Fiscal Year], 'Period'[Fiscal Quarter]), 'Period'[Period Sort], DESC)
+			VAR _minSort = MINX(_last, 'Period'[Period Sort])
+			VAR _pts = ADDCOLUMNS(_last, "@x", 70 + ('Period'[Period Sort] - _minSort) * 75)
+			VAR _x0 = MINX(FILTER(_pts, 'Period'[Fiscal Year] = _fy), [@x])
+			VAR _vPPA = LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], _k, 'Quarterly Segments'[Segment Code], "PPA")
+			VAR _vSAT = LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], _k, 'Quarterly Segments'[Segment Code], "SAT")
+			VAR _vCF = LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], _k, 'Quarterly Segments'[Segment Code], "CF")
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='960' height='620' viewBox='0 0 960 620' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><text x='0' y='22' font-size='16' font-weight='bold' fill='%230E0E0C'>Segment operating profit by quarter</text><g fill='none' stroke='%230E0E0C'><line x1='0' y1='44' x2='34' y2='44' stroke-width='5'/><line x1='270' y1='44' x2='304' y2='44' stroke-width='3' stroke-dasharray='14 7'/><line x1='510' y1='44' x2='544' y2='44' stroke-width='3' stroke-dasharray='4 6'/></g><g font-size='13' fill='%230E0E0C'><text x='42' y='49'>PPA Production &amp; Precision Ag</text><text x='312' y='49'>SAT Small Ag &amp; Turf</text><text x='552' y='49'>C&amp;F Construction &amp; Forestry</text></g><line x1='70' y1='396.1' x2='820' y2='396.1' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='401.1' text-anchor='end' font-size='13' fill='%230E0E0C'>$0.5B</text><line x1='70' y1='282.2' x2='820' y2='282.2' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='287.2' text-anchor='end' font-size='13' fill='%230E0E0C'>$1.0B</text><line x1='70' y1='168.3' x2='820' y2='168.3' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='173.3' text-anchor='end' font-size='13' fill='%230E0E0C'>$1.5B</text><rect x='70' y='509' width='750' height='3' fill='%230E0E0C'/><text x='60' y='515' text-anchor='end' font-size='13' fill='%230E0E0C'>$0</text>"
+			        & "<polyline fill='none' stroke='%230E0E0C' stroke-width='5' points='" & CONCATENATEX(_pts, [@x] & "," & ROUND(MAX(100, MIN(510, 510 - (LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA")) * 0.2278)), 1), " ", [@x], ASC) & "'/>"
+			        & CONCATENATEX(_pts, "<rect x='" & ([@x] - 4) & "' y='" & (ROUND(MAX(100, MIN(510, 510 - (LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA")) * 0.2278)), 1) - 4) & "' width='8' height='8' fill='%230E0E0C'/>", "")
+			        & "<text x='834' y='" & (ROUND(MAX(100, MIN(510, 510 - (_vPPA) * 0.2278)), 1) + 5) & "' font-size='15' font-weight='bold' fill='%230E0E0C'>PPA $" & FORMAT(_vPPA, "#,##0") & "M</text>"
+			        & "<polyline fill='none' stroke='%230E0E0C' stroke-width='3' stroke-dasharray='14 7' points='" & CONCATENATEX(_pts, [@x] & "," & ROUND(MAX(100, MIN(510, 510 - (LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT")) * 0.2278)), 1), " ", [@x], ASC) & "'/>"
+			        & CONCATENATEX(_pts, "<rect x='" & ([@x] - 4) & "' y='" & (ROUND(MAX(100, MIN(510, 510 - (LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT")) * 0.2278)), 1) - 4) & "' width='8' height='8' fill='%230E0E0C'/>", "")
+			        & "<text x='834' y='" & (ROUND(MAX(100, MIN(510, 510 - (_vSAT) * 0.2278)), 1) + 5) & "' font-size='15' font-weight='bold' fill='%230E0E0C'>SAT $" & FORMAT(_vSAT, "#,##0") & "M</text>"
+			        & "<polyline fill='none' stroke='%230E0E0C' stroke-width='3' stroke-dasharray='4 6' points='" & CONCATENATEX(_pts, [@x] & "," & ROUND(MAX(100, MIN(510, 510 - (LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "CF")) * 0.2278)), 1), " ", [@x], ASC) & "'/>"
+			        & CONCATENATEX(_pts, "<rect x='" & ([@x] - 4) & "' y='" & (ROUND(MAX(100, MIN(510, 510 - (LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "CF")) * 0.2278)), 1) - 4) & "' width='8' height='8' fill='%230E0E0C'/>", "")
+			        & "<text x='834' y='" & (ROUND(MAX(100, MIN(510, 510 - (_vCF) * 0.2278)), 1) + 5) & "' font-size='15' font-weight='bold' fill='%230E0E0C'>C&amp;F $" & FORMAT(_vCF, "#,##0") & "M</text>"
+			        & CONCATENATEX(FILTER(_pts, 'Period'[Fiscal Quarter] = "Q1" && [@x] > 70), "<line x1='" & ([@x] - 37.5) & "' y1='100' x2='" & ([@x] - 37.5) & "' y2='580' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/>", "")
+			        & CONCATENATEX(_pts, "<text x='" & [@x] & "' y='536' text-anchor='middle' font-size='13' fill='%230E0E0C'>" & 'Period'[Fiscal Quarter] & "</text>", "", [@x], ASC)
+			        & CONCATENATEX(DISTINCT(SELECTCOLUMNS(_pts, "@fy", 'Period'[Fiscal Year])), VAR _f = [@fy] RETURN "<text x='" & AVERAGEX(FILTER(_pts, 'Period'[Fiscal Year] = _f), [@x]) & "' y='562' text-anchor='middle' font-size='14' font-weight='bold' fill='%230E0E0C'>FY" & _f & "</text>", "")
+			        & IF(_satAhead = _q, "<rect x='" & (_x0 - 10) & "' y='76' width='" & (MAXX(_pts, [@x]) - _x0 + 20) & "' height='3' fill='%230E0E0C'/><rect x='" & (_x0 - 10) & "' y='76' width='3' height='12' fill='%230E0E0C'/><rect x='" & (MAXX(_pts, [@x]) + 7) & "' y='76' width='3' height='12' fill='%230E0E0C'/><text x='" & (MAXX(_pts, [@x]) + 10) & "' y='70' text-anchor='end' font-size='14' font-weight='bold' fill='%230E0E0C'>SAT above PPA every quarter</text>", "")
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 4c33508d-707b-4047-883d-7327f6e03c1b
+
+	/// The Stack: SEGMENTS ledger of year-to-date segment profit and the FY2026 sales outlook.
+	measure 'SVG Segments Ledger' =
+			VAR _k = [Latest Period Key]
+			VAR _fy = INT(_k / 100)
+			VAR _q = MOD(_k, 100)
+			VAR _ppa = CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 1)
+			VAR _sat = CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 2)
+			VAR _cf = CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 3)
+			VAR _prior = CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "PPA", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100) + CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "SAT", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100) + CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "CF", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100)
+			VAR _quarters = FILTER(ALL('Period'[Period Key]), 'Period'[Period Key] > _fy * 100 && 'Period'[Period Key] <= _k)
+			VAR _satAhead = COUNTROWS(FILTER(_quarters, LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT") > LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA")))
+			VAR _peakYr = [Peak EPS Year]
+			VAR _peakPpa = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = _peakYr, 'Annual Segments'[Segment Code] = "PPA")
+			VAR _peakAll = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = _peakYr)
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='440' height='572' viewBox='0 0 440 572' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			        & "<rect x='0' y='0' width='440' height='3' fill='%230E0E0C'/><rect x='0' y='38' width='54' height='16' fill='%230E0E0C'/><text x='27' y='50' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='26' font-size='15' font-weight='bold' fill='%230E0E0C'>" & "Equipment operating profit, FY" & _fy & " through Q" & _q & "</text>"
+			        & "<text x='62' y='51' font-size='13' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_ppa + _sat + _cf, _prior) - 1, "+0%;-0%;0%"), "%", "%25") & " vs the same quarters of FY" & (_fy - 1) & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptsl0 = "$" & FORMAT(_ppa + _sat + _cf, "#,##0") & "M"
+			        VAR _pxsl0 = (440 - (LEN("$" & FORMAT(_ppa + _sat + _cf, "#,##0") & "M") * 30 - 5))
+			        VAR _pysl0 = 66
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptsl0), 1), "cisl0", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptsl0, [cisl0], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellsl0", [Value]), MID(_bits, [cellsl0] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxsl0 + ([cisl0] - 1) * 30 + MOD([cellsl0], 5) * 5) & "' y='" & (_pysl0 + INT([cellsl0] / 5) * 5) & "' width='5' height='5'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<rect x='0' y='112' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='146' width='54' height='16' fill='%230E0E0C'/><text x='27' y='158' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='136' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "SAT operating profit, through Q" & _q & "</text>"
+			        & "<text x='62' y='159' font-size='12' fill='%230E0E0C'>" & "Q" & _q & " margin " & SUBSTITUTE(FORMAT(LOOKUPVALUE('Quarterly Segments'[Operating Margin], 'Quarterly Segments'[Period Key], _k, 'Quarterly Segments'[Segment Code], "SAT"), "0.0%"), "%", "%25") & "</text>"
+			        & "<text x='440' y='157' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_sat, "#,##0") & "M" & "</text>"
+			        & "<rect x='0' y='188' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='222' width='54' height='16' fill='%230E0E0C'/><text x='27' y='234' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='212' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "PPA operating profit, through Q" & _q & "</text>"
+			        & "<text x='62' y='235' font-size='12' fill='%230E0E0C'>" & "Q" & _q & " margin " & SUBSTITUTE(FORMAT(LOOKUPVALUE('Quarterly Segments'[Operating Margin], 'Quarterly Segments'[Period Key], _k, 'Quarterly Segments'[Segment Code], "PPA"), "0.0%"), "%", "%25") & "</text>"
+			        & "<text x='440' y='233' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_ppa, "#,##0") & "M" & "</text>"
+			        & "<rect x='0' y='264' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='298' width='54' height='16' fill='%230E0E0C'/><text x='27' y='310' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='288' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "C&amp;F operating profit, through Q" & _q & "</text>"
+			        & "<text x='62' y='311' font-size='12' fill='%230E0E0C'>" & "Q" & _q & " margin " & SUBSTITUTE(FORMAT(LOOKUPVALUE('Quarterly Segments'[Operating Margin], 'Quarterly Segments'[Period Key], _k, 'Quarterly Segments'[Segment Code], "CF"), "0.0%"), "%", "%25") & "</text>"
+			        & "<text x='440' y='309' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_cf, "#,##0") & "M" & "</text>"
+			        & "<rect x='0' y='340' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='374' width='72' height='16' fill='%23367C2B'/><text x='36' y='386' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>GUIDANCE</text>"
+			        & "<text x='0' y='364' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "PPA net sales outlook, FY" & _fy & "</text>"
+			        & "<text x='80' y='387' font-size='12' fill='%230E0E0C'>" & "Management, Q3 release" & "</text>"
+			        & "<text x='440' y='385' text-anchor='end' font-size='22' font-weight='bold' fill='%23367C2B'>" & "About -10%25" & "</text>"
+			        & "<rect x='0' y='416' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='450' width='72' height='16' fill='%23367C2B'/><text x='36' y='462' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>GUIDANCE</text>"
+			        & "<text x='0' y='440' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "SAT net sales outlook, FY" & _fy & "</text>"
+			        & "<text x='80' y='463' font-size='12' fill='%230E0E0C'>" & "Management, Q3 release" & "</text>"
+			        & "<text x='440' y='461' text-anchor='end' font-size='22' font-weight='bold' fill='%23367C2B'>" & "About +15%25" & "</text>"
+			        & "<rect x='0' y='492' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='526' width='72' height='16' fill='%23367C2B'/><text x='36' y='538' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>GUIDANCE</text>"
+			        & "<text x='0' y='516' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "C&amp;F net sales outlook, FY" & _fy & "</text>"
+			        & "<text x='80' y='539' font-size='12' fill='%230E0E0C'>" & "Management, Q3 release" & "</text>"
+			        & "<text x='440' y='537' text-anchor='end' font-size='22' font-weight='bold' fill='%23367C2B'>" & "About +20%25" & "</text>"
+			        & "<rect x='0' y='569' width='440' height='2' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 554b579f-ce9d-462a-8c43-bb43789e082c
+
+	/// The Stack: THE CYCLE card header.
+	measure 'SVG Header THE CYCLE' =
+			VAR _price = [Latest Price]
+			VAR _date = [Latest Price Date]
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='96' viewBox='0 0 1420 96' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><g fill='%230E0E0C'><rect x='0' y='8' width='10' height='10'/><rect x='10' y='8' width='10' height='10'/><rect x='20' y='8' width='10' height='10'/><rect x='30' y='8' width='10' height='10'/><rect x='40' y='8' width='10' height='10'/><rect x='20' y='18' width='10' height='10'/><rect x='20' y='28' width='10' height='10'/><rect x='20' y='38' width='10' height='10'/><rect x='20' y='48' width='10' height='10'/><rect x='20' y='58' width='10' height='10'/><rect x='20' y='68' width='10' height='10'/><rect x='60' y='8' width='10' height='10'/><rect x='100' y='8' width='10' height='10'/><rect x='60' y='18' width='10' height='10'/><rect x='100' y='18' width='10' height='10'/><rect x='60' y='28' width='10' height='10'/><rect x='100' y='28' width='10' height='10'/><rect x='60' y='38' width='10' height='10'/><rect x='70' y='38' width='10' height='10'/><rect x='80' y='38' width='10' height='10'/><rect x='90' y='38' width='10' height='10'/><rect x='100' y='38' width='10' height='10'/><rect x='60' y='48' width='10' height='10'/><rect x='100' y='48' width='10' height='10'/><rect x='60' y='58' width='10' height='10'/><rect x='100' y='58' width='10' height='10'/><rect x='60' y='68' width='10' height='10'/><rect x='100' y='68' width='10' height='10'/><rect x='120' y='8' width='10' height='10'/><rect x='130' y='8' width='10' height='10'/><rect x='140' y='8' width='10' height='10'/><rect x='150' y='8' width='10' height='10'/><rect x='160' y='8' width='10' height='10'/><rect x='120' y='18' width='10' height='10'/><rect x='120' y='28' width='10' height='10'/><rect x='120' y='38' width='10' height='10'/><rect x='130' y='38' width='10' height='10'/><rect x='140' y='38' width='10' height='10'/><rect x='150' y='38' width='10' height='10'/><rect x='120' y='48' width='10' height='10'/><rect x='120' y='58' width='10' height='10'/><rect x='120' y='68' width='10' height='10'/><rect x='130' y='68' width='10' height='10'/><rect x='140' y='68' width='10' height='10'/><rect x='150' y='68' width='10' height='10'/><rect x='160' y='68' width='10' height='10'/><rect x='250' y='8' width='10' height='10'/><rect x='260' y='8' width='10' height='10'/><rect x='270' y='8' width='10' height='10'/><rect x='240' y='18' width='10' height='10'/><rect x='280' y='18' width='10' height='10'/><rect x='240' y='28' width='10' height='10'/><rect x='240' y='38' width='10' height='10'/><rect x='240' y='48' width='10' height='10'/><rect x='240' y='58' width='10' height='10'/><rect x='280' y='58' width='10' height='10'/><rect x='250' y='68' width='10' height='10'/><rect x='260' y='68' width='10' height='10'/><rect x='270' y='68' width='10' height='10'/><rect x='300' y='8' width='10' height='10'/><rect x='340' y='8' width='10' height='10'/><rect x='300' y='18' width='10' height='10'/><rect x='340' y='18' width='10' height='10'/><rect x='300' y='28' width='10' height='10'/><rect x='340' y='28' width='10' height='10'/><rect x='310' y='38' width='10' height='10'/><rect x='330' y='38' width='10' height='10'/><rect x='320' y='48' width='10' height='10'/><rect x='320' y='58' width='10' height='10'/><rect x='320' y='68' width='10' height='10'/><rect x='370' y='8' width='10' height='10'/><rect x='380' y='8' width='10' height='10'/><rect x='390' y='8' width='10' height='10'/><rect x='360' y='18' width='10' height='10'/><rect x='400' y='18' width='10' height='10'/><rect x='360' y='28' width='10' height='10'/><rect x='360' y='38' width='10' height='10'/><rect x='360' y='48' width='10' height='10'/><rect x='360' y='58' width='10' height='10'/><rect x='400' y='58' width='10' height='10'/><rect x='370' y='68' width='10' height='10'/><rect x='380' y='68' width='10' height='10'/><rect x='390' y='68' width='10' height='10'/><rect x='420' y='8' width='10' height='10'/><rect x='420' y='18' width='10' height='10'/><rect x='420' y='28' width='10' height='10'/><rect x='420' y='38' width='10' height='10'/><rect x='420' y='48' width='10' height='10'/><rect x='420' y='58' width='10' height='10'/><rect x='420' y='68' width='10' height='10'/><rect x='430' y='68' width='10' height='10'/><rect x='440' y='68' width='10' height='10'/><rect x='450' y='68' width='10' height='10'/><rect x='460' y='68' width='10' height='10'/><rect x='480' y='8' width='10' height='10'/><rect x='490' y='8' width='10' height='10'/><rect x='500' y='8' width='10' height='10'/><rect x='510' y='8' width='10' height='10'/><rect x='520' y='8' width='10' height='10'/><rect x='480' y='18' width='10' height='10'/><rect x='480' y='28' width='10' height='10'/><rect x='480' y='38' width='10' height='10'/><rect x='490' y='38' width='10' height='10'/><rect x='500' y='38' width='10' height='10'/><rect x='510' y='38' width='10' height='10'/><rect x='480' y='48' width='10' height='10'/><rect x='480' y='58' width='10' height='10'/><rect x='480' y='68' width='10' height='10'/><rect x='490' y='68' width='10' height='10'/><rect x='500' y='68' width='10' height='10'/><rect x='510' y='68' width='10' height='10'/><rect x='520' y='68' width='10' height='10'/></g>"
+			        & "<text x='1420' y='36' text-anchor='end' font-size='16' font-weight='bold' fill='%230E0E0C'>Deere &amp; Company &%23183; NYSE: DE</text>"
+			        & "<text x='1420' y='62' text-anchor='end' font-size='15' fill='%230E0E0C'>Close " & FORMAT(_price, "$#,##0.00") & " on " & FORMAT(_date, "d mmm yyyy") & " &%23183; reported through " & [Latest Period Label] & "</text>"
+			        & "<rect x='0' y='86' width='1420' height='4' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: cb5a7da6-bba4-468a-85dc-67547b1f224c
+
+	/// The Stack: THE CYCLE finding, how the outside drivers moved over the past year (authored claim shown only while the data supports it).
+	measure 'SVG Cycle Finding' =
+			VAR _dC = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn")
+			VAR _vC = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Date] = _dC)
+			VAR _pC = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Date] = EDATE(_dC, -12))
+			VAR _dS = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Soybeans")
+			VAR _vS = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Soybeans", 'Macro Data'[Date] = _dS)
+			VAR _pS = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Soybeans", 'Macro Data'[Date] = EDATE(_dS, -12))
+			VAR _dF = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Federal Funds")
+			VAR _vF = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Federal Funds", 'Macro Data'[Date] = _dF)
+			VAR _pF = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Federal Funds", 'Macro Data'[Date] = EDATE(_dF, -12))
+			VAR _dH = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts")
+			VAR _vH = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] = _dH)
+			VAR _pH = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] = EDATE(_dH, -12))
+			VAR _dK = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending")
+			VAR _vK = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending", 'Macro Data'[Date] = _dK)
+			VAR _pK = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending", 'Macro Data'[Date] = EDATE(_dK, -12))
+			VAR _dX = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "CAD per USD")
+			VAR _vX = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "CAD per USD", 'Macro Data'[Date] = _dX)
+			VAR _fiY = CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'))
+			VAR _fiV = CALCULATE(AVERAGE('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm Income'), 'Farm Income'[Date] = _fiY)
+			VAR _fiPk = CALCULATE(MAX('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm Income'))
+			VAR _fiPkY = CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'), 'Farm Income'[Net Farm Income] = _fiPk)
+			VAR _month = FORMAT(_dC, "mmmm yyyy")
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='84' viewBox='0 0 1420 84' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
+			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & IF(_vC >= _pC && _vS >= _pS && _vF < _pF && _vH < _pH, "Over the past year crop prices rose and interest rates fell, while housing starts kept dropping.", "How Deere's outside demand drivers moved over the past year.") & "</text>"
+			        & "<text x='0' y='70' font-size='22' fill='%230E0E0C'>" & _month & " vs a year earlier: corn " & SUBSTITUTE(FORMAT(DIVIDE(_vC, _pC) - 1, "+0%;-0%"), "%", "%25") & ", soybeans " & SUBSTITUTE(FORMAT(DIVIDE(_vS, _pS) - 1, "+0%;-0%"), "%", "%25") & ", fed funds " & FORMAT(_vF, "0.00") & "%25 (was " & FORMAT(_pF, "0.00") & "%25), housing starts " & SUBSTITUTE(FORMAT(DIVIDE(_vH, _pH) - 1, "+0%;-0%"), "%", "%25") & "." & "</text>"
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: ddc4d712-cee9-4aec-973c-173ba6e044ca
+
+	/// The Stack: corn and soybeans, net farm income, the fed funds rate and housing starts as four small panels.
+	measure 'SVG Cycle Exhibit' =
+			VAR _dC = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn")
+			VAR _vC = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Date] = _dC)
+			VAR _pC = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Date] = EDATE(_dC, -12))
+			VAR _dS = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Soybeans")
+			VAR _vS = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Soybeans", 'Macro Data'[Date] = _dS)
+			VAR _pS = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Soybeans", 'Macro Data'[Date] = EDATE(_dS, -12))
+			VAR _dF = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Federal Funds")
+			VAR _vF = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Federal Funds", 'Macro Data'[Date] = _dF)
+			VAR _pF = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Federal Funds", 'Macro Data'[Date] = EDATE(_dF, -12))
+			VAR _dH = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts")
+			VAR _vH = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] = _dH)
+			VAR _pH = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] = EDATE(_dH, -12))
+			VAR _dK = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending")
+			VAR _vK = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending", 'Macro Data'[Date] = _dK)
+			VAR _pK = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending", 'Macro Data'[Date] = EDATE(_dK, -12))
+			VAR _dX = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "CAD per USD")
+			VAR _vX = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "CAD per USD", 'Macro Data'[Date] = _dX)
+			VAR _fiY = CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'))
+			VAR _fiV = CALCULATE(AVERAGE('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm Income'), 'Farm Income'[Date] = _fiY)
+			VAR _fiPk = CALCULATE(MAX('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm Income'))
+			VAR _fiPkY = CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'), 'Farm Income'[Net Farm Income] = _fiPk)
+			VAR _month = FORMAT(_dC, "mmmm yyyy")
+			VAR _maxD = MAX(MAX(_dC, _dF), _dH)
+			VAR _kx = 310 / DATEDIFF(DATE(2020, 1, 1), _maxD, MONTH)
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='960' height='620' viewBox='0 0 960 620' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><text x='0' y='22' font-size='16' font-weight='bold' fill='%230E0E0C'>Crop prices, farm income, interest rates and housing</text><text x='0' y='78' font-size='15' font-weight='bold' fill='%230E0E0C'>Corn and soybeans, USD per tonne</text><line x1='50' y1='254.72727272727272' x2='360' y2='254.72727272727272' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='259.72727272727275' text-anchor='end' font-size='12' fill='%230E0E0C'>$200</text><line x1='50' y1='184.1818181818182' x2='360' y2='184.1818181818182' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='189.1818181818182' text-anchor='end' font-size='12' fill='%230E0E0C'>$400</text><line x1='50' y1='113.63636363636365' x2='360' y2='113.63636363636365' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='118.63636363636365' text-anchor='end' font-size='12' fill='%230E0E0C'>$600</text><rect x='50' y='289' width='310' height='3' fill='%230E0E0C'/><text x='500' y='78' font-size='15' font-weight='bold' fill='%230E0E0C'>U.S. net farm income, $ billions, yearly</text><line x1='550' y1='241.5' x2='860' y2='241.5' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='246.5' text-anchor='end' font-size='12' fill='%230E0E0C'>$50</text><line x1='550' y1='193' x2='860' y2='193' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='198' text-anchor='end' font-size='12' fill='%230E0E0C'>$100</text><line x1='550' y1='144.5' x2='860' y2='144.5' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='149.5' text-anchor='end' font-size='12' fill='%230E0E0C'>$150</text><line x1='550' y1='96' x2='860' y2='96' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='101' text-anchor='end' font-size='12' fill='%230E0E0C'>$200</text><rect x='550' y='289' width='310' height='3' fill='%230E0E0C'/><text x='0' y='358' font-size='15' font-weight='bold' fill='%230E0E0C'>Federal funds rate</text><line x1='50' y1='505.33333333333337' x2='360' y2='505.33333333333337' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='510.33333333333337' text-anchor='end' font-size='12' fill='%230E0E0C'>2%25</text><line x1='50' y1='440.6666666666667' x2='360' y2='440.6666666666667' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='445.6666666666667' text-anchor='end' font-size='12' fill='%230E0E0C'>4%25</text><line x1='50' y1='376' x2='360' y2='376' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='381' text-anchor='end' font-size='12' fill='%230E0E0C'>6%25</text><rect x='50' y='569' width='310' height='3' fill='%230E0E0C'/><text x='500' y='358' font-size='15' font-weight='bold' fill='%230E0E0C'>Housing starts, thousands a year</text><line x1='550' y1='534.7272727272727' x2='860' y2='534.7272727272727' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='539.7272727272727' text-anchor='end' font-size='12' fill='%230E0E0C'>1,000</text><line x1='550' y1='464.1818181818182' x2='860' y2='464.1818181818182' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='469.1818181818182' text-anchor='end' font-size='12' fill='%230E0E0C'>1,400</text><line x1='550' y1='393.6363636363636' x2='860' y2='393.6363636363636' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='398.6363636363636' text-anchor='end' font-size='12' fill='%230E0E0C'>1,800</text><rect x='550' y='569' width='310' height='3' fill='%230E0E0C'/>"
+			        & CONCATENATEX(GENERATESERIES(2020, YEAR(_maxD)), "<rect x='" & ROUND(50 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kx, 1) & "' y='292' width='1' height='6' fill='%230E0E0C'/><text x='" & ROUND(50 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kx, 1) & "' y='312' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & [Value] & "</text>", "")
+			        & CONCATENATEX(GENERATESERIES(2020, YEAR(_maxD)), "<rect x='" & ROUND(50 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kx, 1) & "' y='572' width='1' height='6' fill='%230E0E0C'/><text x='" & ROUND(50 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kx, 1) & "' y='592' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & [Value] & "</text>", "")
+			        & CONCATENATEX(GENERATESERIES(2020, YEAR(_maxD)), "<rect x='" & ROUND(550 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kx, 1) & "' y='572' width='1' height='6' fill='%230E0E0C'/><text x='" & ROUND(550 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kx, 1) & "' y='592' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & [Value] & "</text>", "")
+			        & (VAR _r = CALCULATETABLE(SELECTCOLUMNS('Macro Data', "@d", 'Macro Data'[Date], "@v", 'Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Soybeans", 'Macro Data'[Date] >= DATE(2020, 1, 1))
+			           VAR _ld = MAXX(_r, [@d])
+			           VAR _lv = MAXX(FILTER(_r, [@d] = _ld), [@v])
+			           RETURN "<polyline fill='none' stroke='%230E0E0C' stroke-width='5' points='" & CONCATENATEX(_r, ROUND(50 + DATEDIFF(DATE(2020, 1, 1), [@d], MONTH) * _kx, 1) & "," & ROUND(290 - (MIN(MAX([@v], 100), 650) - 100) / 550 * 194, 1), " ", [@d], ASC) & "'/>"
+			               & "<text x='368' y='" & (ROUND(290 - (MIN(MAX(_lv, 100), 650) - 100) / 550 * 194, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Soy $" & FORMAT(_lv, "0") & "</text>")
+			        & (VAR _r = CALCULATETABLE(SELECTCOLUMNS('Macro Data', "@d", 'Macro Data'[Date], "@v", 'Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Date] >= DATE(2020, 1, 1))
+			           VAR _ld = MAXX(_r, [@d])
+			           VAR _lv = MAXX(FILTER(_r, [@d] = _ld), [@v])
+			           RETURN "<polyline fill='none' stroke='%230E0E0C' stroke-width='3' stroke-dasharray='8 5' points='" & CONCATENATEX(_r, ROUND(50 + DATEDIFF(DATE(2020, 1, 1), [@d], MONTH) * _kx, 1) & "," & ROUND(290 - (MIN(MAX([@v], 100), 650) - 100) / 550 * 194, 1), " ", [@d], ASC) & "'/>"
+			               & "<text x='368' y='" & (ROUND(290 - (MIN(MAX(_lv, 100), 650) - 100) / 550 * 194, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Corn $" & FORMAT(_lv, "0") & "</text>")
+			        & (VAR _fi = SELECTCOLUMNS(ALL('Farm Income'), "@y", YEAR('Farm Income'[Date]), "@v", 'Farm Income'[Net Farm Income])
+			           VAR _y0 = MINX(_fi, [@y])
+			           VAR _pitch = 310 / COUNTROWS(_fi)
+			           VAR _ly = MAXX(_fi, [@y])
+			           RETURN CONCATENATEX(_fi, "<rect x='" & ROUND(550 + ([@y] - _y0) * _pitch + _pitch * 0.15, 1) & "' y='" & ROUND(290 - (MIN(MAX([@v], 0), 200) - 0) / 200 * 194, 1) & "' width='" & ROUND(_pitch * 0.7, 1) & "' height='" & ROUND(290 - ROUND(290 - (MIN(MAX([@v], 0), 200) - 0) / 200 * 194, 1), 1) & "' fill='%230E0E0C'/>"
+			                   & IF(MOD([@y], 3) = MOD(_ly, 3), "<text x='" & ROUND(550 + ([@y] - _y0 + 0.5) * _pitch, 1) & "' y='312' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & [@y] & "</text>", ""), "", [@y], ASC)
+			               & "<text x='868' y='" & (ROUND(290 - (MIN(MAX(_fiV, 0), 200) - 0) / 200 * 194, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_fiV, "$0") & "B</text>")
+			        & (VAR _r = CALCULATETABLE(SELECTCOLUMNS('Macro Data', "@d", 'Macro Data'[Date], "@v", 'Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Federal Funds", 'Macro Data'[Date] >= DATE(2020, 1, 1))
+			           VAR _ld = MAXX(_r, [@d])
+			           VAR _lv = MAXX(FILTER(_r, [@d] = _ld), [@v])
+			           RETURN "<polyline fill='none' stroke='%230E0E0C' stroke-width='4' points='" & CONCATENATEX(_r, ROUND(50 + DATEDIFF(DATE(2020, 1, 1), [@d], MONTH) * _kx, 1) & "," & ROUND(570 - (MIN(MAX([@v], 0), 6) - 0) / 6 * 194, 1), " ", [@d], ASC) & "'/>"
+			               & "<text x='368' y='" & (ROUND(570 - (MIN(MAX(_lv, 0), 6) - 0) / 6 * 194, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_lv, "0.00") & "%25" & "</text>")
+			        & (VAR _r = CALCULATETABLE(SELECTCOLUMNS('Macro Data', "@d", 'Macro Data'[Date], "@v", 'Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] >= DATE(2020, 1, 1))
+			           VAR _ld = MAXX(_r, [@d])
+			           VAR _lv = MAXX(FILTER(_r, [@d] = _ld), [@v])
+			           RETURN "<polyline fill='none' stroke='%230E0E0C' stroke-width='4' points='" & CONCATENATEX(_r, ROUND(550 + DATEDIFF(DATE(2020, 1, 1), [@d], MONTH) * _kx, 1) & "," & ROUND(570 - (MIN(MAX([@v], 800), 1900) - 800) / 1100 * 194, 1), " ", [@d], ASC) & "'/>"
+			               & "<text x='868' y='" & (ROUND(570 - (MIN(MAX(_lv, 800), 1900) - 800) / 1100 * 194, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_lv, "#,##0") & "K" & "</text>")
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 26f0dd88-32be-44eb-8ba5-273d6586111e
+
+	/// The Stack: THE CYCLE ledger of the latest FRED readings.
+	measure 'SVG Cycle Ledger' =
+			VAR _dC = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn")
+			VAR _vC = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Date] = _dC)
+			VAR _pC = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Date] = EDATE(_dC, -12))
+			VAR _dS = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Soybeans")
+			VAR _vS = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Soybeans", 'Macro Data'[Date] = _dS)
+			VAR _pS = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Soybeans", 'Macro Data'[Date] = EDATE(_dS, -12))
+			VAR _dF = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Federal Funds")
+			VAR _vF = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Federal Funds", 'Macro Data'[Date] = _dF)
+			VAR _pF = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Federal Funds", 'Macro Data'[Date] = EDATE(_dF, -12))
+			VAR _dH = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts")
+			VAR _vH = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] = _dH)
+			VAR _pH = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] = EDATE(_dH, -12))
+			VAR _dK = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending")
+			VAR _vK = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending", 'Macro Data'[Date] = _dK)
+			VAR _pK = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending", 'Macro Data'[Date] = EDATE(_dK, -12))
+			VAR _dX = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "CAD per USD")
+			VAR _vX = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "CAD per USD", 'Macro Data'[Date] = _dX)
+			VAR _fiY = CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'))
+			VAR _fiV = CALCULATE(AVERAGE('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm Income'), 'Farm Income'[Date] = _fiY)
+			VAR _fiPk = CALCULATE(MAX('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm Income'))
+			VAR _fiPkY = CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'), 'Farm Income'[Net Farm Income] = _fiPk)
+			VAR _month = FORMAT(_dC, "mmmm yyyy")
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='440' height='572' viewBox='0 0 440 572' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			        & "<rect x='0' y='0' width='440' height='3' fill='%230E0E0C'/><rect x='0' y='38' width='54' height='16' fill='%230E0E0C'/><text x='27' y='50' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='26' font-size='15' font-weight='bold' fill='%230E0E0C'>" & "Corn, USD per tonne, " & FORMAT(_dC, "mmm yyyy") & "</text>"
+			        & "<text x='62' y='51' font-size='13' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_vC, _pC) - 1, "+0%;-0%;0%"), "%", "%25") & " vs a year earlier" & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptcl0 = "$" & FORMAT(_vC, "0")
+			        VAR _pxcl0 = (440 - (LEN("$" & FORMAT(_vC, "0")) * 30 - 5))
+			        VAR _pycl0 = 66
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptcl0), 1), "cicl0", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptcl0, [cicl0], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellcl0", [Value]), MID(_bits, [cellcl0] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxcl0 + ([cicl0] - 1) * 30 + MOD([cellcl0], 5) * 5) & "' y='" & (_pycl0 + INT([cellcl0] / 5) * 5) & "' width='5' height='5'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<rect x='0' y='112' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='146' width='54' height='16' fill='%230E0E0C'/><text x='27' y='158' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='136' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Soybeans, USD per tonne, " & FORMAT(_dS, "mmm yyyy") & "</text>"
+			        & "<text x='62' y='159' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_vS, _pS) - 1, "+0%;-0%;0%"), "%", "%25") & " vs a year earlier" & "</text>"
+			        & "<text x='440' y='157' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_vS, "0") & "</text>"
+			        & "<rect x='0' y='188' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='222' width='54' height='16' fill='%230E0E0C'/><text x='27' y='234' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='212' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Federal funds rate, " & FORMAT(_dF, "mmm yyyy") & "</text>"
+			        & "<text x='62' y='235' font-size='12' fill='%230E0E0C'>" & FORMAT(_pF, "0.00") & "%25 a year earlier" & "</text>"
+			        & "<text x='440' y='233' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_vF, "0.00") & "%25" & "</text>"
+			        & "<rect x='0' y='264' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='298' width='54' height='16' fill='%230E0E0C'/><text x='27' y='310' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='288' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Housing starts, " & FORMAT(_dH, "mmm yyyy") & "</text>"
+			        & "<text x='62' y='311' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_vH, _pH) - 1, "+0%;-0%;0%"), "%", "%25") & " vs a year earlier" & "</text>"
+			        & "<text x='440' y='309' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_vH, "#,##0") & "K" & "</text>"
+			        & "<rect x='0' y='340' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='374' width='54' height='16' fill='%230E0E0C'/><text x='27' y='386' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='364' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Construction spending, " & FORMAT(_dK, "mmm yyyy") & "</text>"
+			        & "<text x='62' y='387' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_vK, _pK) - 1, "+0%;-0%;0%"), "%", "%25") & " vs a year earlier" & "</text>"
+			        & "<text x='440' y='385' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_vK / 1000000, "0.00") & "T" & "</text>"
+			        & "<rect x='0' y='416' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='450' width='54' height='16' fill='%230E0E0C'/><text x='27' y='462' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='440' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "U.S. net farm income, " & YEAR(_fiY) & "</text>"
+			        & "<text x='62' y='463' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_fiV, _fiPk) - 1, "+0%;-0%;0%"), "%", "%25") & " from the " & YEAR(_fiPkY) & " peak" & "</text>"
+			        & "<text x='440' y='461' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_fiV, "0.0") & "B" & "</text>"
+			        & "<rect x='0' y='492' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='526' width='54' height='16' fill='%230E0E0C'/><text x='27' y='538' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='516' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Canadian dollars per USD" & "</text>"
+			        & "<text x='62' y='539' font-size='12' fill='%230E0E0C'>" & "Daily, " & FORMAT(_dX, "d mmm yyyy") & "</text>"
+			        & "<text x='440' y='537' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_vX, "0.000") & "</text>"
+			        & "<rect x='0' y='569' width='440' height='2' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 25c3ab30-6b51-4205-8e0e-cc44639dd158
+
+	/// The Stack: MODEL LAB card header.
+	measure 'SVG Header MODEL LAB' =
+			VAR _price = [Latest Price]
+			VAR _date = [Latest Price Date]
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='96' viewBox='0 0 1420 96' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><g fill='%230E0E0C'><rect x='0' y='8' width='10' height='10'/><rect x='40' y='8' width='10' height='10'/><rect x='0' y='18' width='10' height='10'/><rect x='10' y='18' width='10' height='10'/><rect x='30' y='18' width='10' height='10'/><rect x='40' y='18' width='10' height='10'/><rect x='0' y='28' width='10' height='10'/><rect x='20' y='28' width='10' height='10'/><rect x='40' y='28' width='10' height='10'/><rect x='0' y='38' width='10' height='10'/><rect x='20' y='38' width='10' height='10'/><rect x='40' y='38' width='10' height='10'/><rect x='0' y='48' width='10' height='10'/><rect x='40' y='48' width='10' height='10'/><rect x='0' y='58' width='10' height='10'/><rect x='40' y='58' width='10' height='10'/><rect x='0' y='68' width='10' height='10'/><rect x='40' y='68' width='10' height='10'/><rect x='70' y='8' width='10' height='10'/><rect x='80' y='8' width='10' height='10'/><rect x='90' y='8' width='10' height='10'/><rect x='60' y='18' width='10' height='10'/><rect x='100' y='18' width='10' height='10'/><rect x='60' y='28' width='10' height='10'/><rect x='100' y='28' width='10' height='10'/><rect x='60' y='38' width='10' height='10'/><rect x='100' y='38' width='10' height='10'/><rect x='60' y='48' width='10' height='10'/><rect x='100' y='48' width='10' height='10'/><rect x='60' y='58' width='10' height='10'/><rect x='100' y='58' width='10' height='10'/><rect x='70' y='68' width='10' height='10'/><rect x='80' y='68' width='10' height='10'/><rect x='90' y='68' width='10' height='10'/><rect x='120' y='8' width='10' height='10'/><rect x='130' y='8' width='10' height='10'/><rect x='140' y='8' width='10' height='10'/><rect x='120' y='18' width='10' height='10'/><rect x='150' y='18' width='10' height='10'/><rect x='120' y='28' width='10' height='10'/><rect x='160' y='28' width='10' height='10'/><rect x='120' y='38' width='10' height='10'/><rect x='160' y='38' width='10' height='10'/><rect x='120' y='48' width='10' height='10'/><rect x='160' y='48' width='10' height='10'/><rect x='120' y='58' width='10' height='10'/><rect x='150' y='58' width='10' height='10'/><rect x='120' y='68' width='10' height='10'/><rect x='130' y='68' width='10' height='10'/><rect x='140' y='68' width='10' height='10'/><rect x='180' y='8' width='10' height='10'/><rect x='190' y='8' width='10' height='10'/><rect x='200' y='8' width='10' height='10'/><rect x='210' y='8' width='10' height='10'/><rect x='220' y='8' width='10' height='10'/><rect x='180' y='18' width='10' height='10'/><rect x='180' y='28' width='10' height='10'/><rect x='180' y='38' width='10' height='10'/><rect x='190' y='38' width='10' height='10'/><rect x='200' y='38' width='10' height='10'/><rect x='210' y='38' width='10' height='10'/><rect x='180' y='48' width='10' height='10'/><rect x='180' y='58' width='10' height='10'/><rect x='180' y='68' width='10' height='10'/><rect x='190' y='68' width='10' height='10'/><rect x='200' y='68' width='10' height='10'/><rect x='210' y='68' width='10' height='10'/><rect x='220' y='68' width='10' height='10'/><rect x='240' y='8' width='10' height='10'/><rect x='240' y='18' width='10' height='10'/><rect x='240' y='28' width='10' height='10'/><rect x='240' y='38' width='10' height='10'/><rect x='240' y='48' width='10' height='10'/><rect x='240' y='58' width='10' height='10'/><rect x='240' y='68' width='10' height='10'/><rect x='250' y='68' width='10' height='10'/><rect x='260' y='68' width='10' height='10'/><rect x='270' y='68' width='10' height='10'/><rect x='280' y='68' width='10' height='10'/><rect x='360' y='8' width='10' height='10'/><rect x='360' y='18' width='10' height='10'/><rect x='360' y='28' width='10' height='10'/><rect x='360' y='38' width='10' height='10'/><rect x='360' y='48' width='10' height='10'/><rect x='360' y='58' width='10' height='10'/><rect x='360' y='68' width='10' height='10'/><rect x='370' y='68' width='10' height='10'/><rect x='380' y='68' width='10' height='10'/><rect x='390' y='68' width='10' height='10'/><rect x='400' y='68' width='10' height='10'/><rect x='430' y='8' width='10' height='10'/><rect x='440' y='8' width='10' height='10'/><rect x='450' y='8' width='10' height='10'/><rect x='420' y='18' width='10' height='10'/><rect x='460' y='18' width='10' height='10'/><rect x='420' y='28' width='10' height='10'/><rect x='460' y='28' width='10' height='10'/><rect x='420' y='38' width='10' height='10'/><rect x='430' y='38' width='10' height='10'/><rect x='440' y='38' width='10' height='10'/><rect x='450' y='38' width='10' height='10'/><rect x='460' y='38' width='10' height='10'/><rect x='420' y='48' width='10' height='10'/><rect x='460' y='48' width='10' height='10'/><rect x='420' y='58' width='10' height='10'/><rect x='460' y='58' width='10' height='10'/><rect x='420' y='68' width='10' height='10'/><rect x='460' y='68' width='10' height='10'/><rect x='480' y='8' width='10' height='10'/><rect x='490' y='8' width='10' height='10'/><rect x='500' y='8' width='10' height='10'/><rect x='510' y='8' width='10' height='10'/><rect x='480' y='18' width='10' height='10'/><rect x='520' y='18' width='10' height='10'/><rect x='480' y='28' width='10' height='10'/><rect x='520' y='28' width='10' height='10'/><rect x='480' y='38' width='10' height='10'/><rect x='490' y='38' width='10' height='10'/><rect x='500' y='38' width='10' height='10'/><rect x='510' y='38' width='10' height='10'/><rect x='480' y='48' width='10' height='10'/><rect x='520' y='48' width='10' height='10'/><rect x='480' y='58' width='10' height='10'/><rect x='520' y='58' width='10' height='10'/><rect x='480' y='68' width='10' height='10'/><rect x='490' y='68' width='10' height='10'/><rect x='500' y='68' width='10' height='10'/><rect x='510' y='68' width='10' height='10'/></g>"
+			        & "<text x='1420' y='36' text-anchor='end' font-size='16' font-weight='bold' fill='%230E0E0C'>Deere &amp; Company &%23183; NYSE: DE</text>"
+			        & "<text x='1420' y='62' text-anchor='end' font-size='15' fill='%230E0E0C'>Close " & FORMAT(_price, "$#,##0.00") & " on " & FORMAT(_date, "d mmm yyyy") & " &%23183; reported through " & [Latest Period Label] & "</text>"
+			        & "<rect x='0' y='86' width='1420' height='4' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 1d76748c-4ad3-4bf7-9127-c408ce0d0c7a
+
+	/// The Stack: MODEL LAB finding, modeled operating profit against FY2025 and net income against guidance, for the current settings.
+	measure 'SVG Model Lab Finding' =
+			VAR _sc = SELECTEDVALUE('Scenario'[Scenario], "Base")
+			VAR _sa = [Selected Sales Adjustment]
+			VAR _ma = [Selected Margin Adjustment Bps]
+			VAR _sales = [Model Equipment Sales]
+			VAR _op = [Model Equipment Operating Profit]
+			VAR _ni = [Scenario Net Income]
+			VAR _eps = [Projected EPS]
+			VAR _op25 = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = 2025)
+			VAR _sales25 = CALCULATE(SUM('Annual Segments'[Net Sales]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = 2025)
+			VAR _tax = DIVIDE(-CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 6), CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 7) - CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 6))
+			VAR _set = LOWER(_sc) & " case" & IF(_sa <> 0, ", sales " & SUBSTITUTE(FORMAT(_sa, "+0%;-0%"), "%", "%25"), "") & IF(_ma <> 0, ", margins " & FORMAT(_ma, "+0;-0") & " bps", "")
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='84' viewBox='0 0 1420 84' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
+			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & "In the " & _set & ", equipment operating profit reaches " & FORMAT(_op / 1000, "$0.00") & "B, " & IF(_op >= _op25, "up ", "down ") & SUBSTITUTE(FORMAT(ABS(DIVIDE(_op, _op25) - 1), "0%"), "%", "%25") & " on FY2025." & "</text>"
+			        & "<text x='0' y='70' font-size='22' fill='%230E0E0C'>" & "That implies FY2026 net income of " & FORMAT(_ni / 1000, "$0.00") & "B and EPS of " & FORMAT(_eps, "$0.00") & ", " & IF(_ni < 4750, "below", IF(_ni > 5000, "above", "inside")) & " management's $4.75B-5.00B range." & "</text>"
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 04125599-a322-430b-96fc-c5fb93a282cf
+
+	/// The Stack: bridge from FY2025 reported operating profit to the FY2026 model by segment, with the growth and margin assumptions.
+	measure 'SVG Model Lab Exhibit' =
+			VAR _sc = SELECTEDVALUE('Scenario'[Scenario], "Base")
+			VAR _sa = [Selected Sales Adjustment]
+			VAR _ma = [Selected Margin Adjustment Bps]
+			VAR _sales = [Model Equipment Sales]
+			VAR _op = [Model Equipment Operating Profit]
+			VAR _ni = [Scenario Net Income]
+			VAR _eps = [Projected EPS]
+			VAR _op25 = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = 2025)
+			VAR _sales25 = CALCULATE(SUM('Annual Segments'[Net Sales]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = 2025)
+			VAR _tax = DIVIDE(-CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 6), CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 7) - CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 6))
+			VAR _set = LOWER(_sc) & " case" & IF(_sa <> 0, ", sales " & SUBSTITUTE(FORMAT(_sa, "+0%;-0%"), "%", "%25"), "") & IF(_ma <> 0, ", margins " & FORMAT(_ma, "+0;-0") & " bps", "")
+			VAR _run0 = _op25
+			VAR _run1 = _run0 + CALCULATE([Model Segment Operating Profit], 'Segment'[Segment Code] = "PPA") - CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = 2025, 'Annual Segments'[Segment Code] = "PPA")
+			VAR _run2 = _run1 + CALCULATE([Model Segment Operating Profit], 'Segment'[Segment Code] = "SAT") - CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = 2025, 'Annual Segments'[Segment Code] = "SAT")
+			VAR _run3 = _run2 + CALCULATE([Model Segment Operating Profit], 'Segment'[Segment Code] = "CF") - CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = 2025, 'Annual Segments'[Segment Code] = "CF")
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1000' height='540' viewBox='0 0 1000 540' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs><text x='0' y='22' font-size='16' font-weight='bold' fill='%230E0E0C'>Equipment operating profit, FY2025 reported to FY2026 model</text><g font-size='13' fill='%230E0E0C'><rect x='0' y='35' width='14' height='14' fill='%230E0E0C'/><text x='22' y='47'>Reported</text><rect x='120' y='35' width='14' height='14' fill='url(%23s)' stroke='%230E0E0C' stroke-width='1.5'/><text x='142' y='47'>CYCLEBOOK model</text></g><line x1='80' y1='331.42' x2='980' y2='331.42' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='70' y='336.42' text-anchor='end' font-size='13' fill='%230E0E0C'>$2B</text><line x1='80' y1='222.84' x2='980' y2='222.84' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='70' y='227.84' text-anchor='end' font-size='13' fill='%230E0E0C'>$4B</text><line x1='80' y1='114.25999999999999' x2='980' y2='114.25999999999999' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='70' y='119.25999999999999' text-anchor='end' font-size='13' fill='%230E0E0C'>$6B</text><rect x='80' y='439' width='900' height='3' fill='%230E0E0C'/><text x='170' y='466' text-anchor='middle' font-size='14' font-weight='bold' fill='%230E0E0C'>FY2025</text><text x='350' y='466' text-anchor='middle' font-size='14' font-weight='bold' fill='%230E0E0C'>PPA</text><text x='530' y='466' text-anchor='middle' font-size='14' font-weight='bold' fill='%230E0E0C'>SAT</text><text x='710' y='466' text-anchor='middle' font-size='14' font-weight='bold' fill='%230E0E0C'>C&amp;F</text><text x='890' y='466' text-anchor='middle' font-size='14' font-weight='bold' fill='%230E0E0C'>FY2026 model</text><rect x='0' y='478' width='1000' height='3' fill='%230E0E0C'/><rect x='0' y='508' width='1000' height='1' fill='%230E0E0C'/><rect x='0' y='537' width='1000' height='2' fill='%230E0E0C'/><g font-size='14' font-weight='bold' fill='%230E0E0C'><text x='0' y='499'>Sales</text><text x='0' y='529'>Margin</text></g>"
+			        & "<rect x='115' y='" & ROUND(MAX(60, 440 - (_op25) / 1000 * 54.29), 1) & "' width='110' height='" & (440 - ROUND(MAX(60, 440 - (_op25) / 1000 * 54.29), 1)) & "' fill='%230E0E0C'/>"
+			        & "<text x='170' y='" & (ROUND(MAX(60, 440 - (_op25) / 1000 * 54.29), 1) - 13) & "' text-anchor='middle' font-size='15' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_op25 / 1000, "$0.00") & "B</text>"
+			        & "<text x='170' y='499' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & FORMAT(_sales25 / 1000, "$0.0") & "B</text>"
+			        & "<text x='170' y='529' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_op25, _sales25), "0.0%"), "%", "%25") & "</text>"
+			        & (VAR _from = _run0
+			           VAR _to = _run1
+			           VAR _x = 350
+			           VAR _top = ROUND(MAX(60, 440 - (MAX(_from, _to)) / 1000 * 54.29), 1)
+			           VAR _bot = ROUND(MAX(60, 440 - (MIN(_from, _to)) / 1000 * 54.29), 1)
+			           RETURN "<rect x='" & (_x - 55) & "' y='" & _top & "' width='110' height='" & MAX(2, _bot - _top) & "' fill='url(%23s)' stroke='%230E0E0C' stroke-width='2'/>"
+			               & "<line x1='" & (_x - 125) & "' y1='" & ROUND(MAX(60, 440 - (_from) / 1000 * 54.29), 1) & "' x2='" & (_x - 55) & "' y2='" & ROUND(MAX(60, 440 - (_from) / 1000 * 54.29), 1) & "' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='3 3'/>"
+			               & "<rect x='" & (_x - 58) & "' y='" & (_top - 30) & "' width='116' height='22' fill='%23F4F4F0'/>"
+			               & "<text x='" & _x & "' y='" & (_top - 13) & "' text-anchor='middle' font-size='15' font-weight='bold' fill='%230E0E0C'>" & IF(_to >= _from, "+", "-") & FORMAT(ABS(_to - _from) / 1000, "$0.00") & "B</text>"
+			               & "<text x='" & _x & "' y='499' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(CALCULATE([Model Segment Growth], 'Segment'[Segment Code] = "PPA"), "+0%;-0%;0%"), "%", "%25") & "</text>"
+			               & "<text x='" & _x & "' y='529' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(CALCULATE([Model Segment Margin], 'Segment'[Segment Code] = "PPA"), "0.0%"), "%", "%25") & "</text>")
+			        & (VAR _from = _run1
+			           VAR _to = _run2
+			           VAR _x = 530
+			           VAR _top = ROUND(MAX(60, 440 - (MAX(_from, _to)) / 1000 * 54.29), 1)
+			           VAR _bot = ROUND(MAX(60, 440 - (MIN(_from, _to)) / 1000 * 54.29), 1)
+			           RETURN "<rect x='" & (_x - 55) & "' y='" & _top & "' width='110' height='" & MAX(2, _bot - _top) & "' fill='url(%23s)' stroke='%230E0E0C' stroke-width='2'/>"
+			               & "<line x1='" & (_x - 125) & "' y1='" & ROUND(MAX(60, 440 - (_from) / 1000 * 54.29), 1) & "' x2='" & (_x - 55) & "' y2='" & ROUND(MAX(60, 440 - (_from) / 1000 * 54.29), 1) & "' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='3 3'/>"
+			               & "<rect x='" & (_x - 58) & "' y='" & (_top - 30) & "' width='116' height='22' fill='%23F4F4F0'/>"
+			               & "<text x='" & _x & "' y='" & (_top - 13) & "' text-anchor='middle' font-size='15' font-weight='bold' fill='%230E0E0C'>" & IF(_to >= _from, "+", "-") & FORMAT(ABS(_to - _from) / 1000, "$0.00") & "B</text>"
+			               & "<text x='" & _x & "' y='499' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(CALCULATE([Model Segment Growth], 'Segment'[Segment Code] = "SAT"), "+0%;-0%;0%"), "%", "%25") & "</text>"
+			               & "<text x='" & _x & "' y='529' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(CALCULATE([Model Segment Margin], 'Segment'[Segment Code] = "SAT"), "0.0%"), "%", "%25") & "</text>")
+			        & (VAR _from = _run2
+			           VAR _to = _run3
+			           VAR _x = 710
+			           VAR _top = ROUND(MAX(60, 440 - (MAX(_from, _to)) / 1000 * 54.29), 1)
+			           VAR _bot = ROUND(MAX(60, 440 - (MIN(_from, _to)) / 1000 * 54.29), 1)
+			           RETURN "<rect x='" & (_x - 55) & "' y='" & _top & "' width='110' height='" & MAX(2, _bot - _top) & "' fill='url(%23s)' stroke='%230E0E0C' stroke-width='2'/>"
+			               & "<line x1='" & (_x - 125) & "' y1='" & ROUND(MAX(60, 440 - (_from) / 1000 * 54.29), 1) & "' x2='" & (_x - 55) & "' y2='" & ROUND(MAX(60, 440 - (_from) / 1000 * 54.29), 1) & "' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='3 3'/>"
+			               & "<rect x='" & (_x - 58) & "' y='" & (_top - 30) & "' width='116' height='22' fill='%23F4F4F0'/>"
+			               & "<text x='" & _x & "' y='" & (_top - 13) & "' text-anchor='middle' font-size='15' font-weight='bold' fill='%230E0E0C'>" & IF(_to >= _from, "+", "-") & FORMAT(ABS(_to - _from) / 1000, "$0.00") & "B</text>"
+			               & "<text x='" & _x & "' y='499' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(CALCULATE([Model Segment Growth], 'Segment'[Segment Code] = "CF"), "+0%;-0%;0%"), "%", "%25") & "</text>"
+			               & "<text x='" & _x & "' y='529' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(CALCULATE([Model Segment Margin], 'Segment'[Segment Code] = "CF"), "0.0%"), "%", "%25") & "</text>")
+			        & "<line x1='765' y1='" & ROUND(MAX(60, 440 - (_run3) / 1000 * 54.29), 1) & "' x2='835' y2='" & ROUND(MAX(60, 440 - (_run3) / 1000 * 54.29), 1) & "' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='3 3'/>"
+			        & "<rect x='835' y='" & ROUND(MAX(60, 440 - (_op) / 1000 * 54.29), 1) & "' width='110' height='" & (440 - ROUND(MAX(60, 440 - (_op) / 1000 * 54.29), 1)) & "' fill='url(%23s)' stroke='%230E0E0C' stroke-width='3'/>"
+			        & "<rect x='832' y='" & (ROUND(MAX(60, 440 - (_op) / 1000 * 54.29), 1) - 30) & "' width='116' height='22' fill='%23F4F4F0'/>"
+			        & "<text x='890' y='" & (ROUND(MAX(60, 440 - (_op) / 1000 * 54.29), 1) - 13) & "' text-anchor='middle' font-size='15' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_op / 1000, "$0.00") & "B</text>"
+			        & "<text x='890' y='499' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & FORMAT(_sales / 1000, "$0.0") & "B</text>"
+			        & "<text x='890' y='529' text-anchor='middle' font-size='14' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_op, _sales), "0.0%"), "%", "%25") & "</text>"
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 81becbb3-351e-493e-804b-614a843f1d30
+
+	/// The Stack: MODEL LAB ledger of modeled outputs against guidance and FY2025.
+	measure 'SVG Model Lab Ledger' =
+			VAR _sc = SELECTEDVALUE('Scenario'[Scenario], "Base")
+			VAR _sa = [Selected Sales Adjustment]
+			VAR _ma = [Selected Margin Adjustment Bps]
+			VAR _sales = [Model Equipment Sales]
+			VAR _op = [Model Equipment Operating Profit]
+			VAR _ni = [Scenario Net Income]
+			VAR _eps = [Projected EPS]
+			VAR _op25 = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = 2025)
+			VAR _sales25 = CALCULATE(SUM('Annual Segments'[Net Sales]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = 2025)
+			VAR _tax = DIVIDE(-CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 6), CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 7) - CALCULATE(SUM('Earnings Bridge'[YTD FY26]), REMOVEFILTERS('Earnings Bridge'), 'Earnings Bridge'[Order] = 6))
+			VAR _set = LOWER(_sc) & " case" & IF(_sa <> 0, ", sales " & SUBSTITUTE(FORMAT(_sa, "+0%;-0%"), "%", "%25"), "") & IF(_ma <> 0, ", margins " & FORMAT(_ma, "+0;-0") & " bps", "")
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='496' viewBox='0 0 400 496' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			        & "<rect x='0' y='0' width='400' height='3' fill='%230E0E0C'/><rect x='0.75' y='38.75' width='58.5' height='14.5' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='1.5'/><rect x='4' y='42' width='8' height='8' fill='url(%23s)'/><text x='36' y='50' text-anchor='middle' font-size='10' font-weight='bold' fill='%230E0E0C'>MODEL</text>"
+			        & "<text x='0' y='26' font-size='15' font-weight='bold' fill='%230E0E0C'>" & "Net income, FY2026, " & LOWER(_sc) & " case" & "</text>"
+			        & "<text x='68' y='51' font-size='13' fill='%230E0E0C'>" & "EPS " & FORMAT(_eps, "$0.00") & " on 269.8M diluted shares" & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptml0 = FORMAT(_ni / 1000, "$0.00") & "B"
+			        VAR _pxml0 = (400 - (LEN(FORMAT(_ni / 1000, "$0.00") & "B") * 30 - 5))
+			        VAR _pyml0 = 66
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptml0), 1), "ciml0", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptml0, [ciml0], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellml0", [Value]), MID(_bits, [cellml0] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxml0 + ([ciml0] - 1) * 30 + MOD([cellml0], 5) * 5) & "' y='" & (_pyml0 + INT([cellml0] / 5) * 5) & "' width='5' height='5'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<rect x='0' y='112' width='400' height='1' fill='%230E0E0C'/><rect x='250' y='122' width='150' height='56' fill='url(%23g)'/><rect x='0.75' y='146.75' width='58.5' height='14.5' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='1.5'/><rect x='4' y='150' width='8' height='8' fill='url(%23s)'/><text x='36' y='158' text-anchor='middle' font-size='10' font-weight='bold' fill='%230E0E0C'>MODEL</text>"
+			        & "<text x='0' y='136' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Equipment sales, FY2026" & "</text>"
+			        & "<text x='68' y='159' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_sales, _sales25) - 1, "+0%;-0%;0%"), "%", "%25") & " on FY2025" & "</text>"
+			        & "<text x='390' y='157' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C' stroke='%23F4F4F0' stroke-width='7' stroke-linejoin='round' paint-order='stroke'>" & FORMAT(_sales / 1000, "$0.0") & "B" & "</text>"
+			        & "<rect x='0' y='188' width='400' height='1' fill='%230E0E0C'/><rect x='250' y='198' width='150' height='56' fill='url(%23g)'/><rect x='0.75' y='222.75' width='58.5' height='14.5' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='1.5'/><rect x='4' y='226' width='8' height='8' fill='url(%23s)'/><text x='36' y='234' text-anchor='middle' font-size='10' font-weight='bold' fill='%230E0E0C'>MODEL</text>"
+			        & "<text x='0' y='212' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Operating profit, FY2026" & "</text>"
+			        & "<text x='68' y='235' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_op, _sales), "0.0%"), "%", "%25") & " margin" & "</text>"
+			        & "<text x='390' y='233' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C' stroke='%23F4F4F0' stroke-width='7' stroke-linejoin='round' paint-order='stroke'>" & FORMAT(_op / 1000, "$0.00") & "B" & "</text>"
+			        & "<rect x='0' y='264' width='400' height='1' fill='%230E0E0C'/><rect x='0' y='298' width='72' height='16' fill='%23367C2B'/><text x='36' y='310' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>GUIDANCE</text>"
+			        & "<text x='0' y='288' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Net income guidance, FY2026" & "</text>"
+			        & "<text x='80' y='311' font-size='12' fill='%230E0E0C'>" & "Management range" & "</text>"
+			        & "<text x='400' y='309' text-anchor='end' font-size='22' font-weight='bold' fill='%23367C2B'>" & "$4.75B-5.00B" & "</text>"
+			        & "<rect x='0' y='340' width='400' height='1' fill='%230E0E0C'/><rect x='0' y='374' width='54' height='16' fill='%230E0E0C'/><text x='27' y='386' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='364' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Operating profit, FY2025" & "</text>"
+			        & "<text x='62' y='387' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_op25, _sales25), "0.0%"), "%", "%25") & " margin" & "</text>"
+			        & "<text x='400' y='385' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_op25 / 1000, "$0.00") & "B" & "</text>"
+			        & "<rect x='0' y='416' width='400' height='1' fill='%230E0E0C'/><rect x='250' y='426' width='150' height='56' fill='url(%23g)'/><rect x='0.75' y='450.75' width='58.5' height='14.5' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='1.5'/><rect x='4' y='454' width='8' height='8' fill='url(%23s)'/><text x='36' y='462' text-anchor='middle' font-size='10' font-weight='bold' fill='%230E0E0C'>MODEL</text>"
+			        & "<text x='0' y='440' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Tax rate on your changes" & "</text>"
+			        & "<text x='68' y='463' font-size='12' fill='%230E0E0C'>" & "FY2026 effective rate, to Q3" & "</text>"
+			        & "<text x='390' y='461' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C' stroke='%23F4F4F0' stroke-width='7' stroke-linejoin='round' paint-order='stroke'>" & SUBSTITUTE(FORMAT(_tax, "0.0%"), "%", "%25") & "</text>"
+			        & "<rect x='0' y='493' width='400' height='2' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 608a869e-f3e1-436a-83f9-c590656dbc33
+
+	/// The Stack: painted sales-adjustment cells; the transparent slicer sits on top.
+	measure 'SVG Sales Strip' =
+			VAR _sel = [Selected Sales Adjustment]
+			VAR _steps = ADDCOLUMNS(ALL('Sales Adjustment'[Sales Adjustment]), "@i", RANKX(ALL('Sales Adjustment'[Sales Adjustment]), 'Sales Adjustment'[Sales Adjustment], , ASC) - 1)
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='480' height='64' viewBox='0 0 480 64' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			        & CONCATENATEX(_steps,
+			            VAR _x = [@i] * 96
+			            VAR _on = 'Sales Adjustment'[Sales Adjustment] = _sel
+			            VAR _ink = IF(_on, "%23F4F4F0", "%230E0E0C")
+			            RETURN "<rect x='" & (_x + 1.5) & "' y='1.5' width='88' height='61' fill='" & IF(_on, "%230E0E0C", "%23F4F4F0") & "' stroke='%230E0E0C' stroke-width='3'/>"
+			                & IF(_on, "", "<rect x='" & (_x + 10) & "' y='44' width='68' height='10' fill='url(%23s)'/>")
+			                & "<text x='" & (_x + 45.5) & "' y='32' text-anchor='middle' font-size='17' font-weight='bold' fill='" & _ink & "'>" & SUBSTITUTE(FORMAT('Sales Adjustment'[Sales Adjustment], "+0%;-0%;0%"), "%", "%25") & "</text>",
+			            "", 'Sales Adjustment'[Sales Adjustment], ASC)
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: ae4ce9fd-d0b2-4d44-9a59-5452bf85e77a
+
+	/// The Stack: painted operating-margin adjustment cells; the transparent slicer sits on top.
+	measure 'SVG Margin Strip' =
+			VAR _sel = [Selected Margin Adjustment Bps]
+			VAR _steps = ADDCOLUMNS(ALL('Margin Adjustment'[Margin Adjustment (bps)]), "@i", RANKX(ALL('Margin Adjustment'[Margin Adjustment (bps)]), 'Margin Adjustment'[Margin Adjustment (bps)], , ASC) - 1)
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='64' viewBox='0 0 500 64' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			        & CONCATENATEX(_steps,
+			            VAR _x = [@i] * 100
+			            VAR _on = 'Margin Adjustment'[Margin Adjustment (bps)] = _sel
+			            VAR _ink = IF(_on, "%23F4F4F0", "%230E0E0C")
+			            RETURN "<rect x='" & (_x + 1.5) & "' y='1.5' width='92' height='61' fill='" & IF(_on, "%230E0E0C", "%23F4F4F0") & "' stroke='%230E0E0C' stroke-width='3'/>"
+			                & IF(_on, "", "<rect x='" & (_x + 10) & "' y='44' width='72' height='10' fill='url(%23s)'/>")
+			                & "<text x='" & (_x + 47.5) & "' y='32' text-anchor='middle' font-size='17' font-weight='bold' fill='" & _ink & "'>" & FORMAT('Margin Adjustment'[Margin Adjustment (bps)], "+0;-0;0") & " bp" & "</text>",
+			            "", 'Margin Adjustment'[Margin Adjustment (bps)], ASC)
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: e2bcd187-feb4-4074-bac8-996ca9087d98
+
+	/// The Stack: SOURCES card header.
+	measure 'SVG Header SOURCES' =
+			VAR _price = [Latest Price]
+			VAR _date = [Latest Price Date]
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='96' viewBox='0 0 1420 96' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><g fill='%230E0E0C'><rect x='10' y='8' width='10' height='10'/><rect x='20' y='8' width='10' height='10'/><rect x='30' y='8' width='10' height='10'/><rect x='40' y='8' width='10' height='10'/><rect x='0' y='18' width='10' height='10'/><rect x='0' y='28' width='10' height='10'/><rect x='10' y='38' width='10' height='10'/><rect x='20' y='38' width='10' height='10'/><rect x='30' y='38' width='10' height='10'/><rect x='40' y='48' width='10' height='10'/><rect x='40' y='58' width='10' height='10'/><rect x='0' y='68' width='10' height='10'/><rect x='10' y='68' width='10' height='10'/><rect x='20' y='68' width='10' height='10'/><rect x='30' y='68' width='10' height='10'/><rect x='70' y='8' width='10' height='10'/><rect x='80' y='8' width='10' height='10'/><rect x='90' y='8' width='10' height='10'/><rect x='60' y='18' width='10' height='10'/><rect x='100' y='18' width='10' height='10'/><rect x='60' y='28' width='10' height='10'/><rect x='100' y='28' width='10' height='10'/><rect x='60' y='38' width='10' height='10'/><rect x='100' y='38' width='10' height='10'/><rect x='60' y='48' width='10' height='10'/><rect x='100' y='48' width='10' height='10'/><rect x='60' y='58' width='10' height='10'/><rect x='100' y='58' width='10' height='10'/><rect x='70' y='68' width='10' height='10'/><rect x='80' y='68' width='10' height='10'/><rect x='90' y='68' width='10' height='10'/><rect x='120' y='8' width='10' height='10'/><rect x='160' y='8' width='10' height='10'/><rect x='120' y='18' width='10' height='10'/><rect x='160' y='18' width='10' height='10'/><rect x='120' y='28' width='10' height='10'/><rect x='160' y='28' width='10' height='10'/><rect x='120' y='38' width='10' height='10'/><rect x='160' y='38' width='10' height='10'/><rect x='120' y='48' width='10' height='10'/><rect x='160' y='48' width='10' height='10'/><rect x='120' y='58' width='10' height='10'/><rect x='160' y='58' width='10' height='10'/><rect x='130' y='68' width='10' height='10'/><rect x='140' y='68' width='10' height='10'/><rect x='150' y='68' width='10' height='10'/><rect x='180' y='8' width='10' height='10'/><rect x='190' y='8' width='10' height='10'/><rect x='200' y='8' width='10' height='10'/><rect x='210' y='8' width='10' height='10'/><rect x='180' y='18' width='10' height='10'/><rect x='220' y='18' width='10' height='10'/><rect x='180' y='28' width='10' height='10'/><rect x='220' y='28' width='10' height='10'/><rect x='180' y='38' width='10' height='10'/><rect x='190' y='38' width='10' height='10'/><rect x='200' y='38' width='10' height='10'/><rect x='210' y='38' width='10' height='10'/><rect x='180' y='48' width='10' height='10'/><rect x='200' y='48' width='10' height='10'/><rect x='180' y='58' width='10' height='10'/><rect x='210' y='58' width='10' height='10'/><rect x='180' y='68' width='10' height='10'/><rect x='220' y='68' width='10' height='10'/><rect x='250' y='8' width='10' height='10'/><rect x='260' y='8' width='10' height='10'/><rect x='270' y='8' width='10' height='10'/><rect x='240' y='18' width='10' height='10'/><rect x='280' y='18' width='10' height='10'/><rect x='240' y='28' width='10' height='10'/><rect x='240' y='38' width='10' height='10'/><rect x='240' y='48' width='10' height='10'/><rect x='240' y='58' width='10' height='10'/><rect x='280' y='58' width='10' height='10'/><rect x='250' y='68' width='10' height='10'/><rect x='260' y='68' width='10' height='10'/><rect x='270' y='68' width='10' height='10'/><rect x='300' y='8' width='10' height='10'/><rect x='310' y='8' width='10' height='10'/><rect x='320' y='8' width='10' height='10'/><rect x='330' y='8' width='10' height='10'/><rect x='340' y='8' width='10' height='10'/><rect x='300' y='18' width='10' height='10'/><rect x='300' y='28' width='10' height='10'/><rect x='300' y='38' width='10' height='10'/><rect x='310' y='38' width='10' height='10'/><rect x='320' y='38' width='10' height='10'/><rect x='330' y='38' width='10' height='10'/><rect x='300' y='48' width='10' height='10'/><rect x='300' y='58' width='10' height='10'/><rect x='300' y='68' width='10' height='10'/><rect x='310' y='68' width='10' height='10'/><rect x='320' y='68' width='10' height='10'/><rect x='330' y='68' width='10' height='10'/><rect x='340' y='68' width='10' height='10'/><rect x='370' y='8' width='10' height='10'/><rect x='380' y='8' width='10' height='10'/><rect x='390' y='8' width='10' height='10'/><rect x='400' y='8' width='10' height='10'/><rect x='360' y='18' width='10' height='10'/><rect x='360' y='28' width='10' height='10'/><rect x='370' y='38' width='10' height='10'/><rect x='380' y='38' width='10' height='10'/><rect x='390' y='38' width='10' height='10'/><rect x='400' y='48' width='10' height='10'/><rect x='400' y='58' width='10' height='10'/><rect x='360' y='68' width='10' height='10'/><rect x='370' y='68' width='10' height='10'/><rect x='380' y='68' width='10' height='10'/><rect x='390' y='68' width='10' height='10'/></g>"
+			        & "<text x='1420' y='36' text-anchor='end' font-size='16' font-weight='bold' fill='%230E0E0C'>Deere &amp; Company &%23183; NYSE: DE</text>"
+			        & "<text x='1420' y='62' text-anchor='end' font-size='15' fill='%230E0E0C'>Close " & FORMAT(_price, "$#,##0.00") & " on " & FORMAT(_date, "d mmm yyyy") & " &%23183; reported through " & [Latest Period Label] & "</text>"
+			        & "<rect x='0' y='86' width='1420' height='4' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 516f2836-7c56-4267-8500-e40e71c4b9a1
+
+	/// The Stack: SOURCES finding, what the three provenance tags mean.
+	measure 'SVG Sources Finding' =
+			VAR _none = 0
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='84' viewBox='0 0 1420 84' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
+			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & "Every number in this stack carries a tag that says where it came from." & "</text>"
+			        & "<text x='0' y='70' font-size='22' fill='%230E0E0C'>" & "ACTUAL: reported by Deere, FRED or Nasdaq. GUIDANCE: management's outlook. MODEL: an assumption made here." & "</text>"
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 1d68d677-0182-4198-b5a2-abd530afe9a3
+
+	/// The Stack: the source registry, one row per source with its provenance tag, type, notes and location.
+	measure 'SVG Sources Exhibit' =
+			VAR _rows = ADDCOLUMNS(ALL('Source Registry'), "@i", RANKX(ALL('Source Registry'), SWITCH('Source Registry'[Classification], "Actual", "1", "Guidance", "2", "3") & 'Source Registry'[Source], , ASC, DENSE) - 1)
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='960' height='620' viewBox='0 0 960 620' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs><text x='0' y='22' font-size='16' font-weight='bold' fill='%230E0E0C'>Where every figure comes from</text><rect x='0' y='38' width='960' height='3' fill='%230E0E0C'/>"
+			        & CONCATENATEX(_rows,
+			            VAR _y = 41 + [@i] * 50
+			            VAR _cls = 'Source Registry'[Classification]
+			            RETURN "<g transform='translate(0," & _y & ")'>"
+			                & SWITCH(_cls, "Actual", "<rect x='0' y='17' width='54' height='16' fill='%230E0E0C'/><text x='27' y='29' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>", "Guidance", "<rect x='0' y='17' width='72' height='16' fill='%23367C2B'/><text x='36' y='29' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>GUIDANCE</text>", "<rect x='0.75' y='17.75' width='58.5' height='14.5' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='1.5'/><rect x='4' y='21' width='8' height='8' fill='url(%23s)'/><text x='36' y='29' text-anchor='middle' font-size='10' font-weight='bold' fill='%230E0E0C'>MODEL</text>")
+			                & "<text x='92' y='21' font-size='14' font-weight='bold' fill='%230E0E0C'>" & SUBSTITUTE(SUBSTITUTE(SUBSTITUTE('Source Registry'[Source], "&", "&amp;"), "%", "%25"), "#", "%23") & "<tspan font-size='12' font-weight='normal'>  &%23183;  " & SUBSTITUTE(SUBSTITUTE(SUBSTITUTE('Source Registry'[Source Type], "&", "&amp;"), "%", "%25"), "#", "%23") & "</tspan></text>"
+			                & "<text x='92' y='40' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(SUBSTITUTE(SUBSTITUTE('Source Registry'[Notes], "&", "&amp;"), "%", "%25"), "#", "%23") & "  &%23183;  " & SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE('Source Registry'[URL / Location], "https://", ""), "www.", ""), "&", "&amp;"), "%", "%25"), "#", "%23") & "</text>"
+			                & "<rect x='0' y='49' width='960' height='1' fill='%230E0E0C'/></g>",
+			            "", [@i], ASC)
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 21d26747-0ef4-4ac0-996d-f18faf17b293
+
+	/// The Stack: SOURCES ledger of how current each input is.
+	measure 'SVG Sources Ledger' =
+			"data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='440' height='572' viewBox='0 0 440 572' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			        & "<rect x='0' y='0' width='440' height='3' fill='%230E0E0C'/><rect x='0' y='38' width='54' height='16' fill='%230E0E0C'/><text x='27' y='50' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='26' font-size='15' font-weight='bold' fill='%230E0E0C'>" & "Latest Deere quarter" & "</text>"
+			        & "<text x='62' y='51' font-size='13' fill='%230E0E0C'>" & "From Deere's earnings release" & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptrl0 = [Latest Period Label]
+			        VAR _pxrl0 = (440 - (LEN([Latest Period Label]) * 30 - 5))
+			        VAR _pyrl0 = 66
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptrl0), 1), "cirl0", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptrl0, [cirl0], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellrl0", [Value]), MID(_bits, [cellrl0] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxrl0 + ([cirl0] - 1) * 30 + MOD([cellrl0], 5) * 5) & "' y='" & (_pyrl0 + INT([cellrl0] / 5) * 5) & "' width='5' height='5'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<rect x='0' y='112' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='146' width='54' height='16' fill='%230E0E0C'/><text x='27' y='158' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='136' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Latest share price" & "</text>"
+			        & "<text x='62' y='159' font-size='12' fill='%230E0E0C'>" & "Nasdaq close " & FORMAT([Latest Price], "$0.00") & "</text>"
+			        & "<text x='440' y='157' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & FORMAT([Latest Price Date], "d mmm yyyy") & "</text>"
+			        & "<rect x='0' y='188' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='222' width='54' height='16' fill='%230E0E0C'/><text x='27' y='234' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='212' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Latest monthly FRED reading" & "</text>"
+			        & "<text x='62' y='235' font-size='12' fill='%230E0E0C'>" & "Corn, soybeans, rates, housing" & "</text>"
+			        & "<text x='440' y='233' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & FORMAT(CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] <> "CAD per USD"), "mmm yyyy") & "</text>"
+			        & "<rect x='0' y='264' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='298' width='54' height='16' fill='%230E0E0C'/><text x='27' y='310' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='288' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Latest net farm income" & "</text>"
+			        & "<text x='62' y='311' font-size='12' fill='%230E0E0C'>" & "BEA via FRED, published yearly" & "</text>"
+			        & "<text x='440' y='309' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & FORMAT(YEAR(CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'))), "0") & "</text>"
+			        & "<rect x='0' y='340' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='374' width='72' height='16' fill='%23367C2B'/><text x='36' y='386' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>GUIDANCE</text>"
+			        & "<text x='0' y='364' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Management guidance" & "</text>"
+			        & "<text x='80' y='387' font-size='12' fill='%230E0E0C'>" & "Q3 FY2026 release" & "</text>"
+			        & "<text x='440' y='385' text-anchor='end' font-size='22' font-weight='bold' fill='%23367C2B'>" & "20 Aug 2026" & "</text>"
+			        & "<rect x='0' y='416' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='450' width='54' height='16' fill='%230E0E0C'/><text x='27' y='462' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='440' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Diluted shares used" & "</text>"
+			        & "<text x='62' y='463' font-size='12' fill='%230E0E0C'>" & "Q3 FY2026 average" & "</text>"
+			        & "<text x='440' y='461' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "269.8M" & "</text>"
+			        & "<rect x='0' y='492' width='440' height='1' fill='%230E0E0C'/><rect x='290' y='502' width='150' height='56' fill='url(%23g)'/><rect x='0.75' y='526.75' width='58.5' height='14.5' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='1.5'/><rect x='4' y='530' width='8' height='8' fill='url(%23s)'/><text x='36' y='538' text-anchor='middle' font-size='10' font-weight='bold' fill='%230E0E0C'>MODEL</text>"
+			        & "<text x='0' y='516' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Scenarios and P/E range" & "</text>"
+			        & "<text x='68' y='539' font-size='12' fill='%230E0E0C'>" & "Bear, base and bull" & "</text>"
+			        & "<text x='430' y='537' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C' stroke='%23F4F4F0' stroke-width='7' stroke-linejoin='round' paint-order='stroke'>" & FORMAT(MINX(ALL('PE Multiple'), 'PE Multiple'[P/E Multiple]), "0") & "x-" & FORMAT(MAXX(ALL('PE Multiple'), 'PE Multiple'[P/E Multiple]), "0") & "x" & "</text>"
+			        & "<rect x='0' y='569' width='440' height='2' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 4559ea88-143f-465c-8f9e-5d3fdf4883dc
 
 	column Dummy
 		dataType: int64
