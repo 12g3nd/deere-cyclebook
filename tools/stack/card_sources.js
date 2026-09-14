@@ -3,16 +3,16 @@ const { C, svgOpen, svgDefs, daxStr } = require("./stack_lib");
 const { ledger, ledgerHeight, header, finding2, tag } = require("./stack_measures_a");
 
 const finding = finding2("VAR _none = 0",
-  `"Every ledger figure in this stack carries a tag that says where it came from."`,
-  `"ACTUAL: reported by Deere, FRED or Nasdaq. GUIDANCE: management's outlook. MODEL: an assumption made here."`);
+  `"I tagged every figure in the ledgers with where it came from."`,
+  `"ACTUAL is what Deere, FRED or Nasdaq reported. GUIDANCE is what management expects. MODEL is what I assumed."`);
 
 // Exhibit (960x620): one 50px row per registry entry, ACTUAL first, then GUIDANCE, then MODEL.
 const safe = (dax) => `SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(${dax}, "&", "&amp;"), "%", "%25"), "#", "%23")`;
 // Reader-facing wording for registry text written for the author (matches the updated Source Registry rows once refreshed).
-const reader = (dax) => `SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(${dax}, "Bundled: DE-3Q26-News-Release.pdf", "investor.deere.com, Q3 FY2026 release"), "Bundled in sources/", "investor.deere.com"), "; live refresh", ""), "Live-refresh macroeconomic", "Macroeconomic")`;
+const reader = (dax) => `SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(${dax}, "Bear/Base/Bull assumptions are explicitly modeled, never presented as actuals", "The bear, base and bull cases I built for this report"),"Bundled: DE-3Q26-News-Release.pdf", "investor.deere.com, Q3 FY2026 release"), "Bundled in sources/", "investor.deere.com"), "; live refresh", ""), "Live-refresh macroeconomic", "Macroeconomic")`;
 const key = `SWITCH('Source Registry'[Classification], "Actual", "1", "Guidance", "2", "3") & 'Source Registry'[Source]`;
 const exhibitStatic = svgOpen(960, 620) + svgDefs +
-  `<text x='0' y='22' font-size='16' font-weight='bold' fill='${C.ink}'>Where every figure comes from</text>` +
+  `<text x='0' y='22' font-size='16' font-weight='bold' fill='${C.ink}'>The sources behind each number</text>` +
   `<rect x='0' y='38' width='960' height='3' fill='${C.ink}'/>`;
 const exhibit = `
 VAR _rows = ADDCOLUMNS(ALL('Source Registry'), "@i", RANKX(ALL('Source Registry'), ${key}, , ASC, DENSE) - 1)

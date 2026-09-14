@@ -9,6 +9,13 @@ These are the words on the seven cards as they render today (close $675.74, repo
 
 Write your version, or `keep`, or `cut`, then tell me and I'll build it into the cards.
 
+**Status, 14 Sep 2026:** you approved every proposal as written, and all of them are now built into the cards. D1 and D2 replaced the old lines in `documentation/INTERVIEW_TALK_TRACK.md`. The `Yours:` lines stay blank as a record. The build added four details the proposals didn't spell out:
+
+- **M1 and V1-V2** say "the base case" at default settings and "your base case" once you move a sales or margin setting. The strips under MODEL LAB show which settings you moved.
+- **S1** counts the quarters in words ("all three quarters", later "all four"). **S2** names whichever segment leads year to date.
+- **C2** has versions for zero to four signals. When only one signal goes Deere's way, the card names that one.
+- **C4** ends at the latest year in the FRED data, so "2020 to 2026" moves forward on its own.
+
 **How I wrote the proposals**
 
 - **Stop-slop rules.** Every sentence gets a person or company doing the verb, and there are no adverbs. I cut "X, while Y" seesaws, tidy groups of three, em dashes, and anything that sounds like a pull quote.

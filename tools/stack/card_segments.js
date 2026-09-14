@@ -23,8 +23,8 @@ VAR _nPrev = COUNTROWS(_prev)
 VAR _ppaAhead = COUNTROWS(FILTER(_prev, ${op("'Period'[Period Key]", "PPA")} > ${op("'Period'[Period Key]", "SAT")}))`;
 
 const finding = finding2(vars,
-  `IF(_satAhead = _q, "Small ag and turf has out-earned large ag in every quarter of fiscal " & _fy & " so far.", "Small ag and turf out-earned large ag in " & _satAhead & " of " & _q & " quarters of fiscal " & _fy & ".")`,
-  `"PPA out-earned SAT in " & IF(_ppaAhead = _nPrev, "every one of the " & _nPrev, _ppaAhead & " of " & _nPrev) & " quarters of FY" & (_fy - 2) & "-FY" & (_fy - 1) & "; through Q" & _q & ", SAT leads $" & FORMAT(_sat, "#,##0") & "M to $" & FORMAT(_ppa, "#,##0") & "M."`);
+  `IF(_satAhead = _q, "Small ag and turf has earned more than large ag in " & SWITCH(_q, 1, "the first quarter", 2, "both quarters", 3, "all three quarters", "all four quarters") & " of fiscal " & _fy & ".", "Small ag and turf earned more than large ag in " & _satAhead & " of " & _q & " quarters of fiscal " & _fy & ".")`,
+  `"Large ag led " & IF(_ppaAhead = _nPrev, "all " & _nPrev, _ppaAhead & " of " & _nPrev) & " quarters of FY" & (_fy - 2) & "-" & RIGHT(_fy - 1, 2) & ". Through Q" & _q & " this year, " & IF(_sat >= _ppa, "small ag leads $" & FORMAT(_sat, "#,##0") & "M to $" & FORMAT(_ppa, "#,##0"), "large ag leads $" & FORMAT(_ppa, "#,##0") & "M to $" & FORMAT(_sat, "#,##0")) & "M."`);
 
 // Exhibit (960x620): operating profit by quarter, last eleven quarters. $0 at y 510, 0.2278px per $1M ($1.8B at y 100).
 const segs = [
@@ -59,7 +59,7 @@ RETURN
         & CONCATENATEX(FILTER(_pts, 'Period'[Fiscal Year] = _fy),
             "<text x='" & [@x] & "' y='592' text-anchor='middle' font-size='12' fill='${C.ink}'>" & FORMAT(${op("'Period'[Period Key]", "SAT")}, "#,##0") & "</text>"
                 & "<text x='" & [@x] & "' y='610' text-anchor='middle' font-size='12' fill='${C.ink}'>" & FORMAT(${op("'Period'[Period Key]", "PPA")}, "#,##0") & "</text>", "")
-        & IF(_satAhead = _q, "<rect x='" & (_x0 - 10) & "' y='76' width='" & (MAXX(_pts, [@x]) - _x0 + 20) & "' height='3' fill='${C.ink}'/><rect x='" & (_x0 - 10) & "' y='76' width='3' height='12' fill='${C.ink}'/><rect x='" & (MAXX(_pts, [@x]) + 7) & "' y='76' width='3' height='12' fill='${C.ink}'/><text x='" & (MAXX(_pts, [@x]) + 10) & "' y='70' text-anchor='end' font-size='14' font-weight='bold' fill='${C.ink}'>SAT above PPA every quarter</text>", "")
+        & IF(_satAhead = _q, "<rect x='" & (_x0 - 10) & "' y='76' width='" & (MAXX(_pts, [@x]) - _x0 + 20) & "' height='3' fill='${C.ink}'/><rect x='" & (_x0 - 10) & "' y='76' width='3' height='12' fill='${C.ink}'/><rect x='" & (MAXX(_pts, [@x]) + 7) & "' y='76' width='3' height='12' fill='${C.ink}'/><text x='" & (MAXX(_pts, [@x]) + 10) & "' y='70' text-anchor='end' font-size='14' font-weight='bold' fill='${C.ink}'>Small ag ahead all year</text>", "")
         & "</svg>"`;
 
 const margin = (code) => `SUBSTITUTE(FORMAT(${op("_k", code, "Operating Margin")}, "0.0%"), "%", "%25")`;

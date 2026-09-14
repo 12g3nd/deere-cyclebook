@@ -152,7 +152,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Model fiscal 2026'"
+                  "Value": "'Run the 2026 numbers'"
                 }
               }
             }

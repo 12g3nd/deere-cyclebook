@@ -27,10 +27,12 @@ const AUTHORED = "_vC >= _pC && _vS >= _pS && _vF < _pF && _vH < _pH";
 const fallback = `(VAR _t = {("corn prices", INT(_vC < _pC)), ("soybean prices", INT(_vS < _pS)), ("interest rates", INT(_vF >= _pF)), ("housing starts", INT(_vH < _pH))}
             VAR _bad = COUNTROWS(FILTER(_t, [Value2] = 1))
             VAR _good = 4 - _bad
-            RETURN IF(_bad = 0, "All four demand drivers moved Deere's way over the past year.",
-                IF(_good = 0, "None of Deere's four demand drivers moved its way over the past year.",
-                    SWITCH(_good, 1, "One", 2, "Two", 3, "Three") & " of four demand drivers moved Deere's way over the past year; " & CONCATENATEX(FILTER(_t, [Value2] = 1), [Value1], ", ") & " did not.")))`;
-const line1 = (cond) => `IF(${cond}, "Over the past year crop prices rose and interest rates fell, while housing starts kept dropping.", ${fallback})`;
+            VAR _misses = CONCATENATEX(FILTER(_t, [Value2] = 1), [Value1], " and ")
+            RETURN IF(_bad = 0, "All four demand signals went Deere's way this year.",
+                IF(_good = 0, "None of the four demand signals went Deere's way this year.",
+                    IF(_good = 1, "One of four demand signals went Deere's way this year: " & CONCATENATEX(FILTER(_t, [Value2] = 0), [Value1]) & ".",
+                        SWITCH(_good, 2, "Two", "Three") & " of four demand signals went Deere's way this year. " & UPPER(LEFT(_misses, 1)) & MID(_misses, 2, 99) & " didn't."))))`;
+const line1 = (cond) => `IF(${cond}, "Crop prices and rates moved in farmers' favour this year. Housing starts kept falling.", ${fallback})`;
 const line2 = `_month & " vs a year earlier: corn " & ${esc25(`FORMAT(DIVIDE(_vC, _pC) - 1, "+0%;-0%")`)} & ", soybeans " & ${esc25(`FORMAT(DIVIDE(_vS, _pS) - 1, "+0%;-0%")`)} & ", fed funds " & FORMAT(_vF, "0.00") & "%25 (was " & FORMAT(_pF, "0.00") & "%25), housing starts " & ${esc25(`FORMAT(DIVIDE(_vH, _pH) - 1, "+0%;-0%")`)} & "."`;
 const finding = finding2(vars, line1(AUTHORED), line2);
 // Test-only: the same finding with the authored condition forced false, to render the fallback on today's data.
@@ -67,7 +69,6 @@ const bars = `
                & "<text x='" & ROUND(${X(fx, fg, "DATE(YEAR(_fiY) + 1, 1, 1)")} + 4, 1) & "' y='${fy + 26 + fg.h}' font-size='11' fill='${C.ink}'>no data after " & YEAR(_fiY) & "</text>")`;
 
 const exhibitStatic = svgOpen(960, 620) +
-  `<text x='0' y='22' font-size='16' font-weight='bold' fill='${C.ink}'>Crop prices and interest rates, with housing and farm income beside them</text>` +
   frame(...P.ag, "Corn and soybeans, USD per tonne", 100, 650, [200, 400, 600], (t) => `$${t}`) +
   frame(...P.rates, "Federal funds rate", 0, 6, [2, 4, 6], (t) => `${t}%25`) +
   frame(...P.housing, "Housing starts, thousands", 800, 1900, [1000, 1400, 1800], (t) => t.toLocaleString("en-US")) +
@@ -79,7 +80,8 @@ VAR _n = DATEDIFF(DATE(2020, 1, 1), _maxD, MONTH)
 VAR _kL = ${L.w} / _n
 VAR _kS = ${S.w} / _n
 RETURN
-    ${daxStr(exhibitStatic)}${years(...P.ag, 1)}${years(...P.rates, 1)}${years(...P.housing, 2)}${years(...P.farm, 2)}${
+    ${daxStr(exhibitStatic)}
+        & "<text x='0' y='22' font-size='16' font-weight='bold' fill='${C.ink}'>What Deere's customers are dealing with, 2020 to " & YEAR(_maxD) & "</text>"${years(...P.ag, 1)}${years(...P.rates, 1)}${years(...P.housing, 2)}${years(...P.farm, 2)}${
   line(...P.ag, "Soybeans", "stroke-width='5'", 100, 650, `"Soy $" & FORMAT(_lv, "0")`)}${
   line(...P.ag, "Corn", "stroke-width='3' stroke-dasharray='8 5'", 100, 650, `"Corn $" & FORMAT(_lv, "0")`)}${
   line(...P.rates, "Federal Funds", "stroke-width='4'", 0, 6, `FORMAT(_lv, "0.00") & "%25"`)}${

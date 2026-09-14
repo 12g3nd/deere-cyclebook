@@ -26,17 +26,17 @@ VAR _gLo = 4750
 VAR _gHi = 5000
 VAR _thru = "FY" & _fy & " through Q" & _q`;
 
-const dir = (ratio) => `IF(${ratio} >= 0, "up ", "down ") & SUBSTITUTE(FORMAT(ABS(${ratio}), "0%"), "%", "%25")`;
+const more = (ratio) => `SUBSTITUTE(FORMAT(ABS(${ratio}), "0%"), "%", "%25") & IF(${ratio} >= 0, " more", " less")`;
 const finding = finding2(vars,
-  `"Through Q" & _q & ", fiscal " & _fy & " sales are " & ${dir("DIVIDE(_rev, _revP) - 1")} & " on a year earlier and net income is " & ${dir("DIVIDE(_ni, _niP) - 1")} & "."`,
-  `"Net income peaked at " & FORMAT(_peak / 1000, "$0.00") & "B in FY" & _peakYr & "; FY" & _fy & " guidance of $4.75B-5.00B " & IF(_gHi < _lastNi, "is below", IF(_gLo > _lastNi, "is above", "brackets")) & " FY" & _lastYr & "'s " & FORMAT(_lastNi / 1000, "$0.00") & "B."`);
+  `"Deere sold " & ${more("DIVIDE(_rev, _revP) - 1")} & " through Q" & _q & " of fiscal " & _fy & " than a year ago, and earned " & ${more("DIVIDE(_ni, _niP) - 1")} & "."`,
+  `"Net income peaked at " & FORMAT(_peak / 1000, "$0.00") & "B in FY" & _peakYr & ". Management expects $4.75B-5.00B this year, " & IF(_gHi < _lastNi, "under", IF(_gLo > _lastNi, "above", "around")) & " FY" & _lastYr & "'s " & FORMAT(_lastNi / 1000, "$0.00") & "B."`);
 
 // Exhibit (960x620). Plot: $0 at y 470, 36.36px per $1B; one column per fiscal year, 166px pitch from x 153.
 const yB = (m) => `ROUND(470 - (${m}) / 1000 * 36.36, 1)`;
 const exhibitStatic = svgOpen(960, 620) +
   `<text x='0' y='22' font-size='16' font-weight='bold' fill='${C.ink}'>Net income by fiscal year, against FY2026 guidance</text>` +
   `<g font-size='13' fill='${C.ink}'><rect x='0' y='35' width='14' height='14' fill='${C.ink}'/><text x='22' y='47'>Reported</text>` +
-  `<rect x='120' y='36' width='13' height='13' fill='none' stroke='${C.ink}' stroke-width='2' stroke-dasharray='4 3'/><text x='142' y='47'>Still to earn in Q4 to reach guidance</text>` +
+  `<rect x='120' y='36' width='13' height='13' fill='none' stroke='${C.ink}' stroke-width='2' stroke-dasharray='4 3'/><text x='142' y='47'>What Q4 needs to hit guidance</text>` +
   `<rect x='430' y='35' width='14' height='14' fill='${C.green}'/><text x='452' y='47'>Management guidance</text></g>` +
   [2, 4, 6, 8, 10].map((b) => `<line x1='70' y1='${470 - b * 36.36}' x2='900' y2='${470 - b * 36.36}' stroke='${C.ink}' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='${475 - b * 36.36}' text-anchor='end' font-size='13' fill='${C.ink}'>$${b}B</text>`).join("") +
   `<rect x='70' y='469' width='830' height='3' fill='${C.ink}'/>` +
@@ -77,12 +77,12 @@ RETURN
 const margin = (n, d) => `SUBSTITUTE(FORMAT(DIVIDE(${n}, ${d}), "0.0%"), "%", "%25")`;
 const rows = [
   { label: `"Net income, " & _thru`, tag: "ACTUAL", value: `"$" & FORMAT(_ni, "#,##0") & "M"`, note: `${pct("DIVIDE(_ni, _niP) - 1")} & " vs the same quarters of FY" & (_fy - 1)` },
-  { label: `"Net sales, FY" & _fy & " to Q" & _q`, tag: "ACTUAL", value: `"$" & FORMAT(_rev, "#,##0") & "M"`, note: `${pct("DIVIDE(_rev, _revP) - 1")} & " vs a year earlier"` },
+  { label: `"Net sales, " & _thru`, tag: "ACTUAL", value: `"$" & FORMAT(_rev, "#,##0") & "M"`, note: `${pct("DIVIDE(_rev, _revP) - 1")} & " vs a year earlier"` },
   { label: `"Net margin, " & _thru`, tag: "ACTUAL", value: margin("_ni", "_rev"), note: `${margin("_niP", "_revP")} & " a year earlier"` },
   { label: `"Net income, FY" & _lastYr`, tag: "ACTUAL", value: `"$" & FORMAT(_lastNi, "#,##0") & "M"`, note: `"Diluted EPS " & FORMAT(_lastEps, "$0.00")` },
   { label: `"Net income, FY" & _peakYr & " record"`, tag: "ACTUAL", value: `"$" & FORMAT(_peak, "#,##0") & "M"`, note: `"Diluted EPS " & FORMAT(_peakEps, "$0.00")` },
-  { label: `"Net income guidance, FY" & _fy`, tag: "GUIDANCE", value: `"$4.75B-5.00B"`, note: `"Management range"` },
-  { label: `"Q4 implied by guidance"`, tag: "GUIDANCE", value: `"$" & FORMAT(_gLo - _ni, "#,##0") & "M-" & FORMAT(_gHi - _ni, "#,##0") & "M"`, note: `"Q4 FY" & _lastYr & ": $" & FORMAT(_lastQ4, "#,##0") & "M"` },
+  { label: `"Net income guidance, FY" & _fy`, tag: "GUIDANCE", value: `"$4.75B-5.00B"`, note: `"Management's range"` },
+  { label: `"Q4 needed to hit guidance"`, tag: "GUIDANCE", value: `"$" & FORMAT(_gLo - _ni, "#,##0") & "M-" & FORMAT(_gHi - _ni, "#,##0") & "M"`, note: `"Q4 FY" & _lastYr & ": $" & FORMAT(_lastQ4, "#,##0") & "M"` },
 ];
 
 module.exports = {

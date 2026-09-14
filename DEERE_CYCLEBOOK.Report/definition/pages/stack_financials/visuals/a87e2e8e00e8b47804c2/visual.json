@@ -52,7 +52,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Profit by segment'"
+                  "Value": "'Who earns the profit'"
                 }
               }
             },
@@ -123,7 +123,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Profit by segment'"
+                  "Value": "'Who earns the profit'"
                 }
               }
             },
@@ -197,7 +197,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Profit by segment'"
+                  "Value": "'Who earns the profit'"
                 }
               }
             },
@@ -271,7 +271,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'Profit by segment'"
+                  "Value": "'Who earns the profit'"
                 }
               }
             },
@@ -690,7 +690,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Profit by segment'"
+                  "Value": "'Who earns the profit'"
                 }
               }
             }

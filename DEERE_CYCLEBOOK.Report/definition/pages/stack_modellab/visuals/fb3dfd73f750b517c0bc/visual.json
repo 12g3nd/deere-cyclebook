@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Scenario, sales and margin settings are CYCLEBOOK assumptions and carry over to VALUATION. FY2025 actuals from Deere's annual report. Stipple = model.",
+                    "value": "These settings are my assumptions, and VALUATION uses whatever you pick here. FY2025 figures come from Deere's annual report. Stipple = model.",
                     "textStyle": {
                       "fontFamily": "Verdana",
                       "fontSize": "12px",

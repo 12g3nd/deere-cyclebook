@@ -157,7 +157,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Finding: EPS today''s price requires at the selected multiple, against the record'"
+                  "Value": "'Finding: the multiple you pay on the selected case''s EPS, and the EPS Deere has to earn at the selected multiple'"
                 }
               }
             }

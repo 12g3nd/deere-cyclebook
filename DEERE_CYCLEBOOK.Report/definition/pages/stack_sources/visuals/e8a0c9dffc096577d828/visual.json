@@ -157,7 +157,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Finding: every number in the stack carries a tag saying where it came from'"
+                  "Value": "'Finding: the author tagged every ledger figure with where it came from'"
                 }
               }
             }

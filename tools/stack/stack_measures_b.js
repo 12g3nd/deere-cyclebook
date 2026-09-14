@@ -11,7 +11,7 @@ const clampY = (v) => `MAX(60, MIN(460, ${v}))`;
 const r1 = (v) => `ROUND(${v}, 1)`;
 
 const ladderStatic = svgOpen(1000, 540) + svgDefs +
-  `<text x='0' y='22' font-size='16' font-weight='bold' fill='${C.ink}'>EPS the price requires, at each P/E</text>` +
+  `<text x='0' y='22' font-size='16' font-weight='bold' fill='${C.ink}'>EPS Deere has to earn at each P/E</text>` +
   [20, 30, 40].map((e) => `<line x1='80' y1='${460 - (e - 10) * 11.4286}' x2='860' y2='${460 - (e - 10) * 11.4286}' stroke='${C.ink}' stroke-width='1' stroke-dasharray='2 5'/><text x='70' y='${465 - (e - 10) * 11.4286}' text-anchor='end' font-size='13' fill='${C.ink}'>$${e}</text>`).join("") +
   `<text x='70' y='465' text-anchor='end' font-size='13' fill='${C.ink}'>$10</text><rect x='80' y='459' width='780' height='3' fill='${C.ink}'/>` +
   [16, 20, 24, 28, 32, 36, 40].map((pe) => `<rect x='${80 + (pe - 14) * 27.857 - 1}' y='460' width='2' height='8' fill='${C.ink}'/><text x='${80 + (pe - 14) * 27.857}' y='486' text-anchor='middle' font-size='13' fill='${C.ink}'>${pe}x</text>`).join("");
@@ -52,11 +52,11 @@ RETURN
         & "<text x='860' y='" & ${r1(`${Y("_peak")} - 10`)} & "' text-anchor='end' font-size='13' font-weight='bold' fill='${C.ink}'>FY" & [Peak EPS Year] & " record, " & FORMAT(_peak, "$0.00") & "</text>"
         & "<polyline fill='none' stroke='${C.ink}' stroke-width='4' points='" & _curve & "'/>"
         & "<rect x='" & (_closeX - 5) & "' y='" & (_closeY - 5) & "' width='10' height='10' fill='${C.ink}'/>"
-        & "<text x='" & (_closeX + 14) & "' y='" & (_closeY - 6) & "' font-size='14' font-weight='bold' fill='${C.ink}'>Close " & FORMAT(_price, "$0.00") & " at each multiple</text>"
+        & "<text x='" & (_closeX + 14) & "' y='" & (_closeY - 6) & "' font-size='14' font-weight='bold' fill='${C.ink}'>EPS needed at today's " & FORMAT(_price, "$0.00") & "</text>"
         & "<line x1='" & _peX & "' y1='" & ${r1(Y("_peak"))} & "' x2='" & _peX & "' y2='500' stroke='${C.ink}' stroke-width='2' stroke-dasharray='3 4'/>"
         & "<line x1='" & _scX & "' y1='" & ${r1(Y("_epsSel"))} & "' x2='" & _scX & "' y2='500' stroke='${C.ink}' stroke-width='2' stroke-dasharray='3 4'/>"
         & "<rect x='86' y='" & ${r1(`${Y("_bear")} + 6`)} & "' width='246' height='18' fill='${C.paper}'/>"
-        & "<text x='90' y='" & ${r1(`${Y("_bear")} + 20`)} & "' font-size='13' fill='${C.ink}'>CYCLEBOOK scenarios, bear to bull</text>"
+        & "<text x='90' y='" & ${r1(`${Y("_bear")} + 20`)} & "' font-size='13' fill='${C.ink}'>My bear-to-bull range</text>"
         & "<rect x='" & (_peX - 7) & "' y='" & ${r1(`${Y("_peak")} - 7`)} & "' width='14' height='14' fill='${C.ink}'/>"
         & "<rect x='" & (_scX - 7) & "' y='" & ${r1(`${Y("_epsSel")} - 7`)} & "' width='14' height='14' fill='${C.paper}' stroke='${C.ink}' stroke-width='3'/>"
         ${axisLabel("_peX", `FORMAT(DIVIDE(_price, _peak), "0.0") & "x = FY" & [Peak EPS Year] & " record EPS"`)}
@@ -123,9 +123,10 @@ VAR _pe = [Selected PE]
 VAR _sc = LOWER(SELECTEDVALUE('Scenario'[Scenario], "Base"))
 VAR _eps = [Projected EPS]
 VAR _need = DIVIDE(_price, _pe)
-VAR _l1 = "At " & FORMAT(_price, "$#,##0.00") & ", Deere trades at " & FORMAT(DIVIDE(_price, _eps), "0.0") & "x " & _sc & "-case FY2026 EPS of " & FORMAT(_eps, "$0.00") & "."
-VAR _gap = FORMAT(DIVIDE(_need, _eps) - 1, "+0%;-0%;0%")
-VAR _l2 = "At " & FORMAT(_pe, "0") & "x the price needs " & FORMAT(_need, "$0.00") & " (" & _gap & " vs " & _sc & " case); record EPS justifies it only at " & FORMAT(DIVIDE(_price, [Peak EPS]), "0.0") & "x."`;
+VAR _case = IF([Selected Sales Adjustment] = 0 && [Selected Margin Adjustment Bps] = 0, "the ", "your ") & _sc & " case"
+VAR _l1 = "At " & FORMAT(_price, "$#,##0.00") & ", you're paying " & FORMAT(DIVIDE(_price, _eps), "0.0") & "x the " & FORMAT(_eps, "$0.00") & " a share Deere earns in " & _case & " this year."
+VAR _gap = FORMAT(ABS(DIVIDE(_need, _eps) - 1), "0%") & IF(_need >= _eps, " above ", " below ")
+VAR _l2 = "To justify " & FORMAT(_pe, "0") & "x, Deere has to earn " & FORMAT(_need, "$0.00") & " a share, " & _gap & _case & ". Its record EPS gets you to " & FORMAT(DIVIDE(_price, [Peak EPS]), "0.0") & "x."`;
 
 const finding = `${findingParts}
 RETURN _l1 & " " & _l2`;

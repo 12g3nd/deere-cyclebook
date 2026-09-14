@@ -157,7 +157,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Finding: large ag shrinking again while small ag and construction still grow'"
+                  "Value": "'Finding: large ag is back to shrinking, small ag and construction still grow but slower than in Q1'"
                 }
               }
             }

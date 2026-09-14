@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "FRED and Nasdaq series refresh from the web; Deere figures come from the releases listed above.",
+                    "value": "Power BI pulls FRED and Nasdaq data from the web on refresh. I entered Deere's figures from the releases above.",
                     "textStyle": {
                       "fontFamily": "Verdana",
                       "fontSize": "12px",

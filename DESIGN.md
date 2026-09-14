@@ -209,7 +209,7 @@ A one-bit palette: ink and paper do all the work, and each of the two Deere colo
 - **Guidance Green** (guidance-green): management guidance and nothing else. It is used for the GUIDANCE tag, guidance values in the ledger, the guidance bracket and its labels on the valuation ladder, and the guidance band, its label and its legend swatch on the FINANCIALS exhibit. This is Deere green used as an analyst's annotation, not as livery.
 
 ### Tertiary
-- **Advance Yellow** (advance-yellow): exactly two uses. One is the fill of the single painted button that advances the argument on each card ("Profit by segment", "What drives demand", "Model fiscal 2026", "What the price assumes", "Change the assumptions"). SOURCES, the last card, has none. The other is the 18px selected-multiple marker on the valuation ladder.
+- **Advance Yellow** (advance-yellow): exactly two uses. One is the fill of the single painted button that advances the argument on each card ("Who earns the profit", "What drives demand", "Run the 2026 numbers", "What the price assumes", "Change the assumptions"). SOURCES, the last card, has none. The other is the 18px selected-multiple marker on the valuation ladder.
 
 ### Neutral
 - **Card Paper** (paper): the card, the page background, button bodies, tag knockouts, the halo behind model numerals, the knockout behind a MODEL lead figure, and the backing behind chart labels.
@@ -249,7 +249,7 @@ A one-bit palette: ink and paper do all the work, and each of the two Deere colo
 - **Tag** (Verdana 700, 10px, uppercase): the ACTUAL, GUIDANCE and MODEL provenance words. This is the smallest type in the system; nothing goes below it.
 
 ### Named Rules
-**The Claim Then Evidence Rule.** Every finding is two lines in one 1420x84 band: the claim in 24px bold, then its evidence in 22px regular. No card sets both lines bold or adds a third line. When a claim depends on live data, the authored sentence shows only while its data condition holds; otherwise line one is computed as a judgement from the same data (THE CYCLE: "Three of four demand drivers moved Deere's way over the past year; housing starts did not."). The card never falls back to a topic label.
+**The Claim Then Evidence Rule.** Every finding is two lines in one 1420x84 band: the claim in 24px bold, then its evidence in 22px regular. No card sets both lines bold or adds a third line. When a claim depends on live data, the authored sentence shows only while its data condition holds; otherwise line one is computed as a judgement from the same data (THE CYCLE: "Three of four demand signals went Deere's way this year. Housing starts didn't."). The card never falls back to a topic label.
 
 **The Two Bitmap Slots Rule.** Bitmap lettering is used only for the card title and each ledger's lead figure. Findings, labels, values and buttons are set in Verdana.
 

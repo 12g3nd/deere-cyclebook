@@ -47,7 +47,7 @@ const standard = (key, title, mods, alts, sources, plain, go) => [
 
 const pulse = [
   desk(), header("PULSE"),
-  finding("SVG Pulse Finding", "large ag shrinking again while small ag and construction still grow"),
+  finding("SVG Pulse Finding", "large ag is back to shrinking, small ag and construction still grow but slower than in Q1"),
   R.image({ x: 256, y: 264, w: 960, h: 620, z: 120 }, "SVG Pulse Divergence", "Segment net sales growth versus the same quarter a year earlier, last seven fiscal quarters"),
   R.image({ x: 1236, y: 264, w: 440, h: A.pulseLedgerHeight, z: 130 }, "SVG Pulse Ledger", "Latest-quarter actuals, fiscal 2026 guidance and share price"),
   R.textbox({ x: 256, y: 926, w: 560, h: 24, z: 140 }, [{ text: "Sources: Deere Q3 FY2026 news release (20 Aug 2026); Nasdaq daily close.", size: 12 }], "Sources"),
@@ -58,21 +58,21 @@ const pulse = [
 const financials = standard("Financials", "FINANCIALS", F,
   { finding: "fiscal 2026 sales and net income to date against a year earlier, the peak and guidance", exhibit: "Net income by fiscal year with fiscal 2026 to date, what Q4 still needs and the guidance range", ledger: "Year-to-date actuals, prior years and guidance" },
   "Sources: Deere annual and quarterly earnings releases, FY2022 to Q3 FY2026; guidance from the Q3 FY2026 release (20 Aug 2026).",
-  [["Back to PULSE", NEW.pulse]], ["Profit by segment", NEW.segments]);
+  [["Back to PULSE", NEW.pulse]], ["Who earns the profit", NEW.segments]);
 
 const segments = standard("Segments", "SEGMENTS", S,
-  { finding: "small ag and turf has out-earned large ag in every quarter of fiscal 2026", exhibit: "Segment operating profit by quarter over the last eleven quarters", ledger: "Year-to-date segment operating profit and the fiscal 2026 sales outlook" },
+  { finding: "small ag and turf has earned more than large ag in every quarter of fiscal 2026", exhibit: "Segment operating profit by quarter over the last eleven quarters", ledger: "Year-to-date segment operating profit and the fiscal 2026 sales outlook" },
   "Sources: Deere quarterly earnings releases, FY2024 to Q3 FY2026; sales outlook from the Q3 FY2026 release (20 Aug 2026).",
   [["Financials", NEW.financials]], ["What drives demand", NEW.cycle]);
 
 const cycle = standard("Cycle", "THE CYCLE", Y,
-  { finding: "over the past year crop prices rose and rates fell while housing starts kept dropping", exhibit: "Corn and soybean prices, U.S. net farm income, the federal funds rate and housing starts", ledger: "Latest FRED readings for each demand driver" },
+  { finding: "crop prices and rates moved in farmers' favour this year, housing starts kept falling", exhibit: "Corn and soybean prices, U.S. net farm income, the federal funds rate and housing starts", ledger: "Latest FRED readings for each demand driver" },
   "Sources: FRED series PMAIZMTUSDM, PSOYBUSDM, FEDFUNDS, HOUST and B1448C1A027NBEA (BEA net farm income).",
-  [["Segments", NEW.segments]], ["Model fiscal 2026", NEW.modelLab]);
+  [["Segments", NEW.segments]], ["Run the 2026 numbers", NEW.modelLab]);
 
 const sources = standard("Sources", "SOURCES", P,
-  { finding: "every number in the stack carries a tag saying where it came from", exhibit: "Source registry with each source's provenance tag, type, notes and location", ledger: "How current each input is" },
-  "FRED and Nasdaq series refresh from the web; Deere figures come from the releases listed above.",
+  { finding: "the author tagged every ledger figure with where it came from", exhibit: "Source registry with each source's provenance tag, type, notes and location", ledger: "How current each input is" },
+  "Power BI pulls FRED and Nasdaq data from the web on refresh. I entered Deere's figures from the releases above.",
   [["Back to PULSE", NEW.pulse]], null);
 
 const modelLab = [
@@ -81,23 +81,23 @@ const modelLab = [
   R.image({ x: 256, y: 264, w: 1000, h: 540, z: 120 }, "SVG Model Lab Exhibit", "Bridge from FY2025 reported operating profit to the FY2026 model by segment, with growth and margin assumptions"),
   R.image({ x: 1276, y: 264, w: 400, h: M.ledgerHeight, z: 130 }, "SVG Model Lab Ledger", "Modeled net income, sales and operating profit against guidance and FY2025"),
   R.textbox({ x: 256, y: 818, w: 380, h: 26, z: 141 }, [{ text: "Scenario", size: 13, bold: true }]),
-  R.textbox({ x: 660, y: 818, w: 480, h: 26, z: 142 }, [{ text: "Sales, every segment: FY2026 EPS at each step", size: 13, bold: true }]),
-  R.textbox({ x: 1176, y: 818, w: 500, h: 26, z: 143 }, [{ text: "Operating margin, every segment: EPS at each step", size: 13, bold: true }]),
+  R.textbox({ x: 660, y: 818, w: 480, h: 26, z: 142 }, [{ text: "Sales for all three segments (EPS under each step)", size: 13, bold: true }]),
+  R.textbox({ x: 1176, y: 818, w: 500, h: 26, z: 143 }, [{ text: "Margin for all three segments (EPS under each step)", size: 13, bold: true }]),
   R.image({ x: 256, y: 844, w: 372, h: 64, z: 145 }, "SVG Scenario Keys", "Scenario keys: Bear, Base, Bull"),
   R.buttonSlicer({ x: 256, y: 844, w: 372, h: 64, z: 310 }, "Scenario", "Scenario", 3, "overlay", { sync: SYNC.scenario }),
   R.image({ x: 660, y: 848, w: 480, h: 80, z: 150 }, "SVG Sales Strip", "Sales adjustment for every segment, minus 10 to plus 10 percent, with FY2026 EPS at each step"),
   R.buttonSlicer({ x: 660, y: 848, w: 480, h: 80, z: 320 }, "Sales Adjustment", "Sales Adjustment", 5, "overlay", { sync: SYNC.sales }),
   R.image({ x: 1176, y: 848, w: 500, h: 80, z: 155 }, "SVG Margin Strip", "Operating margin adjustment for every segment, minus 200 to plus 200 basis points, with FY2026 EPS at each step"),
   R.buttonSlicer({ x: 1176, y: 848, w: 500, h: 80, z: 330 }, "Margin Adjustment", "Margin Adjustment (bps)", 5, "overlay", { sync: SYNC.margin }),
-  note({ x: 256, y: 968, w: 780, h: 44 }, "Scenario, sales and margin settings are CYCLEBOOK assumptions and carry over to VALUATION. FY2025 actuals from Deere's annual report. Stipple = model."),
+  note({ x: 256, y: 968, w: 780, h: 44 }, "These settings are my assumptions, and VALUATION uses whatever you pick here. FY2025 figures come from Deere's annual report. Stipple = model."),
   ...foot(946, [["The cycle", NEW.cycle]], ["What the price assumes", NEW.valuation]),
   ...stackIndex(NEW.modelLab),
 ];
 
 const valuation = [
   desk(), header("VALUATION"),
-  finding("SVG Valuation Finding", "EPS today's price requires at the selected multiple, against the record"),
-  R.image({ x: 256, y: 264, w: 1000, h: 540, z: 120 }, "SVG Valuation Ladder", "EPS the latest close requires at each P/E multiple, against the FY2023 record, management guidance and CYCLEBOOK scenarios"),
+  finding("SVG Valuation Finding", "the multiple you pay on the selected case's EPS, and the EPS Deere has to earn at the selected multiple"),
+  R.image({ x: 256, y: 264, w: 1000, h: 540, z: 120 }, "SVG Valuation Ladder", "EPS Deere has to earn at each P/E multiple at the latest close, against the FY2023 record, management guidance and the author's bear-to-bull range"),
   R.image({ x: 1276, y: 264, w: 400, h: B.valuationLedgerHeight, z: 130 }, "SVG Valuation Ledger", "Share price, market cap, trailing P/E and scenario outputs"),
   R.textbox({ x: 256, y: 818, w: 200, h: 26, z: 140 }, [{ text: "Scenario", size: 13, bold: true }]),
   R.image({ x: 256, y: 844, w: 372, h: 64, z: 145 }, "SVG Scenario Keys", "Scenario keys: Bear, Base, Bull"),

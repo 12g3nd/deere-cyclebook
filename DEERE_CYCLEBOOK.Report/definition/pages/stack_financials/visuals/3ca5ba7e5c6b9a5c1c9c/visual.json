@@ -152,7 +152,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Profit by segment'"
+                  "Value": "'Who earns the profit'"
                 }
               }
             }

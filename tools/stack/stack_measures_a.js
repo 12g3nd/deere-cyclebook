@@ -29,8 +29,8 @@ const pulseFinding = `
 VAR _key = [Latest Period Key]
 RETURN
     ${daxStr(svgOpen(1420, 84))}
-        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='${C.ink}'>Large ag is shrinking again; small ag and construction still grow, just more slowly.</text>"
-        & "<text x='0' y='70' font-size='22' fill='${C.ink}'>Sales in " & [Latest Period Label] & " vs a year earlier: PPA " & ${pct(yoyAt("_key", "PPA"))} & ", SAT " & ${pct(yoyAt("_key", "SAT"))} & ", C&amp;F " & ${pct(yoyAt("_key", "CF"))} & ".</text>"
+        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='${C.ink}'>Large ag is back to shrinking. Small ag and construction still grow, slower than they did in Q1.</text>"
+        & "<text x='0' y='70' font-size='22' fill='${C.ink}'>" & [Latest Period Label] & " sales against the same quarter last year: PPA " & ${pct(yoyAt("_key", "PPA"))} & ", SAT " & ${pct(yoyAt("_key", "SAT"))} & ", C&amp;F " & ${pct(yoyAt("_key", "CF"))} & ".</text>"
         & "</svg>"`;
 
 // PULSE exhibit (960x620): segment sales growth vs a year earlier, last seven fiscal quarters.
@@ -43,7 +43,7 @@ const segs = [
 const yPix = (v) => `ROUND(MAX(100, MIN(510, 305 - ${v} * 512.5)), 1)`;
 
 const divergenceStatic = svgOpen(960, 620) +
-  `<text x='0' y='22' font-size='16' font-weight='bold' fill='${C.ink}'>Segment net sales, change vs the same quarter a year earlier</text>` +
+  `<text x='0' y='22' font-size='16' font-weight='bold' fill='${C.ink}'>Segment sales growth against the same quarter last year</text>` +
   `<g fill='none' stroke='${C.ink}'>` +
   `<line x1='0' y1='44' x2='34' y2='44' stroke-width='5'/><line x1='270' y1='44' x2='304' y2='44' stroke-width='3' stroke-dasharray='14 7'/><line x1='510' y1='44' x2='544' y2='44' stroke-width='3' stroke-dasharray='4 6'/></g>` +
   `<g font-size='13' fill='${C.ink}'><text x='42' y='49'>PPA ${esc("Production & Precision Ag")}</text><text x='312' y='49'>SAT Small Ag ${esc("&")} Turf</text><text x='552' y='49'>C${esc("&")}F Construction ${esc("&")} Forestry</text></g>` +
@@ -127,8 +127,8 @@ const pulseRows = [
   { label: `"Diluted EPS, " & _period`, tag: "ACTUAL", value: `FORMAT([Latest EPS], "$0.00")`, note: `${pct("[Latest EPS YoY]")} & " vs a year earlier"` },
   { label: `"Equipment operating profit, " & _period`, tag: "ACTUAL", value: `"$" & FORMAT(${bridge(`'Earnings Bridge'[Order] <= 3`)}, "#,##0") & "M"`, note: `"PPA $" & FORMAT(${bridge(`'Earnings Bridge'[Order] = 1`)}, "#,##0") & "M, SAT $" & FORMAT(${bridge(`'Earnings Bridge'[Order] = 2`)}, "#,##0") & "M, C&amp;F $" & FORMAT(${bridge(`'Earnings Bridge'[Order] = 3`)}, "#,##0") & "M"` },
   { label: `"Net income, fiscal 2026 to date"`, tag: "ACTUAL", value: `"$" & FORMAT(CALCULATE(SUM('Earnings Bridge'[YTD FY26]), 'Earnings Bridge'[Kind] = "Total"), "#,##0") & "M"`, note: `"First three quarters"` },
-  { label: `"Net income guidance, FY2026"`, tag: "GUIDANCE", value: `"$4.75B-5.00B"`, note: `"Management range"` },
-  { label: `"Share price, " & FORMAT([Latest Price Date], "d mmm yyyy")`, tag: "ACTUAL", value: `FORMAT([Latest Price], "$0.00")`, note: `FORMAT([Trailing PE], "0.0") & "x trailing four-quarter EPS"` },
+  { label: `"Net income guidance, FY2026"`, tag: "GUIDANCE", value: `"$4.75B-5.00B"`, note: `"Management's range"` },
+  { label: `"Share price, " & FORMAT([Latest Price Date], "d mmm yyyy")`, tag: "ACTUAL", value: `FORMAT([Latest Price], "$0.00")`, note: `FORMAT([Trailing PE], "0.0") & "x the last four quarters of EPS"` },
 ];
 const pulseLedger = () => `
 VAR _period = [Latest Period Label]
@@ -154,7 +154,7 @@ module.exports = {
     { name: "SVG Stack Desk", doc: "The Stack: dithered desk with the card stack, full 1920x1080 canvas.", expr: daxStr(desk), svg: true },
     { name: "SVG Header PULSE", doc: "The Stack: PULSE card header with bitmap title and as-of line.", expr: header("PULSE"), svg: true },
     { name: "SVG Header VALUATION", doc: "The Stack: VALUATION card header with bitmap title and as-of line.", expr: header("VALUATION"), svg: true },
-    { name: "SVG Pulse Finding", doc: "The Stack: PULSE finding (author to rewrite line one, see _brief/VOICE_REWRITES.md P2) over the latest quarter's segment growth.", expr: pulseFinding, svg: true },
+    { name: "SVG Pulse Finding", doc: "The Stack: PULSE finding, the author's sentence over the latest quarter's segment growth.", expr: pulseFinding, svg: true },
     { name: "SVG Pulse Divergence", doc: "The Stack: segment sales growth vs a year earlier over the last seven fiscal quarters.", expr: divergence(), svg: true },
     { name: "SVG Pulse Ledger", doc: "The Stack: PULSE ledger of latest-quarter actuals, guidance and price.", expr: pulseLedger(), svg: true },
   ],

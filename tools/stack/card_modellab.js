@@ -26,11 +26,12 @@ VAR _eps = [Projected EPS]
 VAR _op25 = ${fy25("Operating Profit")}
 VAR _sales25 = ${fy25("Net Sales")}
 VAR _tax = DIVIDE(-${bridge(6)}, ${bridge(7)} - ${bridge(6)})
-VAR _set = LOWER(_sc) & " case" & IF(_sa <> 0, ", sales " & SUBSTITUTE(FORMAT(_sa, "+0%;-0%"), "%", "%25"), "") & IF(_ma <> 0, ", margins " & FORMAT(_ma, "+0;-0") & " bps", "")`;
+VAR _set = IF(_sa = 0 && _ma = 0, "the ", "your ") & LOWER(_sc) & " case"`;
 
+// "your" marks a case the reader has adjusted; the strips under the exhibit show which settings.
 const finding = finding2(vars,
-  `"In the " & _set & ", equipment operating profit reaches " & FORMAT(_op / 1000, "$0.00") & "B, " & IF(_op >= _op25, "up ", "down ") & SUBSTITUTE(FORMAT(ABS(DIVIDE(_op, _op25) - 1), "0%"), "%", "%25") & " on FY2025."`,
-  `"That implies FY2026 net income of " & FORMAT(_ni / 1000, "$0.00") & "B and EPS of " & FORMAT(_eps, "$0.00") & ", " & IF(_ni < 4750, "below", IF(_ni > 5000, "above", "inside")) & " management's $4.75B-5.00B range."`);
+  `"In " & _set & ", Deere's equipment business earns " & FORMAT(_op / 1000, "$0.00") & "B in operating profit, " & SUBSTITUTE(FORMAT(ABS(DIVIDE(_op, _op25) - 1), "0%"), "%", "%25") & IF(_op >= _op25, " more", " less") & " than FY2025."`,
+  `"Net income comes to " & FORMAT(_ni / 1000, "$0.00") & "B, or " & FORMAT(_eps, "$0.00") & " a share, " & IF(_ni < 4750, "below", IF(_ni > 5000, "above", "inside")) & " the $4.75B-5.00B management expects."`);
 
 // Exhibit (1000x540): a bridge from FY2025 reported operating profit to the FY2026 model, then the assumptions under it.
 // $0 at y 440, 54.29px per $1B; five columns, 180px pitch from x 170.
@@ -103,7 +104,7 @@ const rows = [
   { label: `"Net income, FY2026, " & LOWER(_sc) & " case"`, tag: "MODEL", value: `FORMAT(_ni / 1000, "$0.00") & "B"`, note: `"EPS " & FORMAT(_eps, "$0.00") & " on 269.8M diluted shares"` },
   { label: `"Equipment sales, FY2026"`, tag: "MODEL", value: `FORMAT(_sales / 1000, "$0.0") & "B"`, note: `${pct("DIVIDE(_sales, _sales25) - 1")} & " on FY2025"` },
   { label: `"Operating profit, FY2026"`, tag: "MODEL", value: `FORMAT(_op / 1000, "$0.00") & "B"`, note: `SUBSTITUTE(FORMAT(DIVIDE(_op, _sales), "0.0%"), "%", "%25") & " margin"` },
-  { label: `"Net income guidance, FY2026"`, tag: "GUIDANCE", value: `"$4.75B-5.00B"`, note: `"Management range"` },
+  { label: `"Net income guidance, FY2026"`, tag: "GUIDANCE", value: `"$4.75B-5.00B"`, note: `"Management's range"` },
   { label: `"Operating profit, FY2025"`, tag: "ACTUAL", value: `FORMAT(_op25 / 1000, "$0.00") & "B"`, note: `SUBSTITUTE(FORMAT(DIVIDE(_op25, _sales25), "0.0%"), "%", "%25") & " margin"` },
   { label: `"Tax rate on your changes"`, tag: "MODEL", value: `SUBSTITUTE(FORMAT(_tax, "0.0%"), "%", "%25")`, note: `"FY2026 effective rate, to Q3"` },
 ];

@@ -1,6 +1,6 @@
 # DEERE // CYCLEBOOK
 
-An interactive Deere & Company equity-research, operating-cycle and valuation workstation built as a Power BI Project (PBIP).
+An interactive equity research report on Deere & Company (operating cycle, scenario model and valuation), built as a Power BI Project (PBIP).
 
 ## Open it
 

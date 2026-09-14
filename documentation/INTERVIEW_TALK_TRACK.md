@@ -1,7 +1,7 @@
 # CYCLEBOOK — Portfolio / Interview Notes
 
 ## 20-second version
-Built a Power BI equity-research workstation for Deere & Company using real reported financials, live FRED macro data, a semantic model, DAX, scenario controls and transparent valuation logic.
+I built a research report on John Deere in Power BI. It runs on Deere's reported numbers and live FRED data, and you can change my assumptions to see what earnings today's price needs. I tagged every number as reported, guided or assumed, because that's the first thing I'd want to know.
 
 ## What makes it more than a dashboard
 - Explicit star-schema relationships.
@@ -22,4 +22,4 @@ Built a Power BI equity-research workstation for Deere & Company using real repo
 6. If the interviewer is technical, open MODEL // PROVENANCE or Model view.
 
 ## One sentence for a resume project bullet
-Built a Power BI Deere equity-research workstation combining reported financial/segment data and live FRED macro series with DAX scenario modeling, operating-margin sensitivities, and interactive P/E valuation in a version-controlled PBIP semantic model.
+Built a 7-page Power BI equity research report on Deere & Company, with a DAX scenario model linking segment sales and margin assumptions to EPS and implied share value.
