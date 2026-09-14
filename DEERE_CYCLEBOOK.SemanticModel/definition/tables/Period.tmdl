@@ -1,0 +1,57 @@
+/// Fiscal-quarter dimension used by Deere quarterly actuals.
+table Period
+	lineageTag: 40761bf1-faa7-421a-ac9e-4363c564cc3b
+
+	column 'Period Key'
+		dataType: int64
+		isHidden
+		lineageTag: bf6e3dee-f212-4705-a23a-1980c9bbf0be
+		summarizeBy: none
+		sourceColumn: PeriodKey
+
+	column 'Fiscal Year'
+		dataType: int64
+		lineageTag: aed1d7ff-860f-497a-9fe7-2ec00ae6f79e
+		summarizeBy: none
+		sourceColumn: FiscalYear
+
+	column 'Fiscal Quarter'
+		dataType: string
+		lineageTag: 174f24a6-ede7-41e0-b222-7983c846b012
+		summarizeBy: none
+		sourceColumn: FiscalQuarter
+
+	column 'Period Label'
+		dataType: string
+		lineageTag: e3a428ac-4a63-4e30-bd95-004c20909dfd
+		summarizeBy: none
+		sourceColumn: PeriodLabel
+		sortByColumn: 'Period Sort'
+
+	column 'Period Sort'
+		dataType: int64
+		isHidden
+		lineageTag: d322858e-3b3e-4865-8882-fd033a65b4a8
+		summarizeBy: none
+		sourceColumn: PeriodSort
+
+	partition Period = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [PeriodKey = Int64.Type, FiscalYear = Int64.Type, FiscalQuarter = text, PeriodLabel = text, PeriodSort = Int64.Type], {
+									{202401, 2024, "Q1", "FY24 Q1", 1},
+									{202402, 2024, "Q2", "FY24 Q2", 2},
+									{202403, 2024, "Q3", "FY24 Q3", 3},
+									{202404, 2024, "Q4", "FY24 Q4", 4},
+									{202501, 2025, "Q1", "FY25 Q1", 5},
+									{202502, 2025, "Q2", "FY25 Q2", 6},
+									{202503, 2025, "Q3", "FY25 Q3", 7},
+									{202504, 2025, "Q4", "FY25 Q4", 8},
+									{202601, 2026, "Q1", "FY26 Q1", 9},
+									{202602, 2026, "Q2", "FY26 Q2", 10},
+									{202603, 2026, "Q3", "FY26 Q3", 11}
+								})
+				in
+					Source
+

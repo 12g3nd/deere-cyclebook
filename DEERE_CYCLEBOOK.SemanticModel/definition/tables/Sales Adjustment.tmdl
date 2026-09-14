@@ -1,0 +1,24 @@
+/// Disconnected sensitivity control layered on top of scenario segment-sales growth assumptions.
+table 'Sales Adjustment'
+	lineageTag: 8f8a60de-efe7-4b2e-baea-911fbc5f48fa
+
+	column 'Sales Adjustment'
+		dataType: double
+		lineageTag: dc5cf0df-ec41-402f-a55e-ec4e38ad5dc7
+		summarizeBy: none
+		sourceColumn: AdjustmentPct
+
+	partition 'Sales Adjustment' = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [AdjustmentPct = number], {
+									{-0.1},
+									{-0.05},
+									{0.0},
+									{0.05},
+									{0.1}
+								})
+				in
+					Source
+

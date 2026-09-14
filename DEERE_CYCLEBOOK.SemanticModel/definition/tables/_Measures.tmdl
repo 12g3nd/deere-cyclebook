@@ -1,0 +1,324 @@
+/// Dedicated measure table for CYCLEBOOK calculations.
+table _Measures
+	lineageTag: 4a4deb44-aff8-4b60-82c0-8dbf2f6815b1
+
+	/// Latest fiscal-quarter key available in the model.
+	measure 'Latest Period Key' = MAXX(ALL('Period'), 'Period'[Period Key])
+		formatString: 0
+		lineageTag: 8a48c342-24f0-4deb-b37a-6464aedbf072
+
+	/// Quarterly consolidated net sales and revenues.
+	measure 'Quarter Revenue' = SUM('Quarterly Financials'[Net Sales & Revenues])
+		formatString: $#,##0 "mm"
+		lineageTag: fa30b2c9-0e13-46b4-ad64-93b73b0b712a
+
+	/// Quarterly consolidated revenue expressed in USD billions.
+	measure 'Quarter Revenue Bn' = DIVIDE([Quarter Revenue], 1000)
+		formatString: $0.0B
+		lineageTag: 553e110c-ec31-49a3-987b-7948d1b372b7
+
+	/// Quarterly net income attributable to Deere.
+	measure 'Quarter Net Income' = SUM('Quarterly Financials'[Net Income])
+		formatString: $#,##0 "mm"
+		lineageTag: 9f674432-8fb8-41ca-90ae-9b49e291fefa
+
+	/// Quarterly net income expressed in USD billions.
+	measure 'Quarter Net Income Bn' = DIVIDE([Quarter Net Income], 1000)
+		formatString: $0.0B
+		lineageTag: 589f9638-7c23-49b1-b6d4-6fdfb6cad22a
+
+	/// Diluted earnings per share for the current quarter context.
+	measure 'Quarter EPS' = MAX('Quarterly Financials'[Diluted EPS])
+		formatString: $0.00
+		lineageTag: 342c83a3-eee0-4b62-bcdb-5222236d4ddf
+
+	/// Revenue for the latest fiscal quarter.
+	measure 'Latest Revenue' = VAR p = [Latest Period Key] RETURN CALCULATE([Quarter Revenue], REMOVEFILTERS('Period'), 'Period'[Period Key] = p)
+		formatString: $#,##0 "mm"
+		lineageTag: 1c21fd76-87d4-442f-88fd-d64cf5b843b1
+
+	/// Revenue for the latest fiscal quarter in USD billions.
+	measure 'Latest Revenue Bn' = DIVIDE([Latest Revenue],1000)
+		formatString: $0.0B
+		lineageTag: 80d6d05d-cb5e-4d40-b01f-6387738517f4
+
+	/// Net income for the latest fiscal quarter.
+	measure 'Latest Net Income' = VAR p = [Latest Period Key] RETURN CALCULATE([Quarter Net Income], REMOVEFILTERS('Period'), 'Period'[Period Key] = p)
+		formatString: $#,##0 "mm"
+		lineageTag: 6a4e86a5-55f6-486f-a905-278653a48a31
+
+	/// Latest-quarter net income in USD billions.
+	measure 'Latest Net Income Bn' = DIVIDE([Latest Net Income],1000)
+		formatString: $0.0B
+		lineageTag: 3ebfd395-bd99-4dd0-90a2-7a7ebd379131
+
+	/// Latest-quarter diluted EPS.
+	measure 'Latest EPS' = VAR p = [Latest Period Key] RETURN CALCULATE([Quarter EPS], REMOVEFILTERS('Period'), 'Period'[Period Key] = p)
+		formatString: $0.00
+		lineageTag: 294ceb40-c15f-4f29-87b4-2b5bd725ef96
+
+	/// Latest-quarter revenue growth versus the prior-year quarter.
+	measure 'Latest Revenue YoY' = VAR p=[Latest Period Key] RETURN CALCULATE(MAX('Quarterly Financials'[Revenue YoY %]), REMOVEFILTERS('Period'), 'Period'[Period Key]=p)
+		formatString: 0.0%
+		lineageTag: ae9aaf16-0f5d-40bb-be1a-3f3558a96cba
+
+	/// Latest-quarter net-income growth versus the prior-year quarter.
+	measure 'Latest Net Income YoY' = VAR p=[Latest Period Key] RETURN CALCULATE(MAX('Quarterly Financials'[Net Income YoY %]), REMOVEFILTERS('Period'), 'Period'[Period Key]=p)
+		formatString: 0.0%
+		lineageTag: ad7c5d5b-05d4-4340-a256-bf1f6359d243
+
+	/// Quarterly equipment-segment net sales.
+	measure 'Segment Sales' = SUM('Quarterly Segments'[Net Sales])
+		formatString: $#,##0 "mm"
+		lineageTag: b4bf3f82-41cd-4e9d-9ceb-06edccab38b1
+
+	/// Quarterly segment operating profit.
+	measure 'Segment Operating Profit' = SUM('Quarterly Segments'[Operating Profit])
+		formatString: $#,##0 "mm"
+		lineageTag: b10c3a7a-d47b-4886-9600-6add46aae66e
+
+	/// Quarterly segment operating margin.
+	measure 'Segment Operating Margin' = DIVIDE([Segment Operating Profit],[Segment Sales])
+		formatString: 0.0%
+		lineageTag: 13b445e0-5db4-4daf-8303-42e4fd3b37b7
+
+	/// Latest-quarter segment net sales.
+	measure 'Latest Segment Sales' = VAR p=[Latest Period Key] RETURN CALCULATE([Segment Sales], REMOVEFILTERS('Period'), 'Period'[Period Key]=p)
+		formatString: $#,##0 "mm"
+		lineageTag: d2ef3b20-e89a-4349-a2c2-f69c705b8019
+
+	/// Latest-quarter segment operating margin.
+	measure 'Latest Segment Margin' = VAR p=[Latest Period Key] RETURN CALCULATE([Segment Operating Margin], REMOVEFILTERS('Period'), 'Period'[Period Key]=p)
+		formatString: 0.0%
+		lineageTag: 6ffb10ee-6063-483a-8cf7-30e61ba8a0f8
+
+	/// Latest-quarter segment sales growth versus prior year.
+	measure 'Latest Segment Sales YoY' = VAR p=[Latest Period Key] RETURN CALCULATE(MAX('Quarterly Segments'[Sales YoY %]), REMOVEFILTERS('Period'), 'Period'[Period Key]=p)
+		formatString: 0.0%
+		lineageTag: 23d73996-5c22-4b3e-a3b7-0f29b3c0baa0
+
+	/// Annual consolidated net sales and revenues.
+	measure 'Annual Revenue' = SUM('Annual Financials'[Net Sales & Revenues])
+		formatString: $#,##0 "mm"
+		lineageTag: 6b8c83c1-503b-436d-834b-e0124dea460f
+
+	/// Annual consolidated net sales and revenues in USD billions.
+	measure 'Annual Revenue Bn' = DIVIDE([Annual Revenue],1000)
+		formatString: $0.0B
+		lineageTag: 5c0974c7-4dda-42ac-9ce4-ac91690cdb71
+
+	/// Annual net income attributable to Deere.
+	measure 'Annual Net Income' = SUM('Annual Financials'[Net Income])
+		formatString: $#,##0 "mm"
+		lineageTag: 6c31dea7-adc8-4c5d-ac2f-a9b1e3c211b2
+
+	/// Annual net income in USD billions.
+	measure 'Annual Net Income Bn' = DIVIDE([Annual Net Income],1000)
+		formatString: $0.0B
+		lineageTag: d685f353-9b47-4b89-bf6f-57496f38607f
+
+	/// Annual diluted earnings per share.
+	measure 'Annual EPS' = MAX('Annual Financials'[Diluted EPS])
+		formatString: $0.00
+		lineageTag: 092353a4-6e71-4215-bfbd-94a6bdd1ee7b
+
+	/// Selected fiscal year, defaulting to the latest actual year when nothing is selected.
+	measure 'Selected Annual Year' = SELECTEDVALUE('Annual Financials'[Fiscal Year], MAXX(ALL('Annual Financials'), 'Annual Financials'[Fiscal Year]))
+		formatString: 0
+		lineageTag: 13e94e9e-f1e1-46e4-a495-33a4580af775
+
+	/// Annual revenue for the selected year; defaults to latest actual year.
+	measure 'Selected Annual Revenue' = VAR y=[Selected Annual Year] RETURN CALCULATE([Annual Revenue], REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Fiscal Year]=y)
+		formatString: $#,##0 "mm"
+		lineageTag: 8d7d1ab3-d25b-45cc-bd8c-bb5a30079e30
+
+	/// Selected-year annual revenue in USD billions.
+	measure 'Selected Annual Revenue Bn' = DIVIDE([Selected Annual Revenue],1000)
+		formatString: $0.0B
+		lineageTag: 82cf8bb3-4211-4023-876f-24ab20146d88
+
+	/// Annual net income for the selected year; defaults to latest actual year.
+	measure 'Selected Annual Net Income' = VAR y=[Selected Annual Year] RETURN CALCULATE([Annual Net Income], REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Fiscal Year]=y)
+		formatString: $#,##0 "mm"
+		lineageTag: 131a0d61-594d-40cf-8b66-289f1037fc60
+
+	/// Selected-year annual net income in USD billions.
+	measure 'Selected Annual Net Income Bn' = DIVIDE([Selected Annual Net Income],1000)
+		formatString: $0.0B
+		lineageTag: 499d4b61-2d96-4f19-bb9d-6c127027b0e5
+
+	/// Annual diluted EPS for the selected year; defaults to latest actual year.
+	measure 'Selected Annual EPS' = VAR y=[Selected Annual Year] RETURN CALCULATE(MAX('Annual Financials'[Diluted EPS]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Fiscal Year]=y)
+		formatString: $0.00
+		lineageTag: e48b2296-c1fe-470e-8e11-d77168c137bd
+
+	/// Annual equipment-segment net sales.
+	measure 'Annual Segment Sales' = SUM('Annual Segments'[Net Sales])
+		formatString: $#,##0 "mm"
+		lineageTag: b184ff99-4cb3-4d7c-832f-171b91270a97
+
+	/// Annual segment operating profit.
+	measure 'Annual Segment Operating Profit' = SUM('Annual Segments'[Operating Profit])
+		formatString: $#,##0 "mm"
+		lineageTag: bd595fcc-152f-47b1-b3d1-594538888171
+
+	/// Annual equipment-segment operating margin.
+	measure 'Annual Segment Margin' = DIVIDE([Annual Segment Operating Profit],[Annual Segment Sales])
+		formatString: 0.0%
+		lineageTag: 68768bf4-e5e8-4be0-a895-1f6e67aaead6
+
+	/// FY2025 segment net sales base used by the scenario model.
+	measure 'FY25 Segment Sales' = CALCULATE([Annual Segment Sales], 'Annual Segments'[Fiscal Year] = 2025)
+		formatString: $#,##0 "mm"
+		lineageTag: efd71c50-8746-486a-8eb1-2895874bdb20
+
+	/// User-selected additive change to segment sales-growth assumptions.
+	measure 'Selected Sales Adjustment' = SELECTEDVALUE('Sales Adjustment'[Sales Adjustment], 0)
+		formatString: 0.0%
+		lineageTag: c98d1c5c-54a4-4255-8116-9b980ee01276
+
+	/// User-selected additive operating-margin sensitivity in basis points.
+	measure 'Selected Margin Adjustment Bps' = SELECTEDVALUE('Margin Adjustment'[Margin Adjustment (bps)], 0)
+		formatString: 0 "bps"
+		lineageTag: 3cc8bbee-b240-40e4-9d93-ebf130c4f538
+
+	/// Scenario segment growth plus user sales-growth sensitivity.
+	measure 'Model Segment Growth' = VAR s=SELECTEDVALUE('Segment'[Segment Code]) VAR a=[Selected Sales Adjustment] RETURN SWITCH(s, "PPA", SELECTEDVALUE('Scenario'[PPA Growth],-0.10)+a, "SAT", SELECTEDVALUE('Scenario'[SAT Growth],0.15)+a, "CF", SELECTEDVALUE('Scenario'[CF Growth],0.20)+a)
+		formatString: 0.0%
+		lineageTag: 3bfad655-bc37-4742-9604-b62ae0a49e91
+
+	/// Modeled FY2026 segment sales.
+	measure 'Model Segment Sales' = [FY25 Segment Sales] * (1 + [Model Segment Growth])
+		formatString: $#,##0 "mm"
+		lineageTag: a945b598-8a3a-4ed1-b9a0-57d70bcdc5d4
+
+	/// Scenario segment operating margin plus margin sensitivity.
+	measure 'Model Segment Margin' = VAR s=SELECTEDVALUE('Segment'[Segment Code]) VAR b=[Selected Margin Adjustment Bps]/10000 RETURN SWITCH(s, "PPA",SELECTEDVALUE('Scenario'[PPA Margin],0.13)+b, "SAT",SELECTEDVALUE('Scenario'[SAT Margin],0.18)+b, "CF",SELECTEDVALUE('Scenario'[CF Margin],0.12)+b)
+		formatString: 0.0%
+		lineageTag: 547d039d-56c7-4e00-a23b-093294c1b3f3
+
+	/// Modeled FY2026 segment operating profit.
+	measure 'Model Segment Operating Profit' = [Model Segment Sales] * [Model Segment Margin]
+		formatString: $#,##0 "mm"
+		lineageTag: 09407d3a-02ce-480f-af7d-bfe1b01361bb
+
+	/// Modeled aggregate equipment net sales across three operating segments.
+	measure 'Model Equipment Sales' = SUMX(VALUES('Segment'[Segment Code]), [Model Segment Sales])
+		formatString: $#,##0 "mm"
+		lineageTag: cbcb488a-0eeb-4314-8531-c9e08f0cf9cc
+
+	/// Modeled aggregate equipment net sales in USD billions.
+	measure 'Model Equipment Sales Bn' = DIVIDE([Model Equipment Sales],1000)
+		formatString: $0.0B
+		lineageTag: cecbff66-466b-4e91-bc00-def37d8bdc4f
+
+	/// Modeled aggregate equipment operating profit.
+	measure 'Model Equipment Operating Profit' = SUMX(VALUES('Segment'[Segment Code]), [Model Segment Operating Profit])
+		formatString: $#,##0 "mm"
+		lineageTag: e906b762-1313-40b7-b93b-feb02f8b658a
+
+	/// Modeled aggregate equipment operating profit in USD billions.
+	measure 'Model Equipment Operating Profit Bn' = DIVIDE([Model Equipment Operating Profit],1000)
+		formatString: $0.0B
+		lineageTag: d9f13b00-5dfe-4d33-a068-97a61f35ebf2
+
+	/// Modeled aggregate equipment operating margin.
+	measure 'Model Equipment Operating Margin' = DIVIDE([Model Equipment Operating Profit],[Model Equipment Sales])
+		formatString: 0.0%
+		lineageTag: 2f69784a-eaba-4027-a918-c07f4f0d2393
+
+	/// Analyst FY2026 net-income scenario. Base equals the midpoint of current management guidance.
+	measure 'Scenario Net Income' = SELECTEDVALUE('Scenario'[Net Income],4875)
+		formatString: $#,##0 "mm"
+		lineageTag: 59ce36ec-cf13-4d4d-b405-d58852afc079
+
+	/// Analyst FY2026 net-income scenario in USD billions.
+	measure 'Scenario Net Income Bn' = DIVIDE([Scenario Net Income],1000)
+		formatString: $0.0B
+		lineageTag: 46a0deda-50c3-4bfc-9b37-d03760bac82a
+
+	/// Scenario net income divided by 270.8 million assumed diluted shares.
+	measure 'Projected EPS' = DIVIDE([Scenario Net Income],270.8)
+		formatString: $0.00
+		lineageTag: e9c167b4-a2c6-4ad9-a228-ad744b2f6d60
+
+	/// Selected price-to-earnings valuation multiple.
+	measure 'Selected PE' = SELECTEDVALUE('PE Multiple'[P/E Multiple],28)
+		formatString: 0.0x
+		lineageTag: 36dc8824-dfa4-4f81-b090-76955dd8593a
+
+	/// Scenario implied value per share.
+	measure 'Implied Price' = [Projected EPS] * [Selected PE]
+		formatString: $0
+		lineageTag: 6a3e8404-7676-48f5-9725-46dc68d90787
+
+	/// Scenario implied market capitalization.
+	measure 'Implied Market Cap Bn' = DIVIDE([Implied Price]*270.8,1000)
+		formatString: $0.0B
+		lineageTag: 7060ce22-274a-4f6a-9d7a-41044c21de95
+
+	/// FY2026 Q4 net income required to reach the selected full-year scenario after Q3 YTD actuals.
+	measure 'Q4 Net Income Needed' = [Scenario Net Income] - 3808
+		formatString: $#,##0 "mm"
+		lineageTag: 8a0ec737-937a-44ea-b263-32d7162ffea0
+
+	/// Midpoint of Deere Q3 FY2026 net-income guidance of $4.75B-$5.00B.
+	measure 'Mgmt Guidance Midpoint Bn' = 4.875
+		formatString: $0.000B
+		lineageTag: 81c8c821-7203-4f3c-b654-9490fa4c64d5
+
+	/// Average macro-series observation in current filter context.
+	measure 'Macro Value' = AVERAGE('Macro Data'[Value])
+		formatString: 0.00
+		lineageTag: 23ad9149-d947-4e0f-91d3-0fc503cddbd4
+
+	/// World corn price, USD per metric ton.
+	measure 'Corn Price' = CALCULATE([Macro Value], KEEPFILTERS('Macro Data'[Series] = "Corn"))
+		formatString: $0
+		lineageTag: c4c5476c-5910-4632-bb35-21fb3acf6ae3
+
+	/// World soybean price, USD per metric ton.
+	measure 'Soybean Price' = CALCULATE([Macro Value], KEEPFILTERS('Macro Data'[Series] = "Soybeans"))
+		formatString: $0
+		lineageTag: b182c5a5-e2d6-4ba9-9fc0-c5f79dd69ae6
+
+	/// Effective federal funds rate. Note: FRED stores percentage points; display requires interpretation.
+	measure 'Federal Funds Rate' = CALCULATE([Macro Value], KEEPFILTERS('Macro Data'[Series] = "Federal Funds"))
+		formatString: 0.00"%"
+		lineageTag: 30b5b3a2-5675-4c6a-bd5f-04f496e3a0a9
+
+	/// U.S. housing starts, thousands SAAR.
+	measure 'Housing Starts' = CALCULATE([Macro Value], KEEPFILTERS('Macro Data'[Series] = "Housing Starts"))
+		formatString: #,##0
+		lineageTag: 90d8bcd9-1e6e-493c-851e-1587a6dfcf22
+
+	/// U.S. total construction spending, USD millions SAAR.
+	measure 'Construction Spending' = CALCULATE([Macro Value], KEEPFILTERS('Macro Data'[Series] = "Construction Spending"))
+		formatString: $#,##0
+		lineageTag: 9e9c8c23-9e66-489d-aca2-127a4bd8b1c9
+
+	/// Canadian dollars per U.S. dollar.
+	measure 'CAD per USD' = CALCULATE([Macro Value], KEEPFILTERS('Macro Data'[Series] = "CAD per USD"))
+		formatString: 0.000
+		lineageTag: aef07dae-fc7a-4dfd-8bd2-36a6ea28123e
+
+	/// U.S. net farm income, USD billions.
+	measure 'Net Farm Income' = AVERAGE('Farm Income'[Net Farm Income])
+		formatString: $0.0
+		lineageTag: 281ffef5-9100-4415-8eae-03f336dec52b
+
+	column Dummy
+		dataType: int64
+		isHidden
+		lineageTag: 7de1285a-2741-4bc4-8ad7-fdfd73d9042c
+		summarizeBy: none
+		sourceColumn: Dummy
+
+	partition _Measures = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [Dummy = Int64.Type], {{1}})
+				in
+					Source
+

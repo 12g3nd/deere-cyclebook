@@ -1,0 +1,33 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	discourageImplicitMeasures
+	sourceQueryCulture: en-US
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Period","Segment","Annual Financials","Quarterly Financials","Quarterly Segments","Annual Segments","Scenario","Sales Adjustment","Margin Adjustment","PE Multiple","Macro Data","Farm Income","Source Registry","_Measures"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Period
+ref table Segment
+ref table 'Annual Financials'
+ref table 'Quarterly Financials'
+ref table 'Quarterly Segments'
+ref table 'Annual Segments'
+ref table Scenario
+ref table 'Sales Adjustment'
+ref table 'Margin Adjustment'
+ref table 'PE Multiple'
+ref table 'Macro Data'
+ref table 'Farm Income'
+ref table 'Source Registry'
+ref table _Measures
+ref table DateTableTemplate_0c034984-9fb8-4146-8cc8-7a5067223f92
+ref table LocalDateTable_364df7cb-3971-4a37-9c43-a85dd4570d4f
+ref table LocalDateTable_4611c0c9-dcc4-4686-9a5d-26c221d2f6f3
+

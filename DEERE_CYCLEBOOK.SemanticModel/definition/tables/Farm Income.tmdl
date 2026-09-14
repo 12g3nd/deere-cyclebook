@@ -1,0 +1,40 @@
+/// U.S. net farm income from FRED/BEA.
+table 'Farm Income'
+	lineageTag: 6fa432ee-caa4-4a6f-ac8c-9953c3ac6c8c
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4eb0b36c-cf4a-43ee-8075-8325bc4500e1
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: f6c110a7-8b36-4396-b925-2e3b19a4d74b
+			defaultHierarchy: LocalDateTable_4611c0c9-dcc4-4686-9a5d-26c221d2f6f3.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Net Farm Income'
+		dataType: double
+		lineageTag: c81ec780-f04d-4c18-8899-29fda5a13687
+		summarizeBy: sum
+		sourceColumn: NetFarmIncome
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Farm Income' = m
+		mode: import
+		source =
+				let
+				    Raw = Csv.Document(Web.Contents("https://fred.stlouisfed.org/graph/fredgraph.csv", [Query=[id="B1448C1A027NBEA"]]), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Raw, [PromoteAllScalars=true]),
+				    Renamed = Table.RenameColumns(Headers, {{"observation_date", "Date"}, {"B1448C1A027NBEA", "NetFarmIncome"}}),
+				    Typed = Table.TransformColumnTypes(Renamed, {{"Date", type date}, {"NetFarmIncome", type number}}, "en-US"),
+				    Filtered = Table.SelectRows(Typed, each [Date] >= #date(2015,1,1))
+				in
+				    Filtered
+
+	annotation PBI_ResultType = Table
+

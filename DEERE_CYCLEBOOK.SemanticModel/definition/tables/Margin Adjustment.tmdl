@@ -1,0 +1,24 @@
+/// Disconnected sensitivity control for segment operating margin, expressed in basis points.
+table 'Margin Adjustment'
+	lineageTag: 823cbc73-b51c-43ab-8e23-3ecdcb40a231
+
+	column 'Margin Adjustment (bps)'
+		dataType: int64
+		lineageTag: ea2317c1-36a1-4a16-8822-9eba0cc804f1
+		summarizeBy: none
+		sourceColumn: MarginBps
+
+	partition 'Margin Adjustment' = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [MarginBps = Int64.Type], {
+									{-200},
+									{-100},
+									{0},
+									{100},
+									{200}
+								})
+				in
+					Source
+

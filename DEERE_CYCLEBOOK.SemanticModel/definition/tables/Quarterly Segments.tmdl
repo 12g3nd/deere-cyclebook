@@ -1,0 +1,90 @@
+/// Quarterly equipment-segment actuals for PPA, SAT and Construction & Forestry.
+table 'Quarterly Segments'
+	lineageTag: e61bda78-18ba-451a-85b6-c6c8cde09bd6
+
+	column 'Period Key'
+		dataType: int64
+		isHidden
+		lineageTag: a0977160-be54-4028-a5e0-a09e94ad7dcc
+		summarizeBy: none
+		sourceColumn: PeriodKey
+
+	column 'Segment Code'
+		dataType: string
+		isHidden
+		lineageTag: 14492d12-f196-46aa-a010-35af5b12078b
+		summarizeBy: none
+		sourceColumn: SegmentCode
+
+	column 'Net Sales'
+		dataType: int64
+		lineageTag: c8dd2d39-3283-4c10-b9b8-618c9c9e9eeb
+		summarizeBy: none
+		sourceColumn: NetSales
+
+	column 'Operating Profit'
+		dataType: int64
+		lineageTag: 660f7e10-715f-416e-bbce-4b57ab5b8de3
+		summarizeBy: none
+		sourceColumn: OperatingProfit
+
+	column 'Operating Margin'
+		dataType: double
+		lineageTag: 1c386cb6-006f-4ec6-a200-bfec0f05c361
+		summarizeBy: none
+		sourceColumn: OperatingMargin
+
+	column 'Sales YoY %'
+		dataType: double
+		lineageTag: b8c1564d-71c8-4139-b99e-524421f050fb
+		summarizeBy: none
+		sourceColumn: SalesYoYPct
+
+	column 'Operating Profit YoY %'
+		dataType: double
+		lineageTag: 815ebc9d-b538-4d64-9889-35b42d121a7f
+		summarizeBy: none
+		sourceColumn: OperatingProfitYoYPct
+
+	partition 'Quarterly Segments' = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [PeriodKey = Int64.Type, SegmentCode = text, NetSales = Int64.Type, OperatingProfit = Int64.Type, OperatingMargin = number, SalesYoYPct = number, OperatingProfitYoYPct = number], {
+									{202401, "PPA", 4849, 1045, 0.2155083522, null, null},
+									{202401, "SAT", 2425, 326, 0.1344329897, null, null},
+									{202401, "CF", 3212, 566, 0.1762141968, null, null},
+									{202402, "PPA", 6581, 1650, 0.2507217748, null, null},
+									{202402, "SAT", 3185, 571, 0.179277865, null, null},
+									{202402, "CF", 3844, 668, 0.1737773153, null, null},
+									{202403, "PPA", 5099, 1162, 0.2278878211, null, null},
+									{202403, "SAT", 3053, 496, 0.162463151, null, null},
+									{202403, "CF", 3235, 448, 0.1384853168, null, null},
+									{202404, "PPA", 4305, 657, 0.1526132404, null, null},
+									{202404, "SAT", 2306, 234, 0.1014744146, null, null},
+									{202404, "CF", 2664, 328, 0.1231231231, null, null},
+									{202501, "PPA", 3067, 338, 0.1102054125, -0.3674984533, -0.6765550239},
+									{202501, "SAT", 1748, 124, 0.0709382151, -0.2791752577, -0.6196319018},
+									{202501, "CF", 1994, 65, 0.0325977934, -0.3792029888, -0.8851590106},
+									{202502, "PPA", 5230, 1148, 0.2195028681, -0.2052879502, -0.3042424242},
+									{202502, "SAT", 2994, 574, 0.1917167669, -0.0599686028, 0.0052539405},
+									{202502, "CF", 2947, 379, 0.1286053614, -0.2333506764, -0.4326347305},
+									{202503, "PPA", 4273, 580, 0.1357360168, -0.1619925476, -0.5008605852},
+									{202503, "SAT", 3025, 485, 0.1603305785, -0.0091713069, -0.0221774194},
+									{202503, "CF", 3059, 237, 0.0774762994, -0.0544049459, -0.4709821429},
+									{202504, "PPA", 4740, 604, 0.1274261603, 0.1010452962, -0.0806697108},
+									{202504, "SAT", 2457, 25, 0.0101750102, 0.065481353, -0.8931623932},
+									{202504, "CF", 3382, 348, 0.1028976937, 0.2695195195, 0.0609756098},
+									{202601, "PPA", 3163, 139, 0.0439456212, 0.0313009455, -0.5887573964},
+									{202601, "SAT", 2168, 196, 0.0904059041, 0.2402745995, 0.5806451613},
+									{202601, "CF", 2670, 137, 0.0513108614, 0.3390170512, 1.1076923077},
+									{202602, "PPA", 4503, 706, 0.156784366, -0.1390057361, -0.3850174216},
+									{202602, "SAT", 3485, 719, 0.206312769, 0.163994656, 0.2526132404},
+									{202602, "CF", 3790, 561, 0.1480211082, 0.2860536138, 0.4802110818},
+									{202603, "PPA", 3998, 527, 0.131815908, -0.0643575942, -0.0913793103},
+									{202603, "SAT", 3383, 622, 0.1838604789, 0.1183471074, 0.2824742268},
+									{202603, "CF", 3618, 436, 0.1205085683, 0.1827394573, 0.8396624473}
+								})
+				in
+					Source
+

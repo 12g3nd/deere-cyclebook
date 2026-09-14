@@ -1,0 +1,56 @@
+/// Annual Deere equipment-segment sales and operating profit actuals.
+table 'Annual Segments'
+	lineageTag: abe60ea7-a3fa-4dfc-8eeb-055c594cb40e
+
+	column 'Fiscal Year'
+		dataType: int64
+		lineageTag: 3e22ca30-e934-4814-be5b-28aae9afffbf
+		summarizeBy: none
+		sourceColumn: FiscalYear
+
+	column 'Segment Code'
+		dataType: string
+		isHidden
+		lineageTag: bcdc4465-e566-4f04-b6de-204dfa2c5c03
+		summarizeBy: none
+		sourceColumn: SegmentCode
+
+	column 'Net Sales'
+		dataType: int64
+		lineageTag: 8c2acbef-b483-4dc8-bbe0-3e35530adfcc
+		summarizeBy: none
+		sourceColumn: NetSales
+
+	column 'Operating Profit'
+		dataType: int64
+		lineageTag: b435f93c-53fc-4cea-ba33-4203be559a4a
+		summarizeBy: none
+		sourceColumn: OperatingProfit
+
+	column 'Operating Margin'
+		dataType: double
+		lineageTag: 18a36d07-3437-44fd-9496-e51f6a746d7b
+		summarizeBy: none
+		sourceColumn: OperatingMargin
+
+	partition 'Annual Segments' = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [FiscalYear = Int64.Type, SegmentCode = text, NetSales = Int64.Type, OperatingProfit = Int64.Type, OperatingMargin = number], {
+									{2022, "PPA", 22002, 4386, 0.199345514},
+									{2022, "SAT", 13381, 1949, 0.1456542859},
+									{2022, "CF", 12534, 2014, 0.1606829424},
+									{2023, "PPA", 26790, 6996, 0.2611422172},
+									{2023, "SAT", 13980, 2472, 0.1768240343},
+									{2023, "CF", 14795, 2695, 0.1821561338},
+									{2024, "PPA", 20834, 4514, 0.2166650667},
+									{2024, "SAT", 10969, 1627, 0.1483271037},
+									{2024, "CF", 12956, 2009, 0.1550632911},
+									{2025, "PPA", 17311, 2671, 0.154294957},
+									{2025, "SAT", 10224, 1207, 0.1180555556},
+									{2025, "CF", 11382, 1028, 0.090318046}
+								})
+				in
+					Source
+

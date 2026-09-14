@@ -1,0 +1,47 @@
+/// Audited annual Deere consolidated financial history. Values are USD millions except EPS.
+table 'Annual Financials'
+	lineageTag: 5e753052-3c48-4bc8-82f4-5a123929fa00
+
+	column 'Fiscal Year'
+		dataType: int64
+		lineageTag: f32cfe91-7511-4bbd-84b5-14b1c7c04508
+		summarizeBy: none
+		sourceColumn: FiscalYear
+
+	column 'Net Sales'
+		dataType: int64
+		lineageTag: b489b588-19a6-4cab-bfeb-79df6c482959
+		summarizeBy: none
+		sourceColumn: NetSales
+
+	column 'Net Sales & Revenues'
+		dataType: int64
+		lineageTag: 69752eaf-467a-4a93-ace7-1c10828ddadb
+		summarizeBy: none
+		sourceColumn: NetSalesRevenues
+
+	column 'Net Income'
+		dataType: int64
+		lineageTag: fcd902e8-d39e-4297-9eb6-3ca856991d71
+		summarizeBy: none
+		sourceColumn: NetIncome
+
+	column 'Diluted EPS'
+		dataType: double
+		lineageTag: 337e1b6c-5e6e-42a1-854b-b1887dfa6d39
+		summarizeBy: none
+		sourceColumn: DilutedEPS
+
+	partition 'Annual Financials' = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [FiscalYear = Int64.Type, NetSales = Int64.Type, NetSalesRevenues = Int64.Type, NetIncome = Int64.Type, DilutedEPS = number], {
+									{2022, 47917, 52577, 7131, 23.28},
+									{2023, 55565, 61251, 10166, 34.63},
+									{2024, 44759, 51716, 7100, 25.62},
+									{2025, 38917, 45684, 5027, 18.5}
+								})
+				in
+					Source
+

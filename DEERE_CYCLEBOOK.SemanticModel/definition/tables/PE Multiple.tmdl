@@ -1,0 +1,30 @@
+/// Disconnected valuation multiple control.
+table 'PE Multiple'
+	lineageTag: d779d5dd-f772-4fa6-8d53-d2daf8f35e90
+
+	column 'P/E Multiple'
+		dataType: double
+		lineageTag: 69e3beed-f6f5-4235-a79d-a0a18ee59137
+		summarizeBy: none
+		sourceColumn: Multiple
+
+	partition 'PE Multiple' = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [Multiple = number], {
+									{18},
+									{20},
+									{22},
+									{24},
+									{26},
+									{28},
+									{30},
+									{32},
+									{34},
+									{36},
+									{38}
+								})
+				in
+					Source
+

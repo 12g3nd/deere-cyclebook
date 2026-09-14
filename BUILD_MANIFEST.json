@@ -1,0 +1,27 @@
+{
+  "project": "DEERE // CYCLEBOOK",
+  "generated": "2026-08-21",
+  "currency": "USD",
+  "latest_company_period": "FY2026 Q3",
+  "latest_release_date": "2026-08-20",
+  "report_pages": [
+    "PULSE",
+    "FINANCIALS",
+    "SEGMENTS",
+    "THE CYCLE",
+    "MODEL LAB",
+    "VALUATION // THESIS",
+    "MODEL // PROVENANCE"
+  ],
+  "source_policy": "Reported actuals and management guidance are kept separate from analyst assumptions.",
+  "notes": [
+    "Company actuals embedded for portability",
+    "Macro series refresh from FRED",
+    "Final rendering requires Power BI Desktop verification"
+  ],
+  "build_revision": "1.1-m-parser-fix",
+  "repair_notes": [
+    "Corrected Power Query M table-field grammar: primitive types inside `type table [...]` now use `text`/`number` rather than invalid `type text`/`type number`.",
+    "Added regression validation for invalid primitive type prefixes in embedded #table definitions."
+  ]
+}

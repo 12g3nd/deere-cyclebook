@@ -1,0 +1,51 @@
+{
+  "$schema": "https://raw.githubusercontent.com/microsoft/powerbi-desktop-samples/main/Report%20Theme%20JSON%20Schema/reportThemeSchema-2.156.json",
+  "name": "cyclebook-industrial-ab1c635cd17b.json",
+  "dataColors": [
+    "#367C2B",
+    "#171A17",
+    "#FFDE00",
+    "#72836B",
+    "#9A9283",
+    "#8D332C",
+    "#48745B",
+    "#B7A43A"
+  ],
+  "background": "#F2EFE7",
+  "foreground": "#171A17",
+  "tableAccent": "#367C2B",
+  "good": "#367C2B",
+  "neutral": "#B28D00",
+  "bad": "#8D332C",
+  "maximum": "#367C2B",
+  "center": "#B28D00",
+  "minimum": "#D9D3C6",
+  "null": "#9A9283",
+  "firstLevelElements": "#171A17",
+  "secondLevelElements": "#51564F",
+  "thirdLevelElements": "#77776E",
+  "fourthLevelElements": "#BDB7AA",
+  "secondaryBackground": "#F7F4ED",
+  "textClasses": {
+    "callout": {
+      "fontSize": 30,
+      "fontFace": "Bahnschrift SemiBold",
+      "color": "#171A17"
+    },
+    "title": {
+      "fontSize": 14,
+      "fontFace": "Bahnschrift SemiBold",
+      "color": "#171A17"
+    },
+    "header": {
+      "fontSize": 12,
+      "fontFace": "Bahnschrift SemiBold",
+      "color": "#171A17"
+    },
+    "label": {
+      "fontSize": 10,
+      "fontFace": "Bahnschrift",
+      "color": "#51564F"
+    }
+  }
+}

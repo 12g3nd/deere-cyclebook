@@ -1,0 +1,41 @@
+/// Deere equipment operating segments.
+table Segment
+	lineageTag: 6ed79d0a-9695-417b-8ec0-8f9fb260989e
+
+	column 'Segment Key'
+		dataType: int64
+		isHidden
+		lineageTag: 990c4ec8-86cb-4727-b900-c0212c8bc9ec
+		summarizeBy: none
+		sourceColumn: SegmentKey
+
+	column 'Segment Code'
+		dataType: string
+		lineageTag: fa48e09c-b8fe-4783-9b4b-47f673359820
+		summarizeBy: none
+		sourceColumn: SegmentCode
+
+	column Segment
+		dataType: string
+		lineageTag: 127a72ee-02b0-484e-89cf-fee8334bbe23
+		summarizeBy: none
+		sourceColumn: SegmentName
+
+	column Description
+		dataType: string
+		lineageTag: 390599c1-1fb6-41ca-9feb-92292b89f74b
+		summarizeBy: none
+		sourceColumn: Description
+
+	partition Segment = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [SegmentKey = Int64.Type, SegmentCode = text, SegmentName = text, Description = text], {
+									{1, "PPA", "Production & Precision Agriculture", "Large agriculture, precision systems, high-horsepower equipment"},
+									{2, "SAT", "Small Agriculture & Turf", "Small tractors, turf and related equipment"},
+									{3, "CF", "Construction & Forestry", "Construction, forestry and roadbuilding equipment"}
+								})
+				in
+					Source
+

@@ -1,0 +1,70 @@
+/// Live-refresh macroeconomic and commodity data from FRED.
+table 'Macro Data'
+	lineageTag: a020673d-f478-4598-994f-8d73c52e6c4f
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 181fa550-d484-4272-b870-5a47103c0e29
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: 9068b14c-f6a1-40c7-a989-688f701bee81
+			defaultHierarchy: LocalDateTable_364df7cb-3971-4a37-9c43-a85dd4570d4f.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Series
+		dataType: string
+		lineageTag: d09bfb02-4714-471d-8a3e-244f26e09573
+		summarizeBy: none
+		sourceColumn: Series
+
+	column Family
+		dataType: string
+		lineageTag: 235b030e-081c-438e-b92b-2ef9983ebbac
+		summarizeBy: none
+		sourceColumn: Family
+
+	column Unit
+		dataType: string
+		lineageTag: bf9e3f63-4ca4-4abe-976c-ba8292d6fb4a
+		summarizeBy: none
+		sourceColumn: Unit
+
+	column Value
+		dataType: double
+		lineageTag: a929eff4-680e-4ff3-b197-f908a19c8276
+		summarizeBy: sum
+		sourceColumn: Value
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Macro Data' = m
+		mode: import
+		source =
+				let
+				    GetFred = (series as text, label as text, family as text, unit as text) as table =>
+				        let
+				            Raw = Csv.Document(Web.Contents("https://fred.stlouisfed.org/graph/fredgraph.csv", [Query=[id=series]]), [Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				            Headers = Table.PromoteHeaders(Raw, [PromoteAllScalars=true]),
+				            Renamed = Table.RenameColumns(Headers, {{"observation_date", "Date"}, {series, "Value"}}),
+				            Typed = Table.TransformColumnTypes(Renamed, {{"Date", type date}, {"Value", type number}}, "en-US"),
+				            AddSeries = Table.AddColumn(Typed, "Series", each label, type text),
+				            AddFamily = Table.AddColumn(AddSeries, "Family", each family, type text),
+				            AddUnit = Table.AddColumn(AddFamily, "Unit", each unit, type text),
+				            Selected = Table.SelectColumns(AddUnit, {"Date", "Series", "Family", "Unit", "Value"})
+				        in Selected,
+				    Corn = GetFred("PMAIZMTUSDM", "Corn", "Agriculture", "USD / metric ton"),
+				    Soy = GetFred("PSOYBUSDM", "Soybeans", "Agriculture", "USD / metric ton"),
+				    Fed = GetFred("FEDFUNDS", "Federal Funds", "Rates", "%"),
+				    Housing = GetFred("HOUST", "Housing Starts", "Construction", "Thousands, SAAR"),
+				    Construction = GetFred("TTLCONS", "Construction Spending", "Construction", "USD millions, SAAR"),
+				    Fx = GetFred("DEXCAUS", "CAD per USD", "FX", "CAD per USD"),
+				    Combined = Table.Combine({Corn, Soy, Fed, Housing, Construction, Fx}),
+				    Filtered = Table.SelectRows(Combined, each [Date] >= #date(2020,1,1))
+				in
+				    Filtered
+

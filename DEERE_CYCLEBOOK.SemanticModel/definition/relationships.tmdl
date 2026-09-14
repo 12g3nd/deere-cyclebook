@@ -1,0 +1,26 @@
+relationship 'Quarterly Financials to Period'
+	fromColumn: 'Quarterly Financials'.'Period Key'
+	toColumn: Period.'Period Key'
+
+relationship 'Quarterly Segments to Period'
+	fromColumn: 'Quarterly Segments'.'Period Key'
+	toColumn: Period.'Period Key'
+
+relationship 'Quarterly Segments to Segment'
+	fromColumn: 'Quarterly Segments'.'Segment Code'
+	toColumn: Segment.'Segment Code'
+
+relationship 'Annual Segments to Segment'
+	fromColumn: 'Annual Segments'.'Segment Code'
+	toColumn: Segment.'Segment Code'
+
+relationship 9068b14c-f6a1-40c7-a989-688f701bee81
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Macro Data'.Date
+	toColumn: LocalDateTable_364df7cb-3971-4a37-9c43-a85dd4570d4f.Date
+
+relationship f6c110a7-8b36-4396-b925-2e3b19a4d74b
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Farm Income'.Date
+	toColumn: LocalDateTable_4611c0c9-dcc4-4686-9a5d-26c221d2f6f3.Date
+

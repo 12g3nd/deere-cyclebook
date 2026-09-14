@@ -1,0 +1,52 @@
+/// Data provenance registry. Distinguishes actuals, management guidance, and analyst-model assumptions.
+table 'Source Registry'
+	lineageTag: 8cf5dc4b-2baf-4b5f-991d-f44f88cc5d02
+
+	column Classification
+		dataType: string
+		lineageTag: 61ff7a44-c2bc-455f-8fa0-7ea82ec6f8fa
+		summarizeBy: none
+		sourceColumn: Classification
+
+	column Source
+		dataType: string
+		lineageTag: 683a0443-039a-4b85-b9c9-318ade41cd3e
+		summarizeBy: none
+		sourceColumn: Source
+
+	column 'URL / Location'
+		dataType: string
+		lineageTag: 4c3d5a4e-c585-4c8c-8a44-1623510e0c47
+		summarizeBy: none
+		sourceColumn: URL
+
+	column 'Source Type'
+		dataType: string
+		lineageTag: e9a525d9-01c7-4fe3-88de-7c407a3bf477
+		summarizeBy: none
+		sourceColumn: SourceType
+
+	column Notes
+		dataType: string
+		lineageTag: 3ec451ba-0af9-4260-b4a4-dba9a4459705
+		summarizeBy: none
+		sourceColumn: Notes
+
+	partition 'Source Registry' = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [Classification = text, Source = text, URL = text, SourceType = text, Notes = text], {
+									{"Actual", "Deere FY2022 earnings release", "https://www.deere.com/assets/pdfs/common/news/deere-4q22-news-release.pdf", "Company filing / earnings", "FY2022 company and segment actuals"},
+									{"Actual", "Deere FY2023 earnings release", "https://www.deere.com/en/news/all-news/fy23-fourth-quarter-earnings/", "Company earnings", "FY2023 actuals and FY2022 comparisons"},
+									{"Actual", "Deere FY2024 earnings release", "https://www.deere.com/en/news/all-news/fy24-fourth-quarter-earnings/", "Company earnings", "FY2024 actuals and FY2023 comparisons"},
+									{"Actual", "Deere FY2025 annual report", "https://investor.deere.com/sec-filings/sec-filings-details/default.aspx?FilingId=19004831", "SEC filing / annual report", "FY2025 audited historical financials"},
+									{"Actual", "Deere FY2025 quarterly earnings releases", "Bundled in sources/", "Company earnings PDFs", "FY2024 comparatives and FY2025 quarters"},
+									{"Actual", "Deere FY2026 quarterly earnings releases", "Bundled in sources/", "Company earnings PDFs", "FY2026 Q1-Q3 actuals and guidance"},
+									{"Actual", "FRED macroeconomic series", "https://fred.stlouisfed.org/", "Federal Reserve Bank of St. Louis", "Live-refresh macroeconomic and commodity series"},
+									{"Guidance", "Deere Q3 FY2026 guidance", "Bundled: DE-3Q26-News-Release.pdf", "Management guidance", "FY2026 net income $4.75B-$5.00B; segment sales outlook"},
+									{"Model", "CYCLEBOOK analyst scenarios", "Internal assumptions", "Analyst model", "Bear/Base/Bull assumptions are explicitly modeled, never presented as actuals"}
+								})
+				in
+					Source
+

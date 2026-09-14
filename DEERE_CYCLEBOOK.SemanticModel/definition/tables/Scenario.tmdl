@@ -1,0 +1,70 @@
+/// Disconnected analyst scenario assumptions. Management Q3 FY2026 segment-sales outlook anchors the Base case.
+table Scenario
+	lineageTag: ae1306e1-5d03-4576-8194-f9000cd35a3c
+
+	column Scenario
+		dataType: string
+		lineageTag: 268c3f1a-ddd8-4105-9522-5dc9dd7066ef
+		summarizeBy: none
+		sourceColumn: Scenario
+
+	column 'PPA Growth'
+		dataType: double
+		lineageTag: 0528f85d-3edd-4615-9649-9ca10a55037f
+		summarizeBy: none
+		sourceColumn: PPAGrowth
+
+	column 'SAT Growth'
+		dataType: double
+		lineageTag: b12952a6-c781-41d1-a692-f77da2d2cce8
+		summarizeBy: none
+		sourceColumn: SATGrowth
+
+	column 'CF Growth'
+		dataType: double
+		lineageTag: c70f330f-6d17-4da5-bc1c-2b2790a14546
+		summarizeBy: none
+		sourceColumn: CFGrowth
+
+	column 'PPA Margin'
+		dataType: double
+		lineageTag: b4cf61a1-878b-47e8-bc91-6790f2fa59e3
+		summarizeBy: none
+		sourceColumn: PPAMargin
+
+	column 'SAT Margin'
+		dataType: double
+		lineageTag: 262f6612-cee3-48b0-bed3-a2ecf68ad0e7
+		summarizeBy: none
+		sourceColumn: SATMargin
+
+	column 'CF Margin'
+		dataType: double
+		lineageTag: d0d40e30-10f6-42e0-bab3-a16b7e92bd62
+		summarizeBy: none
+		sourceColumn: CFMargin
+
+	column 'Net Income'
+		dataType: int64
+		lineageTag: c9771f45-b0da-4154-bef0-4df183434739
+		summarizeBy: none
+		sourceColumn: NetIncome
+
+	column 'Default P/E'
+		dataType: double
+		lineageTag: 95c04ed5-7b3b-4c5b-a07f-537bc4a03669
+		summarizeBy: none
+		sourceColumn: DefaultPE
+
+	partition Scenario = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [Scenario = text, PPAGrowth = number, SATGrowth = number, CFGrowth = number, PPAMargin = number, SATMargin = number, CFMargin = number, NetIncome = Int64.Type, DefaultPE = number], {
+									{"Bear", -0.13, 0.1, 0.15, 0.11, 0.165, 0.105, 4400, 22},
+									{"Base", -0.1, 0.15, 0.2, 0.13, 0.18, 0.12, 4875, 28},
+									{"Bull", -0.07, 0.18, 0.24, 0.15, 0.195, 0.135, 5250, 32}
+								})
+				in
+					Source
+
