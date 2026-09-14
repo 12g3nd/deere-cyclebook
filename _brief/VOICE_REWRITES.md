@@ -231,7 +231,7 @@ Yours:
 
 ### N7 · SEGMENTS finding (live, two lines)
 > Small ag and turf has out-earned large ag in every quarter of fiscal 2026 so far.
-> Operating profit through Q3: SAT $1,538M, PPA $1,372M, C&F $1,134M. In FY2023, PPA earned $6,996M, 58% of the total.
+> PPA out-earned SAT in every one of the 8 quarters of FY2024-FY2025; through Q3, SAT leads $1,538M to $1,372M.
 
 If a later quarter breaks the streak, line one switches to "out-earned large ag in N of M quarters".
 
@@ -241,7 +241,7 @@ Yours:
 > Over the past year crop prices rose and interest rates fell, while housing starts kept dropping.
 > July 2026 vs a year earlier: corn +11%, soybeans +18%, fed funds 3.63% (was 4.33%), housing starts -13%.
 
-Line one only shows while the FRED data still says it; after a refresh that changes the direction of any of the four, the card falls back to a neutral lead. Line two is live.
+Line one only shows while the FRED data still says it. If a refresh changes the direction of any of the four, line one becomes a plain sentence naming which way each driver moved ("Over the past year corn fell, soybeans rose, interest rates fell and housing starts rose."). Line two is live.
 
 Yours:
 
@@ -252,8 +252,10 @@ Yours:
 Yours:
 
 ### N10 · SOURCES finding
-> Every number in this stack carries a tag that says where it came from.
+> Every ledger figure in this stack carries a tag that says where it came from.
 > ACTUAL: reported by Deere, FRED or Nasdaq. GUIDANCE: management's outlook. MODEL: an assumption made here.
+
+The claim says "ledger figure" because chart labels and the small tables under the charts aren't tagged. Keep it that narrow unless those get tags too.
 
 Yours:
 
