@@ -206,7 +206,7 @@ const page = (id, displayName) => ({
   width: 1920,
   objects: {
     background: [props({ color: color(C.paperHex), transparency: num(0) })],
-    outspace: [props({ color: color("#5E5E5A"), transparency: num(0) })],
+    outspace: [props({ color: color(C.outspaceHex), transparency: num(0) })],
   },
 });
 

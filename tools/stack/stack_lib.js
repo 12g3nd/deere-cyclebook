@@ -8,6 +8,7 @@ const C = {
   paperHex: "#F4F4F0",
   greenHex: "#367C2B",
   yellowHex: "#FFDE00",
+  outspaceHex: "#5E5E5A", // the table under the desk, outside the 1920x1080 page
 };
 
 // 5x7 bitmap glyphs, rows top to bottom.

@@ -6,6 +6,8 @@
 
 web
 
+A Power BI report (PBIR project) read through a published web link. The Power BI service renders it in the viewer's browser as a fixed 1920x1080 canvas scaled to fit the window; there is no HTML or CSS of our own, so layout, type and color are set through report JSON and DAX-generated SVG.
+
 ## Users
 
 Primary: finance hiring managers (equity research, investment banking, corporate finance) evaluating the author as an analyst candidate. They open a published Power BI web link on their own, with no presenter, usually on a laptop between other work. They read research notes, 10-Ks and valuation models every day. Their job: decide within minutes whether the author thinks like an analyst: the numbers are right, the thesis is clear, the assumptions are labeled.
