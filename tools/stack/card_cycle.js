@@ -21,11 +21,20 @@ VAR _fiPk = CALCULATE(MAX('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm I
 VAR _fiPkY = CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'), 'Farm Income'[Net Farm Income] = _fiPk)
 VAR _month = FORMAT(_dC, "mmmm yyyy")`;
 
-// The authored claim shows while the data says it; otherwise a plain sentence names which way each driver moved.
-const moved = (k) => `IF(_v${k} >= _p${k}, "rose", "fell")`;
-const finding = finding2(vars,
-  `IF(_vC >= _pC && _vS >= _pS && _vF < _pF && _vH < _pH, "Over the past year crop prices rose and interest rates fell, while housing starts kept dropping.", "Over the past year corn " & ${moved("C")} & ", soybeans " & ${moved("S")} & ", interest rates " & ${moved("F")} & " and housing starts " & ${moved("H")} & ".")`,
-  `_month & " vs a year earlier: corn " & ${esc25(`FORMAT(DIVIDE(_vC, _pC) - 1, "+0%;-0%")`)} & ", soybeans " & ${esc25(`FORMAT(DIVIDE(_vS, _pS) - 1, "+0%;-0%")`)} & ", fed funds " & FORMAT(_vF, "0.00") & "%25 (was " & FORMAT(_pF, "0.00") & "%25), housing starts " & ${esc25(`FORMAT(DIVIDE(_vH, _pH) - 1, "+0%;-0%")`)} & "."`);
+// The authored claim shows while the data says it. Otherwise the card still makes a claim: how many of the four drivers
+// moved in Deere's favour over the year (crop prices up, rates down, housing starts up), naming the ones that did not.
+const AUTHORED = "_vC >= _pC && _vS >= _pS && _vF < _pF && _vH < _pH";
+const fallback = `(VAR _t = {("corn prices", INT(_vC < _pC)), ("soybean prices", INT(_vS < _pS)), ("interest rates", INT(_vF >= _pF)), ("housing starts", INT(_vH < _pH))}
+            VAR _bad = COUNTROWS(FILTER(_t, [Value2] = 1))
+            VAR _good = 4 - _bad
+            RETURN IF(_bad = 0, "All four demand drivers moved Deere's way over the past year.",
+                IF(_good = 0, "None of Deere's four demand drivers moved its way over the past year.",
+                    SWITCH(_good, 1, "One", 2, "Two", 3, "Three") & " of four demand drivers moved Deere's way over the past year; " & CONCATENATEX(FILTER(_t, [Value2] = 1), [Value1], ", ") & " did not.")))`;
+const line1 = (cond) => `IF(${cond}, "Over the past year crop prices rose and interest rates fell, while housing starts kept dropping.", ${fallback})`;
+const line2 = `_month & " vs a year earlier: corn " & ${esc25(`FORMAT(DIVIDE(_vC, _pC) - 1, "+0%;-0%")`)} & ", soybeans " & ${esc25(`FORMAT(DIVIDE(_vS, _pS) - 1, "+0%;-0%")`)} & ", fed funds " & FORMAT(_vF, "0.00") & "%25 (was " & FORMAT(_pF, "0.00") & "%25), housing starts " & ${esc25(`FORMAT(DIVIDE(_vH, _pH) - 1, "+0%;-0%")`)} & "."`;
+const finding = finding2(vars, line1(AUTHORED), line2);
+// Test-only: the same finding with the authored condition forced false, to render the fallback on today's data.
+const findingForcedFallback = finding2(vars, line1("FALSE()"), line2);
 
 // Exhibit (960x620). Panels: { px, py, plot width, plot height }. Large panels lead the card; small ones sit at right.
 const L = { w: 510, h: 200 }, S = { w: 130, h: 140 };
@@ -90,6 +99,7 @@ const rows = [
 
 module.exports = {
   ledgerHeight: ledgerHeight(rows),
+  forcedFallback: findingForcedFallback,
   measures: [
     { name: "SVG Header THE CYCLE", doc: "The Stack: THE CYCLE card header.", expr: header("THE CYCLE"), svg: true },
     { name: "SVG Cycle Finding", doc: "The Stack: THE CYCLE finding, how the outside drivers moved over the past year; always names each driver's direction.", expr: finding, svg: true },

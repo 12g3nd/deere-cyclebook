@@ -879,7 +879,7 @@ table _Measures
 			        & "<text x='80' y='463' font-size='12' fill='%230E0E0C'>" & "Management range" & "</text>"
 			        & "<text x='440' y='461' text-anchor='end' font-size='22' font-weight='bold' fill='%23367C2B'>" & "$4.75B-5.00B" & "</text>"
 			        & "<rect x='0' y='492' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='526' width='72' height='16' fill='%23367C2B'/><text x='36' y='538' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>GUIDANCE</text>"
-			        & "<text x='0' y='516' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Q4 net income guidance implies" & "</text>"
+			        & "<text x='0' y='516' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Q4 implied by guidance" & "</text>"
 			        & "<text x='80' y='539' font-size='12' fill='%230E0E0C'>" & "Q4 FY" & _lastYr & ": $" & FORMAT(_lastQ4, "#,##0") & "M" & "</text>"
 			        & "<text x='440' y='537' text-anchor='end' font-size='22' font-weight='bold' fill='%23367C2B'>" & "$" & FORMAT(_gLo - _ni, "#,##0") & "M-" & FORMAT(_gHi - _ni, "#,##0") & "M" & "</text>"
 			        & "<rect x='0' y='569' width='440' height='2' fill='%230E0E0C'/></svg>"
@@ -958,13 +958,11 @@ table _Measures
 			        & CONCATENATEX(FILTER(_pts, 'Period'[Fiscal Quarter] = "Q1" && [@x] > 70), "<line x1='" & ([@x] - 37.5) & "' y1='100' x2='" & ([@x] - 37.5) & "' y2='580' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/>", "")
 			        & CONCATENATEX(_pts, "<text x='" & [@x] & "' y='536' text-anchor='middle' font-size='13' fill='%230E0E0C'>" & 'Period'[Fiscal Quarter] & "</text>", "", [@x], ASC)
 			        & CONCATENATEX(DISTINCT(SELECTCOLUMNS(_pts, "@fy", 'Period'[Fiscal Year])), VAR _f = [@fy] RETURN "<text x='" & AVERAGEX(FILTER(_pts, 'Period'[Fiscal Year] = _f), [@x]) & "' y='562' text-anchor='middle' font-size='14' font-weight='bold' fill='%230E0E0C'>FY" & _f & "</text>", "")
-			        & CONCATENATEX(FILTER(_pts, 'Period'[Fiscal Year] = _fy && 'Period'[Period Key] < _k),
-			            VAR _s = LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT")
-			            VAR _p = LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA")
-			            VAR _top = MIN(ROUND(MAX(100, MIN(510, 510 - (_s) * 0.2278)), 1), ROUND(MAX(100, MIN(510, 510 - (_p) * 0.2278)), 1))
-			            VAR _bot = MAX(ROUND(MAX(100, MIN(510, 510 - (_s) * 0.2278)), 1), ROUND(MAX(100, MIN(510, 510 - (_p) * 0.2278)), 1))
-			            RETURN "<rect x='" & ([@x] - 46) & "' y='" & (_top - 27) & "' width='92' height='17' fill='%23F4F4F0'/><text x='" & [@x] & "' y='" & (_top - 13) & "' text-anchor='middle' font-size='12' font-weight='bold' fill='%230E0E0C'>" & IF(_s >= _p, "SAT $" & _s, "PPA $" & _p) & "M</text>"
-			                & "<rect x='" & ([@x] - 46) & "' y='" & (_bot + 9) & "' width='92' height='17' fill='%23F4F4F0'/><text x='" & [@x] & "' y='" & (_bot + 22) & "' text-anchor='middle' font-size='12' font-weight='bold' fill='%230E0E0C'>" & IF(_s >= _p, "PPA $" & _p, "SAT $" & _s) & "M</text>", "")
+			        // FY2026 SAT and PPA values sit in two rows under the axis, off the line paths where the series cross.
+			        & "<text x='" & (_x0 - 34) & "' y='592' text-anchor='end' font-size='12' font-weight='bold' fill='%230E0E0C'>SAT, $M</text><text x='" & (_x0 - 34) & "' y='610' text-anchor='end' font-size='12' font-weight='bold' fill='%230E0E0C'>PPA, $M</text>"
+			        & CONCATENATEX(FILTER(_pts, 'Period'[Fiscal Year] = _fy),
+			            "<text x='" & [@x] & "' y='592' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & FORMAT(LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT"), "#,##0") & "</text>"
+			                & "<text x='" & [@x] & "' y='610' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & FORMAT(LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA"), "#,##0") & "</text>", "")
 			        & IF(_satAhead = _q, "<rect x='" & (_x0 - 10) & "' y='76' width='" & (MAXX(_pts, [@x]) - _x0 + 20) & "' height='3' fill='%230E0E0C'/><rect x='" & (_x0 - 10) & "' y='76' width='3' height='12' fill='%230E0E0C'/><rect x='" & (MAXX(_pts, [@x]) + 7) & "' y='76' width='3' height='12' fill='%230E0E0C'/><text x='" & (MAXX(_pts, [@x]) + 10) & "' y='70' text-anchor='end' font-size='14' font-weight='bold' fill='%230E0E0C'>SAT above PPA every quarter</text>", "")
 			        & "</svg>"
 		dataCategory: ImageUrl
@@ -1070,7 +1068,12 @@ table _Measures
 			VAR _month = FORMAT(_dC, "mmmm yyyy")
 			RETURN
 			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='84' viewBox='0 0 1420 84' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
-			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & IF(_vC >= _pC && _vS >= _pS && _vF < _pF && _vH < _pH, "Over the past year crop prices rose and interest rates fell, while housing starts kept dropping.", "Over the past year corn " & IF(_vC >= _pC, "rose", "fell") & ", soybeans " & IF(_vS >= _pS, "rose", "fell") & ", interest rates " & IF(_vF >= _pF, "rose", "fell") & " and housing starts " & IF(_vH >= _pH, "rose", "fell") & ".") & "</text>"
+			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & IF(_vC >= _pC && _vS >= _pS && _vF < _pF && _vH < _pH, "Over the past year crop prices rose and interest rates fell, while housing starts kept dropping.", (VAR _t = {("corn prices", INT(_vC < _pC)), ("soybean prices", INT(_vS < _pS)), ("interest rates", INT(_vF >= _pF)), ("housing starts", INT(_vH < _pH))}
+			            VAR _bad = COUNTROWS(FILTER(_t, [Value2] = 1))
+			            VAR _good = 4 - _bad
+			            RETURN IF(_bad = 0, "All four demand drivers moved Deere's way over the past year.",
+			                IF(_good = 0, "None of Deere's four demand drivers moved its way over the past year.",
+			                    SWITCH(_good, 1, "One", 2, "Two", 3, "Three") & " of four demand drivers moved Deere's way over the past year; " & CONCATENATEX(FILTER(_t, [Value2] = 1), [Value1], ", ") & " did not.")))) & "</text>"
 			        & "<text x='0' y='70' font-size='22' fill='%230E0E0C'>" & _month & " vs a year earlier: corn " & SUBSTITUTE(FORMAT(DIVIDE(_vC, _pC) - 1, "+0%;-0%"), "%", "%25") & ", soybeans " & SUBSTITUTE(FORMAT(DIVIDE(_vS, _pS) - 1, "+0%;-0%"), "%", "%25") & ", fed funds " & FORMAT(_vF, "0.00") & "%25 (was " & FORMAT(_pF, "0.00") & "%25), housing starts " & SUBSTITUTE(FORMAT(DIVIDE(_vH, _pH) - 1, "+0%;-0%"), "%", "%25") & "." & "</text>"
 			        & "</svg>"
 		dataCategory: ImageUrl

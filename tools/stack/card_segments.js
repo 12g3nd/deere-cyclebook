@@ -54,13 +54,11 @@ RETURN
         & CONCATENATEX(FILTER(_pts, 'Period'[Fiscal Quarter] = "Q1" && [@x] > 70), "<line x1='" & ([@x] - 37.5) & "' y1='100' x2='" & ([@x] - 37.5) & "' y2='580' stroke='${C.ink}' stroke-width='1' stroke-dasharray='2 5'/>", "")
         & CONCATENATEX(_pts, "<text x='" & [@x] & "' y='536' text-anchor='middle' font-size='13' fill='${C.ink}'>" & 'Period'[Fiscal Quarter] & "</text>", "", [@x], ASC)
         & CONCATENATEX(DISTINCT(SELECTCOLUMNS(_pts, "@fy", 'Period'[Fiscal Year])), VAR _f = [@fy] RETURN "<text x='" & AVERAGEX(FILTER(_pts, 'Period'[Fiscal Year] = _f), [@x]) & "' y='562' text-anchor='middle' font-size='14' font-weight='bold' fill='${C.ink}'>FY" & _f & "</text>", "")
-        & CONCATENATEX(FILTER(_pts, 'Period'[Fiscal Year] = _fy && 'Period'[Period Key] < _k),
-            VAR _s = ${op("'Period'[Period Key]", "SAT")}
-            VAR _p = ${op("'Period'[Period Key]", "PPA")}
-            VAR _top = MIN(${yPix("_s")}, ${yPix("_p")})
-            VAR _bot = MAX(${yPix("_s")}, ${yPix("_p")})
-            RETURN "<rect x='" & ([@x] - 46) & "' y='" & (_top - 27) & "' width='92' height='17' fill='${C.paper}'/><text x='" & [@x] & "' y='" & (_top - 13) & "' text-anchor='middle' font-size='12' font-weight='bold' fill='${C.ink}'>" & IF(_s >= _p, "SAT $" & _s, "PPA $" & _p) & "M</text>"
-                & "<rect x='" & ([@x] - 46) & "' y='" & (_bot + 9) & "' width='92' height='17' fill='${C.paper}'/><text x='" & [@x] & "' y='" & (_bot + 22) & "' text-anchor='middle' font-size='12' font-weight='bold' fill='${C.ink}'>" & IF(_s >= _p, "PPA $" & _p, "SAT $" & _s) & "M</text>", "")
+        // FY2026 SAT and PPA values sit in two rows under the axis, off the line paths where the series cross.
+        & "<text x='" & (_x0 - 34) & "' y='592' text-anchor='end' font-size='12' font-weight='bold' fill='${C.ink}'>SAT, $M</text><text x='" & (_x0 - 34) & "' y='610' text-anchor='end' font-size='12' font-weight='bold' fill='${C.ink}'>PPA, $M</text>"
+        & CONCATENATEX(FILTER(_pts, 'Period'[Fiscal Year] = _fy),
+            "<text x='" & [@x] & "' y='592' text-anchor='middle' font-size='12' fill='${C.ink}'>" & FORMAT(${op("'Period'[Period Key]", "SAT")}, "#,##0") & "</text>"
+                & "<text x='" & [@x] & "' y='610' text-anchor='middle' font-size='12' fill='${C.ink}'>" & FORMAT(${op("'Period'[Period Key]", "PPA")}, "#,##0") & "</text>", "")
         & IF(_satAhead = _q, "<rect x='" & (_x0 - 10) & "' y='76' width='" & (MAXX(_pts, [@x]) - _x0 + 20) & "' height='3' fill='${C.ink}'/><rect x='" & (_x0 - 10) & "' y='76' width='3' height='12' fill='${C.ink}'/><rect x='" & (MAXX(_pts, [@x]) + 7) & "' y='76' width='3' height='12' fill='${C.ink}'/><text x='" & (MAXX(_pts, [@x]) + 10) & "' y='70' text-anchor='end' font-size='14' font-weight='bold' fill='${C.ink}'>SAT above PPA every quarter</text>", "")
         & "</svg>"`;
 

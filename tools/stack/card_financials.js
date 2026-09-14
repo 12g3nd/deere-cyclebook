@@ -82,7 +82,7 @@ const rows = [
   { label: `"Net income, FY" & _lastYr`, tag: "ACTUAL", value: `"$" & FORMAT(_lastNi, "#,##0") & "M"`, note: `"Diluted EPS " & FORMAT(_lastEps, "$0.00")` },
   { label: `"Net income, FY" & _peakYr & " record"`, tag: "ACTUAL", value: `"$" & FORMAT(_peak, "#,##0") & "M"`, note: `"Diluted EPS " & FORMAT(_peakEps, "$0.00")` },
   { label: `"Net income guidance, FY" & _fy`, tag: "GUIDANCE", value: `"$4.75B-5.00B"`, note: `"Management range"` },
-  { label: `"Q4 net income guidance implies"`, tag: "GUIDANCE", value: `"$" & FORMAT(_gLo - _ni, "#,##0") & "M-" & FORMAT(_gHi - _ni, "#,##0") & "M"`, note: `"Q4 FY" & _lastYr & ": $" & FORMAT(_lastQ4, "#,##0") & "M"` },
+  { label: `"Q4 implied by guidance"`, tag: "GUIDANCE", value: `"$" & FORMAT(_gLo - _ni, "#,##0") & "M-" & FORMAT(_gHi - _ni, "#,##0") & "M"`, note: `"Q4 FY" & _lastYr & ": $" & FORMAT(_lastQ4, "#,##0") & "M"` },
 ];
 
 module.exports = {
