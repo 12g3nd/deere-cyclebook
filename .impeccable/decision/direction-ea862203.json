@@ -1,0 +1,178 @@
+{
+  "title": "Choose CYCLEBOOK's visual world",
+  "question": "The roll assigned The Operator's Manual. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "The Operator's Manual",
+      "kicker": "THE ROLL",
+      "lineage": "Farm-equipment operator's manuals, parts catalogs and load charts",
+      "thesis": "Deere's earnings cycle, documented the way its machines are: numbered figures, specifications and signal words.",
+      "palette": ["#F5F7F2", "#15180F", "#367C2B", "#FFDE00", "#8A9186"],
+      "materials": ["coated manual stock", "safety-sign signal panels", "thumb-tab index", "load chart"],
+      "viewport": "PULSE as manual section 01: green thumb tabs down the left edge, FIG. 1-1 exploding Q3 FY26 earnings into numbered parts, and a SPECIFICATIONS sheet with price, market cap and guidance.",
+      "risk": "Tips into costume if the manual devices outnumber the analysis; full green-and-yellow livery can read as a Deere fan page.",
+      "raised": [
+        { "from": "challenger-split-flap", "raise": "Fixed-cell tables: every key-data table keeps the same columns in the same order on every page, and periods never re-sort." },
+        { "from": "challenger-depot-blind", "raise": "Three inks per page; the one lead figure prints inverted, so rank shows by inversion rather than size." },
+        { "from": "challenger-seedbed", "raise": "The active section tab and section band are drenched in field green and own an edge of the page, never sprinkled as accents." },
+        { "from": "challenger-cloud-edge", "raise": "Plots stay achromatic ink; color is spent only on provenance tags and the one series that carries the finding." },
+        { "from": "challenger-quote-grammar", "raise": "MODEL figures carry a diagonal hatch as well as a yellow CAUTION tag, so assumptions separate from actuals in grayscale." }
+      ],
+      "wireframe": {
+        "cols": 12,
+        "rows": 10,
+        "regions": [
+          { "label": "section thumb tabs", "x": 0, "y": 0, "w": 1, "h": 10, "accent": true },
+          { "label": "running header · section 01 · data as of", "x": 1, "y": 0, "w": 11, "h": 1 },
+          { "label": "FIG. 1-1 Q3 FY26 earnings, exploded", "x": 1, "y": 1, "w": 7, "h": 6 },
+          { "label": "SPECIFICATIONS", "x": 8, "y": 1, "w": 4, "h": 6 },
+          { "label": "parts list (numbered)", "x": 1, "y": 7, "w": 7, "h": 2 },
+          { "label": "CAUTION · model assumptions", "x": 8, "y": 7, "w": 4, "h": 2, "accent": true },
+          { "label": "print code · provenance key", "x": 1, "y": 9, "w": 11, "h": 1 }
+        ]
+      }
+    },
+    {
+      "id": "model-pick",
+      "label": "Initiation of Coverage",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "Sell-side equity research initiation notes",
+      "thesis": "CYCLEBOOK as the front page of a research note: rating box, key data, numbered exhibits with a source line under each.",
+      "palette": ["#FAFAF8", "#101318", "#1F3A5F", "#B3261E", "#8C9096"],
+      "materials": ["research-note front page", "numbered exhibits", "key-data table"],
+      "viewport": "A masthead with price and implied value in a rating box, the investment view in running text, and Exhibit 1 and Exhibit 2 stacked at right.",
+      "risk": "Familiar: it is where most finance portfolio pieces land, and it can read as a PDF rather than something to explore.",
+      "wireframe": {
+        "cols": 12,
+        "rows": 10,
+        "regions": [
+          { "label": "masthead + rating box", "x": 0, "y": 0, "w": 12, "h": 2 },
+          { "label": "investment view", "x": 0, "y": 2, "w": 5, "h": 7 },
+          { "label": "key data", "x": 5, "y": 2, "w": 3, "h": 7, "accent": true },
+          { "label": "Exhibit 1", "x": 8, "y": 2, "w": 4, "h": 4 },
+          { "label": "Exhibit 2", "x": 8, "y": 6, "w": 4, "h": 3 },
+          { "label": "sources", "x": 0, "y": 9, "w": 12, "h": 1 }
+        ]
+      }
+    },
+    {
+      "id": "challenger-botanical-folio",
+      "label": "Cycle Folio",
+      "verdict": "competitive",
+      "lineage": "Botanical folios that follow one plant through the seasons at fixed scale",
+      "thesis": "Peak, compression, trough and recovery drawn as plates at exactly the same scale, so the cycle compares honestly.",
+      "palette": ["#EDE8DC", "#2B2A26", "#3F6B35", "#B8322A", "#8E8A80"],
+      "materials": ["fixed-scale plates", "shared baseline", "engraved captions"],
+      "viewport": "Four equal plates across the page, each a phase of the cycle, every segment on one shared axis.",
+      "case": "Holds product clarity (shared-scale small multiples make the cycle exact); loses audience identification, since botanical plates read as neither finance nor Deere.",
+      "risk": "Its cream ground and italic captions are two of the most common AI-generated tells; it needs a different stock to survive.",
+      "hero": "https://impeccable.style/worlds/cards/editorial-sequence-montage-botanical-folio-season-hero.webp",
+      "board": "https://impeccable.style/worlds/cards/editorial-sequence-montage-botanical-folio-season.webp",
+      "wireframe": {
+        "cols": 12,
+        "rows": 10,
+        "regions": [
+          { "label": "folio title", "x": 0, "y": 0, "w": 12, "h": 1 },
+          { "label": "plate: peak", "x": 0, "y": 1, "w": 3, "h": 6 },
+          { "label": "plate: compression", "x": 3, "y": 1, "w": 3, "h": 6 },
+          { "label": "plate: trough", "x": 6, "y": 1, "w": 3, "h": 6 },
+          { "label": "plate: recovery", "x": 9, "y": 1, "w": 3, "h": 6, "accent": true },
+          { "label": "shared-baseline captions", "x": 0, "y": 7, "w": 12, "h": 3 }
+        ]
+      }
+    },
+    {
+      "id": "challenger-split-flap",
+      "label": "Departure Board",
+      "verdict": "declined",
+      "lineage": "Split-flap boards in rail concourses and old trading floors",
+      "thesis": "Quarterly results as board rows: period, segment, status.",
+      "palette": ["#121212", "#F2F2F2", "#E8A33A", "#9B2F2A"],
+      "materials": ["flap cells", "steel frame"],
+      "viewport": "A full-width board of quarter rows with fixed columns.",
+      "case": "Loses both axes: rail wayfinding is not the audience's world, and a board cannot carry a valuation chart.",
+      "kept": "Fixed-cell discipline: columns never move, only values change.",
+      "risk": "Power BI cannot animate the flaps, so the board would be a still image of motion.",
+      "hero": "https://impeccable.style/worlds/cards/signals-instruments-split-flap-concourse-hero.webp"
+    },
+    {
+      "id": "challenger-depot-blind",
+      "label": "Destination Blind",
+      "verdict": "declined",
+      "lineage": "Bus depot destination blinds on dyed cloth",
+      "thesis": "Pages as courses on a cloth roll stepping under one window.",
+      "palette": ["#1F4D35", "#E8C230", "#EFEBDD"],
+      "materials": ["dyed duck cloth", "punched eyelet tape"],
+      "viewport": "One fixed window showing the current section's course.",
+      "case": "Loses both axes: the metaphor hides the numbers from a reader with ten minutes.",
+      "kept": "Three inks only, with rank shown by inversion.",
+      "risk": "The step motion it depends on is impossible in a report page.",
+      "hero": "https://impeccable.style/worlds/cards/operate-c-depot-blind-courses-hero.webp"
+    },
+    {
+      "id": "challenger-seedbed",
+      "label": "Seedbed Lobes",
+      "verdict": "declined",
+      "lineage": "Saturated-field product marketing with floating capsule UI",
+      "thesis": "One green field owns the page; everything floats on it as pills.",
+      "palette": ["#82CC5C", "#2F3130", "#FFFFFF", "#F2EFE3"],
+      "materials": ["floating capsules", "rounded slabs"],
+      "viewport": "A green field with a floating pill bar and oversized flush-left headline.",
+      "case": "Loses both axes: it is a startup-marketing grammar, and hiring managers would read it as a landing page.",
+      "kept": "One color owns a whole region instead of being scattered.",
+      "risk": "Reads as SaaS marketing, the opposite of research.",
+      "hero": "https://impeccable.style/worlds/cards/sd-seedbed-lobes-hero.webp"
+    },
+    {
+      "id": "challenger-cloud-edge",
+      "label": "Iridescent Edge",
+      "verdict": "declined",
+      "lineage": "Cloud iridescence observation",
+      "thesis": "An achromatic field with color only at the edges.",
+      "palette": ["#F4F5F6", "#4A5058", "#9FD9C4", "#E6A6B8", "#9C8AD6"],
+      "materials": ["thin humanist type", "spectral hairlines"],
+      "viewport": "Wide white margins with a thin spectral band marking the active item.",
+      "case": "Loses both axes: no connection to Deere or finance, and pastel bands blur provenance.",
+      "kept": "Data fields stay achromatic; color lives only where it means something.",
+      "risk": "Pretty and weightless for a subject that is heavy iron.",
+      "hero": "https://impeccable.style/worlds/cards/clouds-storms-auroras-iridescent-cloud-edge-hero.webp"
+    },
+    {
+      "id": "challenger-quote-grammar",
+      "label": "Quoted Industrial",
+      "verdict": "declined",
+      "lineage": "Industrial streetwear labeling and hazard striping",
+      "thesis": "Every label in quotes, hazard stripes under what matters.",
+      "palette": ["#F4F4F2", "#121212", "#FF6B1A"],
+      "materials": ["hazard diagonals", "zip-tie tags"],
+      "viewport": "Caps labels in straight quotes with diagonal stripes marking modeled values.",
+      "case": "Loses audience identification (fashion irony in a finance read); holds some clarity through literal labels.",
+      "kept": "Hatching marks what is not fact, independent of color.",
+      "risk": "The irony undercuts the credibility a research piece needs.",
+      "hero": "https://impeccable.style/worlds/cards/textiles-weave-drape-fashion-industrial-quote-grammar-hero.webp"
+    }
+  ],
+  "reroll": { "registers": ["safer", "bolder"] },
+  "buildPath": { "value": "code", "toggle": false },
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "A Power BI finance dashboard as the category ships it, executed at full craft.",
+    "palette": ["#FFFFFF", "#1B1F24", "#2563EB", "#E5E7EB"],
+    "materials": ["KPI card row", "line and bar charts", "data table"],
+    "viewport": "A row of KPI cards over a revenue trend, a segment chart and a detail table.",
+    "risk": "Indistinguishable from every other finance dashboard by design.",
+    "wireframe": {
+      "cols": 12,
+      "rows": 10,
+      "regions": [
+        { "label": "KPI cards", "x": 0, "y": 0, "w": 12, "h": 2 },
+        { "label": "revenue trend", "x": 0, "y": 2, "w": 8, "h": 4 },
+        { "label": "segment mix", "x": 8, "y": 2, "w": 4, "h": 4 },
+        { "label": "detail table", "x": 0, "y": 6, "w": 12, "h": 4 }
+      ]
+    }
+  },
+  "steer": true
+}

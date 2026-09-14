@@ -87,11 +87,6 @@ table _Measures
 		formatString: $#,##0 "mm"
 		lineageTag: d2ef3b20-e89a-4349-a2c2-f69c705b8019
 
-	/// Latest-quarter segment net sales in USD billions.
-	measure 'Latest Segment Sales Bn' = DIVIDE([Latest Segment Sales], 1000)
-		formatString: $0.0B
-		lineageTag: 6b4d4585-eba9-4710-a966-351c8bfe46e4
-
 	/// Latest-quarter segment operating margin.
 	measure 'Latest Segment Margin' = VAR p=[Latest Period Key] RETURN CALCULATE([Segment Operating Margin], REMOVEFILTERS('Period'), 'Period'[Period Key]=p)
 		formatString: 0.0%
@@ -162,11 +157,6 @@ table _Measures
 		formatString: $#,##0 "mm"
 		lineageTag: b184ff99-4cb3-4d7c-832f-171b91270a97
 
-	/// Annual equipment-segment net sales in USD billions.
-	measure 'Annual Segment Sales Bn' = DIVIDE([Annual Segment Sales], 1000)
-		formatString: $0.0B
-		lineageTag: 13984def-706f-4300-83db-d56755eb1a78
-
 	/// Annual segment operating profit.
 	measure 'Annual Segment Operating Profit' = SUM('Annual Segments'[Operating Profit])
 		formatString: $#,##0 "mm"
@@ -202,11 +192,6 @@ table _Measures
 		formatString: $#,##0 "mm"
 		lineageTag: a945b598-8a3a-4ed1-b9a0-57d70bcdc5d4
 
-	/// Modeled FY2026 segment sales in USD billions.
-	measure 'Model Segment Sales Bn' = DIVIDE([Model Segment Sales], 1000)
-		formatString: $0.0B
-		lineageTag: 9c517b2f-4ab9-457d-b6fd-ffc49273687c
-
 	/// Scenario segment operating margin plus margin sensitivity.
 	measure 'Model Segment Margin' = VAR s=SELECTEDVALUE('Segment'[Segment Code]) VAR b=[Selected Margin Adjustment Bps]/10000 RETURN SWITCH(s, "PPA",SELECTEDVALUE('Scenario'[PPA Margin],0.13)+b, "SAT",SELECTEDVALUE('Scenario'[SAT Margin],0.18)+b, "CF",SELECTEDVALUE('Scenario'[CF Margin],0.12)+b)
 		formatString: 0.0%
@@ -216,11 +201,6 @@ table _Measures
 	measure 'Model Segment Operating Profit' = [Model Segment Sales] * [Model Segment Margin]
 		formatString: $#,##0 "mm"
 		lineageTag: 09407d3a-02ce-480f-af7d-bfe1b01361bb
-
-	/// Modeled FY2026 segment operating profit in USD billions.
-	measure 'Model Segment Operating Profit Bn' = DIVIDE([Model Segment Operating Profit], 1000)
-		formatString: $0.0B
-		lineageTag: d6305f9b-f312-4c83-9d3d-232aa7ebaf56
 
 	/// Modeled aggregate equipment net sales across three operating segments.
 	measure 'Model Equipment Sales' = SUMX(VALUES('Segment'[Segment Code]), [Model Segment Sales])
@@ -257,8 +237,8 @@ table _Measures
 		formatString: $0.0B
 		lineageTag: 46a0deda-50c3-4bfc-9b37-d03760bac82a
 
-	/// Scenario net income divided by 270.8 million assumed diluted shares.
-	measure 'Projected EPS' = DIVIDE([Scenario Net Income],270.8)
+	/// Scenario net income divided by 269.8 million diluted average shares (Q3 FY2026 release).
+	measure 'Projected EPS' = DIVIDE([Scenario Net Income],269.8)
 		formatString: $0.00
 		lineageTag: e9c167b4-a2c6-4ad9-a228-ad744b2f6d60
 
@@ -273,7 +253,7 @@ table _Measures
 		lineageTag: 6a3e8404-7676-48f5-9725-46dc68d90787
 
 	/// Scenario implied market capitalization.
-	measure 'Implied Market Cap Bn' = DIVIDE([Implied Price]*270.8,1000)
+	measure 'Implied Market Cap Bn' = DIVIDE([Implied Price]*269.8,1000)
 		formatString: $0.0B
 		lineageTag: 7060ce22-274a-4f6a-9d7a-41044c21de95
 
@@ -281,11 +261,6 @@ table _Measures
 	measure 'Q4 Net Income Needed' = [Scenario Net Income] - 3808
 		formatString: $#,##0 "mm"
 		lineageTag: 8a0ec737-937a-44ea-b263-32d7162ffea0
-
-	/// FY2026 Q4 net income needed to reach the selected scenario, in USD billions.
-	measure 'Q4 Net Income Needed Bn' = DIVIDE([Q4 Net Income Needed], 1000)
-		formatString: $0.00B
-		lineageTag: 50fd02f4-d208-48a2-a0b3-8d35c8a659a0
 
 	/// Midpoint of Deere Q3 FY2026 net-income guidance of $4.75B-$5.00B.
 	measure 'Mgmt Guidance Midpoint Bn' = 4.875
@@ -331,6 +306,106 @@ table _Measures
 	measure 'Net Farm Income' = AVERAGE('Farm Income'[Net Farm Income])
 		formatString: $0.0
 		lineageTag: 281ffef5-9100-4415-8eae-03f336dec52b
+
+	/// Latest-quarter segment net sales in USD billions.
+	measure 'Latest Segment Sales Bn' = DIVIDE([Latest Segment Sales], 1000)
+		formatString: $0.0B
+		lineageTag: 6b4d4585-eba9-4710-a966-351c8bfe46e4
+
+	/// Annual equipment-segment net sales in USD billions.
+	measure 'Annual Segment Sales Bn' = DIVIDE([Annual Segment Sales], 1000)
+		formatString: $0.0B
+		lineageTag: 13984def-706f-4300-83db-d56755eb1a78
+
+	/// Modeled FY2026 segment sales in USD billions.
+	measure 'Model Segment Sales Bn' = DIVIDE([Model Segment Sales], 1000)
+		formatString: $0.0B
+		lineageTag: 9c517b2f-4ab9-457d-b6fd-ffc49273687c
+
+	/// Modeled FY2026 segment operating profit in USD billions.
+	measure 'Model Segment Operating Profit Bn' = DIVIDE([Model Segment Operating Profit], 1000)
+		formatString: $0.0B
+		lineageTag: d6305f9b-f312-4c83-9d3d-232aa7ebaf56
+
+	/// FY2026 Q4 net income needed to reach the selected scenario, in USD billions.
+	measure 'Q4 Net Income Needed Bn' = DIVIDE([Q4 Net Income Needed], 1000)
+		formatString: $0.00B
+		lineageTag: 50fd02f4-d208-48a2-a0b3-8d35c8a659a0
+
+	/// Latest DE closing price in the Nasdaq daily history.
+	measure 'Latest Price' = VAR d = CALCULATE(MAX('Market Price'[Date]), REMOVEFILTERS('Market Price')) RETURN CALCULATE(MAX('Market Price'[Close]), REMOVEFILTERS('Market Price'), 'Market Price'[Date] = d)
+		formatString: $#,##0.00
+		lineageTag: 3ee0baa3-fe75-4aa8-8b7b-fbda1af53b65
+
+	/// Trading date of the latest DE close in the model.
+	measure 'Latest Price Date' = CALCULATE(MAX('Market Price'[Date]), REMOVEFILTERS('Market Price'))
+		formatString: dd mmm yyyy
+		lineageTag: e8f640da-240a-4c42-9959-d89e26609a4e
+
+	/// Highest DE close in the 365 days to the latest price date.
+	measure 'Price 52W High' = VAR d = [Latest Price Date] RETURN CALCULATE(MAX('Market Price'[Close]), REMOVEFILTERS('Market Price'), 'Market Price'[Date] > d - 365, 'Market Price'[Date] <= d)
+		formatString: $#,##0.00
+		lineageTag: 9585cf16-a410-40de-a81b-cf6b7517fe08
+
+	/// Lowest DE close in the 365 days to the latest price date.
+	measure 'Price 52W Low' = VAR d = [Latest Price Date] RETURN CALCULATE(MIN('Market Price'[Close]), REMOVEFILTERS('Market Price'), 'Market Price'[Date] > d - 365, 'Market Price'[Date] <= d)
+		formatString: $#,##0.00
+		lineageTag: 67e4d614-a9c7-4225-9296-6679564af9f7
+
+	/// Market capitalization at the latest close on 269.8 million diluted average shares.
+	measure 'Market Cap Bn' = DIVIDE([Latest Price] * 269.8, 1000)
+		formatString: $#,##0.0B
+		lineageTag: ac3037cc-72ab-4c50-b606-6ad8222a5715
+
+	/// Diluted EPS over the last four reported fiscal quarters.
+	measure 'TTM EPS' = VAR p = [Latest Period Key] RETURN SUMX(TOPN(4, FILTER(ALL('Quarterly Financials'), 'Quarterly Financials'[Period Key] <= p), 'Quarterly Financials'[Period Key], DESC), 'Quarterly Financials'[Diluted EPS])
+		formatString: $0.00
+		lineageTag: 27b674cb-e5ea-4640-b2ff-0caf1419f74a
+
+	/// Latest close divided by trailing four-quarter diluted EPS.
+	measure 'Trailing PE' = DIVIDE([Latest Price], [TTM EPS])
+		formatString: 0.0x
+		lineageTag: d7e38ba0-5160-4872-821a-fced35b7ee80
+
+	/// Multiple the latest close pays for the selected scenario's FY2026 EPS.
+	measure 'Price Implied PE' = DIVIDE([Latest Price], [Projected EPS])
+		formatString: 0.0x
+		lineageTag: 700b07a8-e76e-4490-b3bc-27806f8b95eb
+
+	/// EPS the latest close requires at the selected P/E multiple.
+	measure 'Price Implied EPS' = DIVIDE([Latest Price], [Selected PE])
+		formatString: $0.00
+		lineageTag: 48260c76-e173-4794-9636-9b3653eaec36
+
+	/// Scenario implied value per share versus the latest close.
+	measure 'Implied Upside' = VAR p = [Latest Price] RETURN IF(NOT ISBLANK(p), DIVIDE([Implied Price], p) - 1)
+		formatString: +0.0%;-0.0%;0.0%
+		lineageTag: 1b40d783-41d3-47b6-8781-356b41e7729b
+
+	/// Record annual diluted EPS in the model.
+	measure 'Peak EPS' = CALCULATE(MAX('Annual Financials'[Diluted EPS]), REMOVEFILTERS('Annual Financials'))
+		formatString: $0.00
+		lineageTag: 31eb0775-f26d-4d6a-b790-b44fd99ccd5a
+
+	/// Fiscal year of record annual diluted EPS.
+	measure 'Peak EPS Year' = VAR pk = [Peak EPS] RETURN CALCULATE(MAX('Annual Financials'[Fiscal Year]), REMOVEFILTERS('Annual Financials'), 'Annual Financials'[Diluted EPS] = pk)
+		formatString: 0
+		lineageTag: 1f7aed38-5701-48a7-bf15-5ba452220019
+
+	/// Price-implied EPS relative to record annual EPS.
+	measure 'Price Implied EPS vs Peak' = IF(NOT ISBLANK([Latest Price]), DIVIDE([Price Implied EPS], [Peak EPS]) - 1)
+		formatString: +0%;-0%;0%
+		lineageTag: 206838e3-abef-46dc-ac47-a04b00d3c0ae
+
+	/// Q3 FY2026 earnings bridge amount in the current filter context, USD millions.
+	measure 'Bridge Q3 FY26' = SUM('Earnings Bridge'[Q3 FY26])
+		formatString: #,##0;(#,##0)
+		lineageTag: 690a39ea-0e90-4d33-ba06-9a64c882d8c8
+
+	/// Fiscal 2026 year-to-date earnings bridge amount in the current filter context, USD millions.
+	measure 'Bridge YTD FY26' = SUM('Earnings Bridge'[YTD FY26])
+		formatString: #,##0;(#,##0)
+		lineageTag: 83b0f215-9f65-4296-b636-cd94c688f3af
 
 	column Dummy
 		dataType: int64

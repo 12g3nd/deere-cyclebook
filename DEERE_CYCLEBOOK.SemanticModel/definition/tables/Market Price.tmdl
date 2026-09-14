@@ -1,0 +1,73 @@
+/// Daily DE (NYSE) prices from Nasdaq's public quote history, five years to the refresh date. Live refresh.
+table 'Market Price'
+	lineageTag: 8e59986e-a028-4f70-85f6-5bc0846ff057
+
+	column Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: b11aaab8-b54e-429c-b29a-e4ed5fa8fccb
+		summarizeBy: none
+		sourceColumn: Date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Close
+		dataType: double
+		formatString: $#,##0.00
+		lineageTag: 73943802-b3f1-4b9d-a934-7eb6b4060fce
+		summarizeBy: none
+		sourceColumn: Close
+
+	column Open
+		dataType: double
+		formatString: $#,##0.00
+		lineageTag: e8cdc419-f3a1-4ab0-b60e-bccdb27dd6de
+		summarizeBy: none
+		sourceColumn: Open
+
+	column High
+		dataType: double
+		formatString: $#,##0.00
+		lineageTag: 729e0652-0cef-4bbb-871f-667d57cc8f88
+		summarizeBy: none
+		sourceColumn: High
+
+	column Low
+		dataType: double
+		formatString: $#,##0.00
+		lineageTag: 572679bf-6b52-4f67-8bde-74b2f84905e3
+		summarizeBy: none
+		sourceColumn: Low
+
+	column Volume
+		dataType: int64
+		formatString: #,##0
+		lineageTag: 3fdb7b4a-d7fd-4143-afc8-cc0e84eec1af
+		summarizeBy: none
+		sourceColumn: Volume
+
+	partition 'Market Price' = m
+		mode: import
+		source =
+				let
+				    Today = Date.From(DateTimeZone.UtcNow()),
+				    Response = Json.Document(Web.Contents("https://api.nasdaq.com/api/quote/DE/historical", [
+				        Query = [assetclass = "stocks", fromdate = Date.ToText(Date.AddYears(Today, -5), [Format = "yyyy-MM-dd", Culture = "en-US"]), todate = Date.ToText(Today, [Format = "yyyy-MM-dd", Culture = "en-US"]), limit = "9999"],
+				        Headers = [#"User-Agent" = "Mozilla/5.0 (Windows NT 10.0; Win64; x64)", Accept = "application/json"]
+				    ])),
+				    Rows = Response[data][tradesTable][rows],
+				    AsTable = Table.FromRecords(Rows, {"date", "close", "open", "high", "low", "volume"}, MissingField.UseNull),
+				    ToNumber = (t) => try Number.FromText(Text.Remove(t, {"$", ","}), "en-US") otherwise null,
+				    Parsed = Table.TransformColumns(AsTable, {
+				        {"date", each Date.FromText(_, [Format = "MM/dd/yyyy", Culture = "en-US"]), type date},
+				        {"close", ToNumber, type number}, {"open", ToNumber, type number},
+				        {"high", ToNumber, type number}, {"low", ToNumber, type number},
+				        {"volume", each try Int64.From(Number.FromText(Text.Remove(_, {","}), "en-US")) otherwise null, Int64.Type}
+				    }),
+				    Renamed = Table.RenameColumns(Parsed, {{"date", "Date"}, {"close", "Close"}, {"open", "Open"}, {"high", "High"}, {"low", "Low"}, {"volume", "Volume"}}),
+				    Sorted = Table.Sort(Renamed, {{"Date", Order.Ascending}})
+				in
+				    Sorted
+
+	annotation PBI_ResultType = Table
+

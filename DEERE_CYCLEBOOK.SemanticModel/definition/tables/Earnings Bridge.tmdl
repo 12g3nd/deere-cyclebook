@@ -1,0 +1,60 @@
+/// Q3 FY2026 and fiscal-2026 year-to-date net income built up from segment operating profit. Source: Deere Q3 FY2026 news release (2026-08-20). USD millions.
+table 'Earnings Bridge'
+	lineageTag: c7003a38-db71-4127-9e8f-656fc2cfe26b
+
+	column Order
+		dataType: int64
+		isHidden
+		lineageTag: 48ad430a-5490-4e1f-aca0-3235e746294b
+		summarizeBy: none
+		sourceColumn: Order
+
+	column Item
+		dataType: string
+		lineageTag: c7c6b8e5-c240-434f-8e7c-1f4c05a93911
+		summarizeBy: none
+		sourceColumn: Item
+		sortByColumn: Order
+
+	column Kind
+		dataType: string
+		lineageTag: 0c0d1b04-6495-4457-b3e7-6268e79afe87
+		summarizeBy: none
+		sourceColumn: Kind
+
+	column 'Q3 FY26'
+		dataType: double
+		formatString: #,##0;(#,##0)
+		lineageTag: ca87fc10-51b9-4ff8-9169-bc9d4e3b55c4
+		summarizeBy: none
+		sourceColumn: Q3
+
+	column 'YTD FY26'
+		dataType: double
+		formatString: #,##0;(#,##0)
+		lineageTag: 203492a2-a270-4287-aec7-734dc3ec633a
+		summarizeBy: none
+		sourceColumn: YTD
+
+	column Provenance
+		dataType: string
+		lineageTag: 02c2cbf7-2f50-4a71-9cf5-3fe9ac4e952a
+		summarizeBy: none
+		sourceColumn: Provenance
+
+	partition 'Earnings Bridge' = m
+		mode: import
+		source =
+				let
+					Source = #table(type table [Order = Int64.Type, Item = text, Kind = text, Q3 = number, YTD = number, Provenance = text], {
+								{1, "Production & Precision Agriculture", "Segment operating profit", 527, 1372, "Actual"},
+								{2, "Small Agriculture & Turf", "Segment operating profit", 622, 1538, "Actual"},
+								{3, "Construction & Forestry", "Segment operating profit", 436, 1134, "Actual"},
+								{4, "Financial Services", "Segment operating profit", 271, 823, "Actual"},
+								{5, "Reconciling items", "Adjustment", 52, 184, "Actual"},
+								{6, "Income taxes", "Adjustment", -529, -1243, "Actual"},
+								{7, "Net income attributable to Deere & Company", "Total", 1379, 3808, "Actual"}
+							})
+				in
+					Source
+

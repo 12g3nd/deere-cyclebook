@@ -1,2 +1,5 @@
 **/.pbi/localSettings.json
 **/.pbi/cache.abf
+# impeccable decision-page runtime state
+.impeccable/questions/
+.impeccable/config.local.json

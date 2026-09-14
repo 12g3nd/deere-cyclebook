@@ -35,7 +35,8 @@ Every figure declares where it came from: ACTUAL (reported), GUIDANCE (managemen
 - Data in the model: Deere annual FY2022–FY2025, quarterly FY2024 Q1–FY2026 Q3, segment sales and operating profit; FRED corn, soybeans, federal funds rate, housing starts, construction spending, CAD/USD, U.S. net farm income.
 - Data available but not yet modeled: daily DE share price from Nasdaq's public quote endpoint (verified 2026-09-13; close $675.74 on 2026-09-11).
 - Management guidance on hand: FY2026 net income $4.75B–$5.00B; segment sales outlook PPA about −10%, SAT about +15%, C&F about +20% (Q3 FY2026 release, 2026-08-20).
-- Unconfirmed: whether the author's Power BI account can publish to the web (UofT tenant policy). Published reports render in the viewer's browser, so fonts outside Power BI Service's supported set (Bahnschrift, for example) may not render on macOS; typography must be checked against that set.
+- Unconfirmed: whether the author's Power BI account can publish to the web (UofT tenant policy).
+- Fonts: published reports render in the viewer's browser. Power BI defaults to Segoe UI and DIN, which Microsoft notes may fall back on macOS; Bahnschrift is Windows-only. Arial, Verdana, Tahoma and Courier New render reliably on both platforms.
 - No custom visuals assumed (tenant policy unknown). Native visuals and DAX-generated SVG only.
 - Scenarios are the author's assumptions, not investment advice.
 

@@ -4,8 +4,8 @@ table 'Sales Adjustment'
 
 	column 'Sales Adjustment'
 		dataType: double
-		lineageTag: dc5cf0df-ec41-402f-a55e-ec4e38ad5dc7
 		formatString: +0%;-0%;0%
+		lineageTag: dc5cf0df-ec41-402f-a55e-ec4e38ad5dc7
 		summarizeBy: none
 		sourceColumn: AdjustmentPct
 
