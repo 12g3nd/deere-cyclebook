@@ -407,6 +407,409 @@ table _Measures
 		formatString: #,##0;(#,##0)
 		lineageTag: 83b0f215-9f65-4296-b636-cd94c688f3af
 
+	/// Latest fiscal quarter as Q# FY####.
+	measure 'Latest Period Label' = VAR p = [Latest Period Key] RETURN LOOKUPVALUE('Period'[Fiscal Quarter], 'Period'[Period Key], p) & " FY" & LOOKUPVALUE('Period'[Fiscal Year], 'Period'[Period Key], p)
+		displayFolder: The Stack
+		lineageTag: 67c8d26b-feb5-4df4-8bc0-7534d991b6ec
+
+	/// Latest-quarter diluted EPS growth versus the prior-year quarter.
+	measure 'Latest EPS YoY' = VAR p = [Latest Period Key] RETURN CALCULATE(MAX('Quarterly Financials'[EPS YoY %]), REMOVEFILTERS('Period'), 'Quarterly Financials'[Period Key] = p)
+		formatString: 0.0%
+		displayFolder: The Stack
+		lineageTag: 17377870-25e1-4736-8218-a0aad105044d
+
+	/// The Stack: dithered desk with the card stack, full 1920x1080 canvas.
+	measure 'SVG Stack Desk' = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1920' height='1080' viewBox='0 0 1920 1080' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern></defs><rect width='1920' height='1080' fill='%23F4F4F0'/><rect width='1920' height='1080' fill='url(%23d)'/><rect x='242' y='62' width='1500' height='1000' fill='%230E0E0C'/><rect x='236' y='56' width='1500' height='1000' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='3'/><rect x='226' y='46' width='1500' height='1000' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='3'/><rect x='216' y='36' width='1500' height='1000' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='4'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: c7dd1fb8-f439-4b77-8815-b698ed1151e8
+
+	/// The Stack: PULSE card header with bitmap title and as-of line.
+	measure 'SVG Header PULSE' =
+			VAR _price = [Latest Price]
+			VAR _date = [Latest Price Date]
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='96' viewBox='0 0 1420 96' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><g fill='%230E0E0C'><rect x='0' y='8' width='10' height='10'/><rect x='10' y='8' width='10' height='10'/><rect x='20' y='8' width='10' height='10'/><rect x='30' y='8' width='10' height='10'/><rect x='0' y='18' width='10' height='10'/><rect x='40' y='18' width='10' height='10'/><rect x='0' y='28' width='10' height='10'/><rect x='40' y='28' width='10' height='10'/><rect x='0' y='38' width='10' height='10'/><rect x='10' y='38' width='10' height='10'/><rect x='20' y='38' width='10' height='10'/><rect x='30' y='38' width='10' height='10'/><rect x='0' y='48' width='10' height='10'/><rect x='0' y='58' width='10' height='10'/><rect x='0' y='68' width='10' height='10'/><rect x='60' y='8' width='10' height='10'/><rect x='100' y='8' width='10' height='10'/><rect x='60' y='18' width='10' height='10'/><rect x='100' y='18' width='10' height='10'/><rect x='60' y='28' width='10' height='10'/><rect x='100' y='28' width='10' height='10'/><rect x='60' y='38' width='10' height='10'/><rect x='100' y='38' width='10' height='10'/><rect x='60' y='48' width='10' height='10'/><rect x='100' y='48' width='10' height='10'/><rect x='60' y='58' width='10' height='10'/><rect x='100' y='58' width='10' height='10'/><rect x='70' y='68' width='10' height='10'/><rect x='80' y='68' width='10' height='10'/><rect x='90' y='68' width='10' height='10'/><rect x='120' y='8' width='10' height='10'/><rect x='120' y='18' width='10' height='10'/><rect x='120' y='28' width='10' height='10'/><rect x='120' y='38' width='10' height='10'/><rect x='120' y='48' width='10' height='10'/><rect x='120' y='58' width='10' height='10'/><rect x='120' y='68' width='10' height='10'/><rect x='130' y='68' width='10' height='10'/><rect x='140' y='68' width='10' height='10'/><rect x='150' y='68' width='10' height='10'/><rect x='160' y='68' width='10' height='10'/><rect x='190' y='8' width='10' height='10'/><rect x='200' y='8' width='10' height='10'/><rect x='210' y='8' width='10' height='10'/><rect x='220' y='8' width='10' height='10'/><rect x='180' y='18' width='10' height='10'/><rect x='180' y='28' width='10' height='10'/><rect x='190' y='38' width='10' height='10'/><rect x='200' y='38' width='10' height='10'/><rect x='210' y='38' width='10' height='10'/><rect x='220' y='48' width='10' height='10'/><rect x='220' y='58' width='10' height='10'/><rect x='180' y='68' width='10' height='10'/><rect x='190' y='68' width='10' height='10'/><rect x='200' y='68' width='10' height='10'/><rect x='210' y='68' width='10' height='10'/><rect x='240' y='8' width='10' height='10'/><rect x='250' y='8' width='10' height='10'/><rect x='260' y='8' width='10' height='10'/><rect x='270' y='8' width='10' height='10'/><rect x='280' y='8' width='10' height='10'/><rect x='240' y='18' width='10' height='10'/><rect x='240' y='28' width='10' height='10'/><rect x='240' y='38' width='10' height='10'/><rect x='250' y='38' width='10' height='10'/><rect x='260' y='38' width='10' height='10'/><rect x='270' y='38' width='10' height='10'/><rect x='240' y='48' width='10' height='10'/><rect x='240' y='58' width='10' height='10'/><rect x='240' y='68' width='10' height='10'/><rect x='250' y='68' width='10' height='10'/><rect x='260' y='68' width='10' height='10'/><rect x='270' y='68' width='10' height='10'/><rect x='280' y='68' width='10' height='10'/></g>"
+			        & "<text x='1420' y='36' text-anchor='end' font-size='16' font-weight='bold' fill='%230E0E0C'>Deere &amp; Company &%23183; NYSE: DE</text>"
+			        & "<text x='1420' y='62' text-anchor='end' font-size='15' fill='%230E0E0C'>Close " & FORMAT(_price, "$#,##0.00") & " on " & FORMAT(_date, "d mmm yyyy") & " &%23183; reported through " & [Latest Period Label] & "</text>"
+			        & "<rect x='0' y='86' width='1420' height='4' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: df67136e-e535-447c-b4a4-d53c0401b972
+
+	/// The Stack: VALUATION card header with bitmap title and as-of line.
+	measure 'SVG Header VALUATION' =
+			VAR _price = [Latest Price]
+			VAR _date = [Latest Price Date]
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='96' viewBox='0 0 1420 96' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><g fill='%230E0E0C'><rect x='0' y='8' width='10' height='10'/><rect x='40' y='8' width='10' height='10'/><rect x='0' y='18' width='10' height='10'/><rect x='40' y='18' width='10' height='10'/><rect x='0' y='28' width='10' height='10'/><rect x='40' y='28' width='10' height='10'/><rect x='0' y='38' width='10' height='10'/><rect x='40' y='38' width='10' height='10'/><rect x='0' y='48' width='10' height='10'/><rect x='40' y='48' width='10' height='10'/><rect x='10' y='58' width='10' height='10'/><rect x='30' y='58' width='10' height='10'/><rect x='20' y='68' width='10' height='10'/><rect x='70' y='8' width='10' height='10'/><rect x='80' y='8' width='10' height='10'/><rect x='90' y='8' width='10' height='10'/><rect x='60' y='18' width='10' height='10'/><rect x='100' y='18' width='10' height='10'/><rect x='60' y='28' width='10' height='10'/><rect x='100' y='28' width='10' height='10'/><rect x='60' y='38' width='10' height='10'/><rect x='70' y='38' width='10' height='10'/><rect x='80' y='38' width='10' height='10'/><rect x='90' y='38' width='10' height='10'/><rect x='100' y='38' width='10' height='10'/><rect x='60' y='48' width='10' height='10'/><rect x='100' y='48' width='10' height='10'/><rect x='60' y='58' width='10' height='10'/><rect x='100' y='58' width='10' height='10'/><rect x='60' y='68' width='10' height='10'/><rect x='100' y='68' width='10' height='10'/><rect x='120' y='8' width='10' height='10'/><rect x='120' y='18' width='10' height='10'/><rect x='120' y='28' width='10' height='10'/><rect x='120' y='38' width='10' height='10'/><rect x='120' y='48' width='10' height='10'/><rect x='120' y='58' width='10' height='10'/><rect x='120' y='68' width='10' height='10'/><rect x='130' y='68' width='10' height='10'/><rect x='140' y='68' width='10' height='10'/><rect x='150' y='68' width='10' height='10'/><rect x='160' y='68' width='10' height='10'/><rect x='180' y='8' width='10' height='10'/><rect x='220' y='8' width='10' height='10'/><rect x='180' y='18' width='10' height='10'/><rect x='220' y='18' width='10' height='10'/><rect x='180' y='28' width='10' height='10'/><rect x='220' y='28' width='10' height='10'/><rect x='180' y='38' width='10' height='10'/><rect x='220' y='38' width='10' height='10'/><rect x='180' y='48' width='10' height='10'/><rect x='220' y='48' width='10' height='10'/><rect x='180' y='58' width='10' height='10'/><rect x='220' y='58' width='10' height='10'/><rect x='190' y='68' width='10' height='10'/><rect x='200' y='68' width='10' height='10'/><rect x='210' y='68' width='10' height='10'/><rect x='250' y='8' width='10' height='10'/><rect x='260' y='8' width='10' height='10'/><rect x='270' y='8' width='10' height='10'/><rect x='240' y='18' width='10' height='10'/><rect x='280' y='18' width='10' height='10'/><rect x='240' y='28' width='10' height='10'/><rect x='280' y='28' width='10' height='10'/><rect x='240' y='38' width='10' height='10'/><rect x='250' y='38' width='10' height='10'/><rect x='260' y='38' width='10' height='10'/><rect x='270' y='38' width='10' height='10'/><rect x='280' y='38' width='10' height='10'/><rect x='240' y='48' width='10' height='10'/><rect x='280' y='48' width='10' height='10'/><rect x='240' y='58' width='10' height='10'/><rect x='280' y='58' width='10' height='10'/><rect x='240' y='68' width='10' height='10'/><rect x='280' y='68' width='10' height='10'/><rect x='300' y='8' width='10' height='10'/><rect x='310' y='8' width='10' height='10'/><rect x='320' y='8' width='10' height='10'/><rect x='330' y='8' width='10' height='10'/><rect x='340' y='8' width='10' height='10'/><rect x='320' y='18' width='10' height='10'/><rect x='320' y='28' width='10' height='10'/><rect x='320' y='38' width='10' height='10'/><rect x='320' y='48' width='10' height='10'/><rect x='320' y='58' width='10' height='10'/><rect x='320' y='68' width='10' height='10'/><rect x='370' y='8' width='10' height='10'/><rect x='380' y='8' width='10' height='10'/><rect x='390' y='8' width='10' height='10'/><rect x='380' y='18' width='10' height='10'/><rect x='380' y='28' width='10' height='10'/><rect x='380' y='38' width='10' height='10'/><rect x='380' y='48' width='10' height='10'/><rect x='380' y='58' width='10' height='10'/><rect x='370' y='68' width='10' height='10'/><rect x='380' y='68' width='10' height='10'/><rect x='390' y='68' width='10' height='10'/><rect x='430' y='8' width='10' height='10'/><rect x='440' y='8' width='10' height='10'/><rect x='450' y='8' width='10' height='10'/><rect x='420' y='18' width='10' height='10'/><rect x='460' y='18' width='10' height='10'/><rect x='420' y='28' width='10' height='10'/><rect x='460' y='28' width='10' height='10'/><rect x='420' y='38' width='10' height='10'/><rect x='460' y='38' width='10' height='10'/><rect x='420' y='48' width='10' height='10'/><rect x='460' y='48' width='10' height='10'/><rect x='420' y='58' width='10' height='10'/><rect x='460' y='58' width='10' height='10'/><rect x='430' y='68' width='10' height='10'/><rect x='440' y='68' width='10' height='10'/><rect x='450' y='68' width='10' height='10'/><rect x='480' y='8' width='10' height='10'/><rect x='520' y='8' width='10' height='10'/><rect x='480' y='18' width='10' height='10'/><rect x='520' y='18' width='10' height='10'/><rect x='480' y='28' width='10' height='10'/><rect x='490' y='28' width='10' height='10'/><rect x='520' y='28' width='10' height='10'/><rect x='480' y='38' width='10' height='10'/><rect x='500' y='38' width='10' height='10'/><rect x='520' y='38' width='10' height='10'/><rect x='480' y='48' width='10' height='10'/><rect x='510' y='48' width='10' height='10'/><rect x='520' y='48' width='10' height='10'/><rect x='480' y='58' width='10' height='10'/><rect x='520' y='58' width='10' height='10'/><rect x='480' y='68' width='10' height='10'/><rect x='520' y='68' width='10' height='10'/></g>"
+			        & "<text x='1420' y='36' text-anchor='end' font-size='16' font-weight='bold' fill='%230E0E0C'>Deere &amp; Company &%23183; NYSE: DE</text>"
+			        & "<text x='1420' y='62' text-anchor='end' font-size='15' fill='%230E0E0C'>Close " & FORMAT(_price, "$#,##0.00") & " on " & FORMAT(_date, "d mmm yyyy") & " &%23183; reported through " & [Latest Period Label] & "</text>"
+			        & "<rect x='0' y='86' width='1420' height='4' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 0325776b-d20d-410c-9cda-592c88d1de93
+
+	/// The Stack: segment sales growth vs a year earlier over the last seven fiscal quarters.
+	measure 'SVG Pulse Divergence' =
+			VAR _last = TOPN(7, ALL('Period'[Period Key], 'Period'[Period Sort], 'Period'[Period Label]), 'Period'[Period Sort], DESC)
+			VAR _minSort = MINX(_last, 'Period'[Period Sort])
+			VAR _maxKey = MAXX(_last, 'Period'[Period Key])
+			VAR _pts = ADDCOLUMNS(_last, "@x", 70 + ('Period'[Period Sort] - _minSort) * 125)
+			VAR _vPPA = LOOKUPVALUE('Quarterly Segments'[Sales YoY %], 'Quarterly Segments'[Period Key], _maxKey, 'Quarterly Segments'[Segment Code], "PPA")
+			VAR _vSAT = LOOKUPVALUE('Quarterly Segments'[Sales YoY %], 'Quarterly Segments'[Period Key], _maxKey, 'Quarterly Segments'[Segment Code], "SAT")
+			VAR _vCF = LOOKUPVALUE('Quarterly Segments'[Sales YoY %], 'Quarterly Segments'[Period Key], _maxKey, 'Quarterly Segments'[Segment Code], "CF")
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='960' height='600' viewBox='0 0 960 600' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><text x='0' y='22' font-size='16' font-weight='bold' fill='%230E0E0C'>Segment net sales, change vs the same quarter a year earlier</text><g fill='none' stroke='%230E0E0C'><line x1='0' y1='44' x2='34' y2='44' stroke-width='5'/><line x1='270' y1='44' x2='304' y2='44' stroke-width='3' stroke-dasharray='14 7'/><line x1='510' y1='44' x2='544' y2='44' stroke-width='3' stroke-dasharray='4 6'/></g><g font-size='13' fill='%230E0E0C'><text x='42' y='49'>PPA Production &amp; Precision Ag</text><text x='312' y='49'>SAT Small Ag &amp; Turf</text><text x='552' y='49'>C&amp;F Construction &amp; Forestry</text></g><line x1='70' y1='90' x2='820' y2='90' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='95' text-anchor='end' font-size='13' fill='%230E0E0C'>+40%25</text><line x1='70' y1='192.5' x2='820' y2='192.5' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='197.5' text-anchor='end' font-size='13' fill='%230E0E0C'>+20%25</text><line x1='70' y1='397.5' x2='820' y2='397.5' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='402.5' text-anchor='end' font-size='13' fill='%230E0E0C'>-20%25</text><line x1='70' y1='500' x2='820' y2='500' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='60' y='505' text-anchor='end' font-size='13' fill='%230E0E0C'>-40%25</text><rect x='70' y='294' width='750' height='3' fill='%230E0E0C'/><text x='60' y='300' text-anchor='end' font-size='13' fill='%230E0E0C'>0</text><text x='78' y='287' font-size='12' fill='%230E0E0C'>growing</text><text x='78' y='313' font-size='12' fill='%230E0E0C'>shrinking</text>"
+			        & "<polyline fill='none' stroke='%230E0E0C' stroke-width='5' points='" & CONCATENATEX(_pts, [@x] & "," & ROUND(MAX(90, MIN(500, 295 - LOOKUPVALUE('Quarterly Segments'[Sales YoY %], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA") * 512.5)), 1), " ", [@x], ASC) & "'/>"
+			        & CONCATENATEX(_pts, "<rect x='" & ([@x] - 4) & "' y='" & (ROUND(MAX(90, MIN(500, 295 - LOOKUPVALUE('Quarterly Segments'[Sales YoY %], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA") * 512.5)), 1) - 4) & "' width='8' height='8' fill='%230E0E0C'/>", "")
+			        & "<text x='834' y='" & (ROUND(MAX(90, MIN(500, 295 - _vPPA * 512.5)), 1) + 5) & "' font-size='15' font-weight='bold' fill='%230E0E0C'>PPA " & SUBSTITUTE(FORMAT(_vPPA, "+0%;-0%;0%"), "%", "%25") & "</text>"
+			        & "<polyline fill='none' stroke='%230E0E0C' stroke-width='3' stroke-dasharray='14 7' points='" & CONCATENATEX(_pts, [@x] & "," & ROUND(MAX(90, MIN(500, 295 - LOOKUPVALUE('Quarterly Segments'[Sales YoY %], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT") * 512.5)), 1), " ", [@x], ASC) & "'/>"
+			        & CONCATENATEX(_pts, "<rect x='" & ([@x] - 4) & "' y='" & (ROUND(MAX(90, MIN(500, 295 - LOOKUPVALUE('Quarterly Segments'[Sales YoY %], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT") * 512.5)), 1) - 4) & "' width='8' height='8' fill='%230E0E0C'/>", "")
+			        & "<text x='834' y='" & (ROUND(MAX(90, MIN(500, 295 - _vSAT * 512.5)), 1) + 5) & "' font-size='15' font-weight='bold' fill='%230E0E0C'>SAT " & SUBSTITUTE(FORMAT(_vSAT, "+0%;-0%;0%"), "%", "%25") & "</text>"
+			        & "<polyline fill='none' stroke='%230E0E0C' stroke-width='3' stroke-dasharray='4 6' points='" & CONCATENATEX(_pts, [@x] & "," & ROUND(MAX(90, MIN(500, 295 - LOOKUPVALUE('Quarterly Segments'[Sales YoY %], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "CF") * 512.5)), 1), " ", [@x], ASC) & "'/>"
+			        & CONCATENATEX(_pts, "<rect x='" & ([@x] - 4) & "' y='" & (ROUND(MAX(90, MIN(500, 295 - LOOKUPVALUE('Quarterly Segments'[Sales YoY %], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "CF") * 512.5)), 1) - 4) & "' width='8' height='8' fill='%230E0E0C'/>", "")
+			        & "<text x='834' y='" & (ROUND(MAX(90, MIN(500, 295 - _vCF * 512.5)), 1) + 5) & "' font-size='15' font-weight='bold' fill='%230E0E0C'>C&amp;F " & SUBSTITUTE(FORMAT(_vCF, "+0%;-0%;0%"), "%", "%25") & "</text>"
+			        & CONCATENATEX(_pts, "<text x='" & [@x] & "' y='536' text-anchor='middle' font-size='13' fill='%230E0E0C'>" & 'Period'[Period Label] & "</text>", "", [@x], ASC)
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 11c723f1-69eb-4dc1-be21-3c3f1e2ca5c3
+
+	/// The Stack: PULSE ledger of latest-quarter actuals, guidance and price.
+	measure 'SVG Pulse Ledger' =
+			VAR _rev = [Latest Revenue]
+			VAR _ni = [Latest Net Income]
+			VAR _eps = [Latest EPS]
+			VAR _period = [Latest Period Label]
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='440' height='588' viewBox='0 0 440 588' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			        & "<rect x='0' y='0' width='440' height='2' fill='%230E0E0C'/><rect x='368' y='10' width='72' height='22' fill='%230E0E0C'/><text x='404' y='26' text-anchor='middle' font-size='12' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='26' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Net sales and revenues, " & _period & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptpl0 = "$" & FORMAT(_rev, "#,##0") & "M"
+			        VAR _pxpl0 = 0
+			        VAR _pypl0 = 40
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptpl0), 1), "cipl0", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptpl0, [cipl0], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellpl0", [Value]), MID(_bits, [cellpl0] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxpl0 + ([cipl0] - 1) * 24 + MOD([cellpl0], 5) * 4) & "' y='" & (_pypl0 + INT([cellpl0] / 5) * 4) & "' width='4' height='4'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<text x='440' y='102' text-anchor='end' font-size='14' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT([Latest Revenue YoY], "+0%;-0%;0%"), "%", "%25") & " vs a year earlier" & "</text>"
+			        & "<rect x='0' y='116' width='440' height='2' fill='%230E0E0C'/><rect x='368' y='126' width='72' height='22' fill='%230E0E0C'/><text x='404' y='142' text-anchor='middle' font-size='12' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='142' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Net income, " & _period & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptpl1 = "$" & FORMAT(_ni, "#,##0") & "M"
+			        VAR _pxpl1 = 0
+			        VAR _pypl1 = 156
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptpl1), 1), "cipl1", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptpl1, [cipl1], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellpl1", [Value]), MID(_bits, [cellpl1] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxpl1 + ([cipl1] - 1) * 24 + MOD([cellpl1], 5) * 4) & "' y='" & (_pypl1 + INT([cellpl1] / 5) * 4) & "' width='4' height='4'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<text x='440' y='218' text-anchor='end' font-size='14' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT([Latest Net Income YoY], "+0%;-0%;0%"), "%", "%25") & " vs a year earlier" & "</text>"
+			        & "<rect x='0' y='232' width='440' height='2' fill='%230E0E0C'/><rect x='368' y='242' width='72' height='22' fill='%230E0E0C'/><text x='404' y='258' text-anchor='middle' font-size='12' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='258' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Diluted EPS, " & _period & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptpl2 = FORMAT(_eps, "$0.00")
+			        VAR _pxpl2 = 0
+			        VAR _pypl2 = 272
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptpl2), 1), "cipl2", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptpl2, [cipl2], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellpl2", [Value]), MID(_bits, [cellpl2] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxpl2 + ([cipl2] - 1) * 24 + MOD([cellpl2], 5) * 4) & "' y='" & (_pypl2 + INT([cellpl2] / 5) * 4) & "' width='4' height='4'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<text x='440' y='334' text-anchor='end' font-size='14' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT([Latest EPS YoY], "+0%;-0%;0%"), "%", "%25") & " vs a year earlier" & "</text>"
+			        & "<rect x='0' y='348' width='440' height='2' fill='%230E0E0C'/><rect x='344' y='358' width='96' height='22' fill='%23367C2B'/><text x='392' y='374' text-anchor='middle' font-size='12' font-weight='bold' fill='%23F4F4F0'>GUIDANCE</text>"
+			        & "<text x='0' y='374' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Net income guidance, FY2026" & "</text>"
+			        & "<g fill='%23367C2B'>" & (
+			        VAR _ptpl3 = "$4.75B-5.00B"
+			        VAR _pxpl3 = 0
+			        VAR _pypl3 = 388
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptpl3), 1), "cipl3", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptpl3, [cipl3], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellpl3", [Value]), MID(_bits, [cellpl3] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxpl3 + ([cipl3] - 1) * 24 + MOD([cellpl3], 5) * 4) & "' y='" & (_pypl3 + INT([cellpl3] / 5) * 4) & "' width='4' height='4'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<text x='440' y='450' text-anchor='end' font-size='14' fill='%230E0E0C'>" & "Management range, Q3 FY2026 release" & "</text>"
+			        & "<rect x='0' y='464' width='440' height='2' fill='%230E0E0C'/><rect x='368' y='474' width='72' height='22' fill='%230E0E0C'/><text x='404' y='490' text-anchor='middle' font-size='12' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='490' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Share price, " & FORMAT([Latest Price Date], "d mmm yyyy") & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptpl4 = FORMAT([Latest Price], "$0.00")
+			        VAR _pxpl4 = 0
+			        VAR _pypl4 = 504
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptpl4), 1), "cipl4", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptpl4, [cipl4], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellpl4", [Value]), MID(_bits, [cellpl4] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxpl4 + ([cipl4] - 1) * 24 + MOD([cellpl4], 5) * 4) & "' y='" & (_pypl4 + INT([cellpl4] / 5) * 4) & "' width='4' height='4'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<text x='440' y='566' text-anchor='end' font-size='14' fill='%230E0E0C'>" & FORMAT([Trailing PE], "0.0") & "x trailing four-quarter EPS" & "</text>"
+			        & "<rect x='0' y='580' width='440' height='2' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: cc61795a-0de7-430c-a3d6-bf4352b4db9e
+
+	/// The Stack: live VALUATION finding sentence as plain text (author to rewrite the words, see _brief/VOICE_REWRITES.md N1).
+	measure 'Valuation Finding' =
+			VAR _pe = [Selected PE]
+			VAR _gap = [Price Implied EPS vs Peak]
+			RETURN
+			    "At " & FORMAT(_pe, "0") & "x, today's price of " & FORMAT([Latest Price], "$#,##0.00")
+			        & " needs EPS of " & FORMAT([Price Implied EPS], "$0.00") & ", "
+			        & FORMAT(ABS(_gap), "0%") & IF(_gap < 0, " below", " above")
+			        & " the FY" & [Peak EPS Year] & " record of " & FORMAT([Peak EPS], "$0.00") & "."
+		displayFolder: The Stack
+		lineageTag: 6cf738d5-e923-4f15-b7aa-3a0fb97faf40
+
+	/// The Stack: the live VALUATION finding set on two lines.
+	measure 'SVG Valuation Finding' =
+			VAR _pe = [Selected PE]
+			VAR _gap = [Price Implied EPS vs Peak]
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='84' viewBox='0 0 1420 84' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
+			        & "<text x='0' y='30' font-size='27' font-weight='bold' fill='%230E0E0C'>At " & FORMAT(_pe, "0") & "x, today's price of " & FORMAT([Latest Price], "$#,##0.00") & " needs EPS of " & FORMAT([Price Implied EPS], "$0.00") & ",</text>"
+			        & "<text x='0' y='72' font-size='27' font-weight='bold' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(ABS(_gap), "0%"), "%", "%25") & IF(_gap < 0, " below", " above") & " the FY" & [Peak EPS Year] & " record of " & FORMAT([Peak EPS], "$0.00") & ".</text>"
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 8083b93e-da3d-4c0b-906c-a3697a60059a
+
+	/// The Stack: EPS the latest close requires at each P/E, against the FY2023 record, guidance and scenarios.
+	measure 'SVG Valuation Ladder' =
+			VAR _price = [Latest Price]
+			VAR _pe = [Selected PE]
+			VAR _sc = SELECTEDVALUE('Scenario'[Scenario], "Base")
+			VAR _epsSel = [Projected EPS]
+			VAR _bear = CALCULATE(DIVIDE(MAX('Scenario'[Net Income]), 269.8), REMOVEFILTERS('Scenario'), 'Scenario'[Scenario] = "Bear")
+			VAR _bull = CALCULATE(DIVIDE(MAX('Scenario'[Net Income]), 269.8), REMOVEFILTERS('Scenario'), 'Scenario'[Scenario] = "Bull")
+			VAR _gLo = 4750 / 269.8
+			VAR _gHi = 5000 / 269.8
+			VAR _peak = [Peak EPS]
+			VAR _peX = ROUND(MAX(80, MIN(960, (80 + (DIVIDE(_price, _peak) - 14) * 31.4286))), 1)
+			VAR _scX = ROUND(MAX(80, MIN(960, (80 + (DIVIDE(_price, _epsSel) - 14) * 31.4286))), 1)
+			VAR _selX = ROUND((80 + (_pe - 14) * 31.4286), 1)
+			VAR _selY = ROUND(MAX(60, (460 - (DIVIDE(_price, _pe)) * 8)), 1)
+			VAR _boxX = IF(_selX > 700, _selX - 246, _selX + 20)
+			VAR _curve = CONCATENATEX(GENERATESERIES(14, 42, 0.5), ROUND((80 + ([Value] - 14) * 31.4286), 1) & "," & ROUND(MAX(60, (460 - (DIVIDE(_price, [Value])) * 8)), 1), " ", [Value], ASC)
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1000' height='540' viewBox='0 0 1000 540' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern></defs><text x='0' y='22' font-size='16' font-weight='bold' fill='%230E0E0C'>EPS the price requires, at each P/E</text><line x1='80' y1='380' x2='960' y2='380' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='70' y='385' text-anchor='end' font-size='13' fill='%230E0E0C'>$10</text><line x1='80' y1='300' x2='960' y2='300' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='70' y='305' text-anchor='end' font-size='13' fill='%230E0E0C'>$20</text><line x1='80' y1='220' x2='960' y2='220' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='70' y='225' text-anchor='end' font-size='13' fill='%230E0E0C'>$30</text><line x1='80' y1='140' x2='960' y2='140' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='70' y='145' text-anchor='end' font-size='13' fill='%230E0E0C'>$40</text><line x1='80' y1='60' x2='960' y2='60' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='70' y='65' text-anchor='end' font-size='13' fill='%230E0E0C'>$50</text><text x='70' y='465' text-anchor='end' font-size='13' fill='%230E0E0C'>$0</text><rect x='80' y='459' width='880' height='3' fill='%230E0E0C'/><rect x='141.8572' y='460' width='2' height='8' fill='%230E0E0C'/><text x='142.8572' y='486' text-anchor='middle' font-size='13' fill='%230E0E0C'>16x</text><rect x='267.5716' y='460' width='2' height='8' fill='%230E0E0C'/><text x='268.5716' y='486' text-anchor='middle' font-size='13' fill='%230E0E0C'>20x</text><rect x='393.286' y='460' width='2' height='8' fill='%230E0E0C'/><text x='394.286' y='486' text-anchor='middle' font-size='13' fill='%230E0E0C'>24x</text><rect x='519.0004' y='460' width='2' height='8' fill='%230E0E0C'/><text x='520.0004' y='486' text-anchor='middle' font-size='13' fill='%230E0E0C'>28x</text><rect x='644.7148' y='460' width='2' height='8' fill='%230E0E0C'/><text x='645.7148' y='486' text-anchor='middle' font-size='13' fill='%230E0E0C'>32x</text><rect x='770.4292' y='460' width='2' height='8' fill='%230E0E0C'/><text x='771.4292' y='486' text-anchor='middle' font-size='13' fill='%230E0E0C'>36x</text><rect x='896.1436' y='460' width='2' height='8' fill='%230E0E0C'/><text x='897.1436' y='486' text-anchor='middle' font-size='13' fill='%230E0E0C'>40x</text>"
+			        & "<rect x='80' y='" & ROUND((460 - (_bull) * 8), 1) & "' width='880' height='" & ROUND((_bull - _bear) * 8, 1) & "' fill='url(%23s)' stroke='%230E0E0C' stroke-width='1'/>"
+			        & "<text x='90' y='" & ROUND((460 - (_bear) * 8) + 20, 1) & "' font-size='13' fill='%230E0E0C'>CYCLEBOOK scenarios, bear to bull</text>"
+			        & "<rect x='80' y='" & ROUND((460 - (_gHi) * 8), 1) & "' width='880' height='" & ROUND((_gHi - _gLo) * 8, 1) & "' fill='%23367C2B'/>"
+			        & "<text x='90' y='" & ROUND((460 - (_bull) * 8) - 12, 1) & "' font-size='13' font-weight='bold' fill='%23367C2B'>Management guidance, FY2026</text>"
+			        & "<rect x='80' y='" & ROUND((460 - (_peak) * 8) - 1.5, 1) & "' width='880' height='3' fill='%230E0E0C'/>"
+			        & "<text x='960' y='" & ROUND((460 - (_peak) * 8) - 10, 1) & "' text-anchor='end' font-size='13' font-weight='bold' fill='%230E0E0C'>FY" & [Peak EPS Year] & " record, " & FORMAT(_peak, "$0.00") & "</text>"
+			        & "<polyline fill='none' stroke='%230E0E0C' stroke-width='4' points='" & _curve & "'/>"
+			        & "<text x='150' y='104' font-size='14' font-weight='bold' fill='%230E0E0C'>Close " & FORMAT(_price, "$0.00") & "</text>"
+			        & "<line x1='" & _peX & "' y1='" & ROUND((460 - (_peak) * 8), 1) & "' x2='" & _peX & "' y2='500' stroke='%230E0E0C' stroke-width='2' stroke-dasharray='3 4'/>"
+			        & "<line x1='" & _scX & "' y1='" & ROUND((460 - (_epsSel) * 8), 1) & "' x2='" & _scX & "' y2='500' stroke='%230E0E0C' stroke-width='2' stroke-dasharray='3 4'/>"
+			        & "<rect x='" & (_peX - 7) & "' y='" & ROUND((460 - (_peak) * 8) - 7, 1) & "' width='14' height='14' fill='%230E0E0C'/>"
+			        & "<rect x='" & (_scX - 7) & "' y='" & ROUND((460 - (_epsSel) * 8) - 7, 1) & "' width='14' height='14' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='3'/>"
+			        & "<rect x='" & (MAX(150, MIN(850, _peX)) - 150) & "' y='502' width='300' height='30' fill='%23F4F4F0'/>"
+			        & "<text x='" & MAX(150, MIN(850, _peX)) & "' y='523' text-anchor='middle' font-size='14' font-weight='bold' fill='%230E0E0C'>" & FORMAT(DIVIDE(_price, _peak), "0.0") & "x = FY" & [Peak EPS Year] & " record EPS" & "</text>"
+			        & "<rect x='" & (MAX(150, MIN(850, _scX)) - 150) & "' y='502' width='300' height='30' fill='%23F4F4F0'/>"
+			        & "<text x='" & MAX(150, MIN(850, _scX)) & "' y='523' text-anchor='middle' font-size='14' font-weight='bold' fill='%230E0E0C'>" & FORMAT(DIVIDE(_price, _epsSel), "0.0") & "x = " & LOWER(_sc) & "-case FY2026 EPS" & "</text>"
+			        & "<rect x='" & (_selX - 9) & "' y='" & (_selY - 9) & "' width='18' height='18' fill='%23FFDE00' stroke='%230E0E0C' stroke-width='3'/>"
+			        & "<rect x='" & _boxX & "' y='" & (_selY - 54) & "' width='226' height='34' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='2'/>"
+			        & "<text x='" & (_boxX + 12) & "' y='" & (_selY - 31) & "' font-size='15' font-weight='bold' fill='%230E0E0C'>At " & FORMAT(_pe, "0") & "x: EPS " & FORMAT(DIVIDE(_price, _pe), "$0.00") & "</text>"
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: c29a2d62-90f3-41cb-a471-3cb71abdf6d9
+
+	/// The Stack: VALUATION ledger of price, multiples and scenario outputs.
+	measure 'SVG Valuation Ledger' =
+			VAR _sc = SELECTEDVALUE('Scenario'[Scenario], "Base")
+			VAR _pe = [Selected PE]
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='536' viewBox='0 0 400 536' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			        & "<rect x='0' y='0' width='400' height='2' fill='%230E0E0C'/><rect x='328' y='10' width='72' height='22' fill='%230E0E0C'/><text x='364' y='26' text-anchor='middle' font-size='12' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='26' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Share price, " & FORMAT([Latest Price Date], "d mmm yyyy") & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptvl0 = FORMAT([Latest Price], "$0.00")
+			        VAR _pxvl0 = 0
+			        VAR _pyvl0 = 40
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptvl0), 1), "civl0", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptvl0, [civl0], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellvl0", [Value]), MID(_bits, [cellvl0] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxvl0 + ([civl0] - 1) * 24 + MOD([cellvl0], 5) * 4) & "' y='" & (_pyvl0 + INT([cellvl0] / 5) * 4) & "' width='4' height='4'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<text x='400' y='74' text-anchor='end' font-size='14' fill='%230E0E0C'>" & "52-week range " & FORMAT([Price 52W Low], "$0") & "-" & FORMAT([Price 52W High], "$0") & "</text>"
+			        & "<rect x='0' y='88' width='400' height='2' fill='%230E0E0C'/><rect x='328' y='98' width='72' height='22' fill='%230E0E0C'/><text x='364' y='114' text-anchor='middle' font-size='12' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='114' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Market cap, diluted" & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptvl1 = "$" & FORMAT([Market Cap Bn], "0.0") & "B"
+			        VAR _pxvl1 = 0
+			        VAR _pyvl1 = 128
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptvl1), 1), "civl1", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptvl1, [civl1], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellvl1", [Value]), MID(_bits, [cellvl1] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxvl1 + ([civl1] - 1) * 24 + MOD([cellvl1], 5) * 4) & "' y='" & (_pyvl1 + INT([cellvl1] / 5) * 4) & "' width='4' height='4'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<text x='400' y='162' text-anchor='end' font-size='14' fill='%230E0E0C'>" & "on 269.8M diluted shares" & "</text>"
+			        & "<rect x='0' y='176' width='400' height='2' fill='%230E0E0C'/><rect x='328' y='186' width='72' height='22' fill='%230E0E0C'/><text x='364' y='202' text-anchor='middle' font-size='12' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
+			        & "<text x='0' y='202' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Trailing P/E" & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptvl2 = FORMAT([Trailing PE], "0.0") & "x"
+			        VAR _pxvl2 = 0
+			        VAR _pyvl2 = 216
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptvl2), 1), "civl2", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptvl2, [civl2], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellvl2", [Value]), MID(_bits, [cellvl2] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxvl2 + ([civl2] - 1) * 24 + MOD([cellvl2], 5) * 4) & "' y='" & (_pyvl2 + INT([cellvl2] / 5) * 4) & "' width='4' height='4'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<text x='400' y='250' text-anchor='end' font-size='14' fill='%230E0E0C'>" & "on " & FORMAT([TTM EPS], "$0.00") & " last-four-quarter EPS" & "</text>"
+			        & "<rect x='0' y='264' width='400' height='2' fill='%230E0E0C'/><rect x='316' y='275' width='83' height='20' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='2'/><rect x='320' y='279' width='12' height='12' fill='url(%23s)'/><text x='364' y='290' text-anchor='middle' font-size='12' font-weight='bold' fill='%230E0E0C'>MODEL</text>"
+			        & "<text x='0' y='290' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "FY2026 EPS, " & LOWER(_sc) & " case" & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptvl3 = FORMAT([Projected EPS], "$0.00")
+			        VAR _pxvl3 = 0
+			        VAR _pyvl3 = 304
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptvl3), 1), "civl3", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptvl3, [civl3], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellvl3", [Value]), MID(_bits, [cellvl3] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxvl3 + ([civl3] - 1) * 24 + MOD([cellvl3], 5) * 4) & "' y='" & (_pyvl3 + INT([cellvl3] / 5) * 4) & "' width='4' height='4'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<text x='400' y='338' text-anchor='end' font-size='14' fill='%230E0E0C'>" & "net income " & FORMAT([Scenario Net Income Bn], "$0.00") & "B" & "</text>"
+			        & "<rect x='0' y='352' width='400' height='2' fill='%230E0E0C'/><rect x='316' y='363' width='83' height='20' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='2'/><rect x='320' y='367' width='12' height='12' fill='url(%23s)'/><text x='364' y='378' text-anchor='middle' font-size='12' font-weight='bold' fill='%230E0E0C'>MODEL</text>"
+			        & "<text x='0' y='378' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Value at " & FORMAT(_pe, "0") & "x" & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptvl4 = FORMAT([Implied Price], "$0")
+			        VAR _pxvl4 = 0
+			        VAR _pyvl4 = 392
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptvl4), 1), "civl4", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptvl4, [civl4], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellvl4", [Value]), MID(_bits, [cellvl4] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxvl4 + ([civl4] - 1) * 24 + MOD([cellvl4], 5) * 4) & "' y='" & (_pyvl4 + INT([cellvl4] / 5) * 4) & "' width='4' height='4'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<text x='400' y='426' text-anchor='end' font-size='14' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT([Implied Upside], "+0%;-0%;0%"), "%", "%25") & " vs close" & "</text>"
+			        & "<rect x='0' y='440' width='400' height='2' fill='%230E0E0C'/><rect x='316' y='451' width='83' height='20' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='2'/><rect x='320' y='455' width='12' height='12' fill='url(%23s)'/><text x='364' y='466' text-anchor='middle' font-size='12' font-weight='bold' fill='%230E0E0C'>MODEL</text>"
+			        & "<text x='0' y='466' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Q4 net income needed" & "</text>"
+			        & "<g fill='%230E0E0C'>" & (
+			        VAR _ptvl5 = "$" & FORMAT([Q4 Net Income Needed Bn], "0.00") & "B"
+			        VAR _pxvl5 = 0
+			        VAR _pyvl5 = 480
+			        RETURN
+			            CONCATENATEX(
+			                GENERATE(
+			                    SELECTCOLUMNS(GENERATESERIES(1, LEN(_ptvl5), 1), "civl5", [Value]),
+			                    VAR _bits = LOOKUPVALUE('Glyphs'[Bits], 'Glyphs'[Code], UNICODE(MID(_ptvl5, [civl5], 1)), REPT("0", 35))
+			                    RETURN FILTER(SELECTCOLUMNS(GENERATESERIES(0, 34, 1), "cellvl5", [Value]), MID(_bits, [cellvl5] + 1, 1) = "1")
+			                ),
+			                "<rect x='" & (_pxvl5 + ([civl5] - 1) * 24 + MOD([cellvl5], 5) * 4) & "' y='" & (_pyvl5 + INT([cellvl5] / 5) * 4) & "' width='4' height='4'/>",
+			                ""
+			            )
+			    ) & "</g>"
+			        & "<text x='400' y='514' text-anchor='end' font-size='14' fill='%230E0E0C'>" & "after $3.81B through Q3" & "</text>"
+			        & "<rect x='0' y='528' width='400' height='2' fill='%230E0E0C'/></svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: 49f08e6d-bc3a-4f02-9f7a-42841368a021
+
+	/// The Stack: test strip of implied value at every P/E step; the transparent P/E slicer sits on top.
+	measure 'SVG PE Strip' =
+			VAR _sel = [Selected PE]
+			VAR _eps = [Projected EPS]
+			VAR _steps = ADDCOLUMNS(ALL('PE Multiple'[P/E Multiple]), "@i", RANKX(ALL('PE Multiple'[P/E Multiple]), 'PE Multiple'[P/E Multiple], , ASC) - 1)
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1036' height='80' viewBox='0 0 1036 80' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			        & CONCATENATEX(
+			            _steps,
+			            VAR _x = ROUND([@i] * 94.7, 1)
+			            VAR _on = 'PE Multiple'[P/E Multiple] = _sel
+			            VAR _ink = IF(_on, "%23F4F4F0", "%230E0E0C")
+			            RETURN
+			                "<rect x='" & (_x + 1.5) & "' y='1.5' width='85.7' height='77' fill='" & IF(_on, "%230E0E0C", "%23F4F4F0") & "' stroke='%230E0E0C' stroke-width='3'/>"
+			                    & IF(_on, "", "<rect x='" & (_x + 8) & "' y='62' width='72' height='8' fill='url(%23s)'/>")
+			                    & "<text x='" & (_x + 44.4) & "' y='28' text-anchor='middle' font-size='17' font-weight='bold' fill='" & _ink & "'>" & FORMAT('PE Multiple'[P/E Multiple], "0") & "x</text>"
+			                    & "<text x='" & (_x + 44.4) & "' y='52' text-anchor='middle' font-size='14' fill='" & _ink & "'>" & FORMAT('PE Multiple'[P/E Multiple] * _eps, "$0") & "</text>",
+			            "",
+			            'PE Multiple'[P/E Multiple], ASC
+			        )
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: fc19102b-68af-4d90-bc9b-2cc08cb68da4
+
+	/// The Stack: painted Bear, Base and Bull keys; the transparent Scenario slicer sits on top.
+	measure 'SVG Scenario Keys' =
+			VAR _sel = SELECTEDVALUE('Scenario'[Scenario], "Base")
+			RETURN
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='372' height='64' viewBox='0 0 372 64' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
+			        & IF(_sel = "Bear",
+			            "<rect x='5.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C' stroke='%230E0E0C' stroke-width='3'/><text x='60' y='38' text-anchor='middle' font-size='17' font-weight='bold' fill='%23F4F4F0'>Bear</text>",
+			            "<rect x='5.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C'/><rect x='1.5' y='1.5' width='109' height='53' rx='12' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='3'/><text x='56' y='34' text-anchor='middle' font-size='17' font-weight='bold' fill='%230E0E0C'>Bear</text>")
+			        & IF(_sel = "Base",
+			            "<rect x='129.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C' stroke='%230E0E0C' stroke-width='3'/><text x='184' y='38' text-anchor='middle' font-size='17' font-weight='bold' fill='%23F4F4F0'>Base</text>",
+			            "<rect x='129.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C'/><rect x='125.5' y='1.5' width='109' height='53' rx='12' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='3'/><text x='180' y='34' text-anchor='middle' font-size='17' font-weight='bold' fill='%230E0E0C'>Base</text>")
+			        & IF(_sel = "Bull",
+			            "<rect x='253.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C' stroke='%230E0E0C' stroke-width='3'/><text x='308' y='38' text-anchor='middle' font-size='17' font-weight='bold' fill='%23F4F4F0'>Bull</text>",
+			            "<rect x='253.5' y='5.5' width='109' height='53' rx='12' fill='%230E0E0C'/><rect x='249.5' y='1.5' width='109' height='53' rx='12' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='3'/><text x='304' y='34' text-anchor='middle' font-size='17' font-weight='bold' fill='%230E0E0C'>Bull</text>")
+			        & "</svg>"
+		dataCategory: ImageUrl
+		displayFolder: The Stack
+		lineageTag: d853f741-d7b7-4ab8-a2e7-029f3ee383b3
+
 	column Dummy
 		dataType: int64
 		isHidden

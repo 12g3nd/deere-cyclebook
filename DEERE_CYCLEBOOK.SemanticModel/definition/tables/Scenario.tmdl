@@ -7,6 +7,7 @@ table Scenario
 		lineageTag: 268c3f1a-ddd8-4105-9522-5dc9dd7066ef
 		summarizeBy: none
 		sourceColumn: Scenario
+		sortByColumn: 'Default P/E'
 
 	column 'PPA Growth'
 		dataType: double
@@ -55,6 +56,7 @@ table Scenario
 		lineageTag: 95c04ed5-7b3b-4c5b-a07f-537bc4a03669
 		summarizeBy: none
 		sourceColumn: DefaultPE
+
 
 	partition Scenario = m
 		mode: import

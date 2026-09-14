@@ -180,3 +180,34 @@ Yours:
 ## Added during the redesign
 
 New lines I write for PULSE and VALUATION will land here as they're written, so you can rewrite those too.
+
+### N1 · VALUATION finding (live sentence)
+> At 28x, today's price of $675.74 needs EPS of $24.13, 30% below the FY2023 record of $34.63.
+
+The numbers update with the P/E and scenario you pick. Rewrite the words around them; keep the four slots (multiple, price, required EPS, gap to record).
+
+Yours:
+
+### N2 · PULSE button to VALUATION
+> What the price assumes
+
+The one yellow button on PULSE. It should make an executive want to click.
+
+Yours:
+
+### N3 · VALUATION exhibit title
+> EPS the price requires, at each P/E
+
+Yours:
+
+### N4 · valuation exhibit labels
+> FY2023 record · FY2025 reported · Management guidance, FY2026 · CYCLEBOOK scenarios, bear to bull
+
+Short labels drawn on the chart. Keep them short.
+
+Yours:
+
+### N5 · VALUATION button to MODEL LAB
+> Change the assumptions
+
+Yours:
