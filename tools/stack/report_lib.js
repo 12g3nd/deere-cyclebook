@@ -92,13 +92,55 @@ function button(pos, label, link, variant = "plain") {
       outline: perState((bg, fg, id) => ({ show: bool(true), lineColor: color(C.inkHex), transparency: num(0), weight: num(id === "hover" ? 4 : 3) })),
       // Painted buttons are rounded; the index mini cards stay square because they are cards.
       shape: small
-        ? [props({ tileShape: str("rectangle") })]
-        : [props({ tileShape: str("rectangleRounded"), roundEdge: int(12), rectangleRoundedCurve: int(12) })],
+        ? dual({ tileShape: str("rectangle") })
+        : dual({ tileShape: str("rectangleRounded"), roundEdge: int(12), rectangleRoundedCurve: int(12) }),
       shadow: dual({ show: bool(true), color: color(C.inkHex), transparency: num(0), shadowBlur: num(0), shadowPositionPreset: str("bottomRight"), shadowDistance: num(4) }),
     },
     visualContainerObjects: bareContainer({ visualLink }),
     drillFilterOtherVisuals: true,
   });
+}
+
+// Painted button drawn as a static SVG (true rounded corners, hard one-bit shadow), with an invisible
+// action button on top that owns the click and darkens slightly on hover and press.
+function paintedButton(pos, label, link, variant = "plain") {
+  const w = pos.w, h = pos.h;
+  const fill = variant === "go" ? C.yellow : C.paper;
+  const svg = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='${w}' height='${h}' viewBox='0 0 ${w} ${h}' font-family='Verdana,Geneva,sans-serif'>` +
+    `<rect x='4.5' y='4.5' width='${w - 6}' height='${h - 6}' rx='12' fill='${C.ink}'/>` +
+    `<rect x='1.5' y='1.5' width='${w - 6}' height='${h - 6}' rx='12' fill='${fill}' stroke='${C.ink}' stroke-width='3'/>` +
+    `<text x='${(w - 6) / 2 + 1.5}' y='${(h - 6) / 2 + 8}' text-anchor='middle' font-size='17' font-weight='bold' fill='${C.ink}'>${label}</text></svg>`;
+  const img = container({ ...pos, z: pos.z }, {
+    visualType: "image",
+    objects: {
+      image: [props({ sourceType: str("imageUrl"), sourceUrl: str(svg) })],
+      imageScaling: [props({ imageScalingType: str("Fit") })],
+    },
+    visualContainerObjects: bareContainer({ general: [props({ altText: str(label) })] }),
+  });
+  const states = { default: 100, hover: 88, selected: 70 };
+  const perState = (fn) => {
+    const entries = Object.entries(states).map(([id, t]) => props(fn(t, id), id));
+    return [{ properties: entries[0].properties }, ...entries];
+  };
+  const dual = (p) => [props(p), props(p, "default")];
+  const visualLink = link.type === "Back"
+    ? [props({ show: bool(true), type: str("Back") })]
+    : [props({ show: bool(true), type: str("PageNavigation"), navigationSection: str(link.page) })];
+  const hit = container({ ...pos, z: pos.z + 1 }, {
+    visualType: "actionButton",
+    objects: {
+      icon: dual({ shapeType: str("blank") }),
+      text: perState(() => ({ show: bool(false) })),
+      fill: perState((t) => ({ show: bool(true), fillColor: color(C.inkHex), transparency: num(t) })),
+      outline: perState(() => ({ show: bool(false) })),
+      shadow: dual({ show: bool(false) }),
+      shape: [props({ tileShape: str("rectangle") })],
+    },
+    visualContainerObjects: bareContainer({ visualLink, general: [props({ altText: str(label) })] }),
+    drillFilterOtherVisuals: true,
+  });
+  return [img, hit];
 }
 
 // Measure text in a card with no label: used for the live VALUATION finding.
@@ -162,4 +204,4 @@ const page = (id, displayName) => ({
   },
 });
 
-module.exports = { newId, image, textbox, button, textCard, buttonSlicer, page, props, str, num, bool, color };
+module.exports = { newId, image, textbox, button, paintedButton, textCard, buttonSlicer, page, props, str, num, bool, color };

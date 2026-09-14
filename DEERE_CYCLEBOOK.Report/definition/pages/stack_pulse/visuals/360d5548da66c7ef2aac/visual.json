@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
-  "name": "50c7ae024f932cf6b907",
+  "name": "360d5548da66c7ef2aac",
   "position": {
-    "x": 1276,
-    "y": 264,
-    "z": 130,
-    "height": 496,
-    "width": 400,
-    "tabOrder": 130
+    "x": 1316,
+    "y": 912,
+    "z": 304,
+    "height": 56,
+    "width": 360,
+    "tabOrder": 304
   },
   "visual": {
     "visualType": "image",
@@ -24,13 +24,8 @@
             },
             "sourceUrl": {
               "expr": {
-                "Measure": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "_Measures"
-                    }
-                  },
-                  "Property": "SVG Valuation Ledger"
+                "Literal": {
+                  "Value": "'data:image/svg+xml;utf8,<svg xmlns=''http://www.w3.org/2000/svg'' width=''360'' height=''56'' viewBox=''0 0 360 56'' font-family=''Verdana,Geneva,sans-serif''><rect x=''4.5'' y=''4.5'' width=''354'' height=''50'' rx=''12'' fill=''%230E0E0C''/><rect x=''1.5'' y=''1.5'' width=''354'' height=''50'' rx=''12'' fill=''%23FFDE00'' stroke=''%230E0E0C'' stroke-width=''3''/><text x=''178.5'' y=''33'' text-anchor=''middle'' font-size=''17'' font-weight=''bold'' fill=''%230E0E0C''>What the price assumes</text></svg>'"
                 }
               }
             }
@@ -157,14 +152,13 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Share price, market cap, trailing P/E and scenario outputs'"
+                  "Value": "'What the price assumes'"
                 }
               }
             }
           }
         }
       ]
-    },
-    "drillFilterOtherVisuals": true
+    }
   }
 }

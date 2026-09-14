@@ -1,36 +1,47 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
-  "name": "c21926253d41d21b8911",
+  "name": "999398c9bd10cdef3683",
   "position": {
-    "x": 256,
-    "y": 176,
-    "z": 110,
-    "height": 60,
-    "width": 1420,
-    "tabOrder": 110
+    "x": 1076,
+    "y": 946,
+    "z": 330,
+    "height": 56,
+    "width": 220,
+    "tabOrder": 330
   },
   "visual": {
-    "visualType": "textbox",
+    "visualType": "image",
     "objects": {
-      "general": [
+      "image": [
         {
           "properties": {
-            "paragraphs": [
-              {
-                "textRuns": [
-                  {
-                    "value": "Large ag is shrinking again; small ag and construction still grow, just more slowly.",
-                    "textStyle": {
-                      "fontFamily": "Verdana",
-                      "fontSize": "26px",
-                      "color": "#0E0E0C",
-                      "fontWeight": "bold"
-                    }
-                  }
-                ],
-                "horizontalAlignment": "left"
+            "sourceType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'imageUrl'"
+                }
               }
-            ]
+            },
+            "sourceUrl": {
+              "expr": {
+                "Literal": {
+                  "Value": "'data:image/svg+xml;utf8,<svg xmlns=''http://www.w3.org/2000/svg'' width=''220'' height=''56'' viewBox=''0 0 220 56'' font-family=''Verdana,Geneva,sans-serif''><rect x=''4.5'' y=''4.5'' width=''214'' height=''50'' rx=''12'' fill=''%230E0E0C''/><rect x=''1.5'' y=''1.5'' width=''214'' height=''50'' rx=''12'' fill=''%23F4F4F0'' stroke=''%230E0E0C'' stroke-width=''3''/><text x=''108.5'' y=''33'' text-anchor=''middle'' font-size=''17'' font-weight=''bold'' fill=''%230E0E0C''>Back to PULSE</text></svg>'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "imageScaling": [
+        {
+          "properties": {
+            "imageScalingType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Fit'"
+                }
+              }
+            }
           }
         }
       ]
@@ -141,7 +152,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Finding'"
+                  "Value": "'Back to PULSE'"
                 }
               }
             }

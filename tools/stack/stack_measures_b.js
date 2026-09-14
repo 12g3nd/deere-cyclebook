@@ -2,18 +2,19 @@
 const { C, svgOpen, svgDefs, daxStr } = require("./stack_lib");
 const { pct, ledger, ledgerHeight } = require("./stack_measures_a");
 
-// Ladder geometry: P/E 14..42 across x 80..920; EPS $10..$45 across y 460..60 (11.4286 px per dollar).
-const X = (pe) => `(80 + (${pe} - 14) * 30)`;
+// Ladder geometry: P/E 14..42 across x 80..860; EPS $10..$45 across y 460..60 (11.4286 px per dollar).
+// The strip right of the plot (x 866..1000) carries the management guidance bracket and its label.
+const X = (pe) => `(80 + (${pe} - 14) * 27.857)`;
 const Y = (eps) => `(460 - ((${eps}) - 10) * 11.4286)`;
-const clampX = (v) => `MAX(80, MIN(920, ${v}))`;
+const clampX = (v) => `MAX(80, MIN(860, ${v}))`;
 const clampY = (v) => `MAX(60, MIN(460, ${v}))`;
 const r1 = (v) => `ROUND(${v}, 1)`;
 
 const ladderStatic = svgOpen(1000, 540) + svgDefs +
   `<text x='0' y='22' font-size='16' font-weight='bold' fill='${C.ink}'>EPS the price requires, at each P/E</text>` +
-  [20, 30, 40].map((e) => `<line x1='80' y1='${460 - (e - 10) * 11.4286}' x2='920' y2='${460 - (e - 10) * 11.4286}' stroke='${C.ink}' stroke-width='1' stroke-dasharray='2 5'/><text x='70' y='${465 - (e - 10) * 11.4286}' text-anchor='end' font-size='13' fill='${C.ink}'>$${e}</text>`).join("") +
-  `<text x='70' y='465' text-anchor='end' font-size='13' fill='${C.ink}'>$10</text><rect x='80' y='459' width='840' height='3' fill='${C.ink}'/>` +
-  [16, 20, 24, 28, 32, 36, 40].map((pe) => `<rect x='${80 + (pe - 14) * 30 - 1}' y='460' width='2' height='8' fill='${C.ink}'/><text x='${80 + (pe - 14) * 30}' y='486' text-anchor='middle' font-size='13' fill='${C.ink}'>${pe}x</text>`).join("");
+  [20, 30, 40].map((e) => `<line x1='80' y1='${460 - (e - 10) * 11.4286}' x2='860' y2='${460 - (e - 10) * 11.4286}' stroke='${C.ink}' stroke-width='1' stroke-dasharray='2 5'/><text x='70' y='${465 - (e - 10) * 11.4286}' text-anchor='end' font-size='13' fill='${C.ink}'>$${e}</text>`).join("") +
+  `<text x='70' y='465' text-anchor='end' font-size='13' fill='${C.ink}'>$10</text><rect x='80' y='459' width='780' height='3' fill='${C.ink}'/>` +
+  [16, 20, 24, 28, 32, 36, 40].map((pe) => `<rect x='${80 + (pe - 14) * 27.857 - 1}' y='460' width='2' height='8' fill='${C.ink}'/><text x='${80 + (pe - 14) * 27.857}' y='486' text-anchor='middle' font-size='13' fill='${C.ink}'>${pe}x</text>`).join("");
 
 // A multiple read-out on the axis row, centred under its marker and kept inside the plot.
 const axisLabel = (xDax, textDax) => `
@@ -41,13 +42,14 @@ VAR _closeY = ${r1(clampY(Y("DIVIDE(_price, 16)")))}
 VAR _curve = CONCATENATEX(GENERATESERIES(15.5, 42, 0.5), ${r1(X("[Value]"))} & "," & ${r1(clampY(Y("DIVIDE(_price, [Value])")))}, " ", [Value], ASC)
 RETURN
     ${daxStr(ladderStatic)}
-        & "<rect x='80' y='" & ${r1(Y("_bull"))} & "' width='840' height='" & ${r1("(_bull - _bear) * 11.4286")} & "' fill='url(%23s)'/>"
-        & "<rect x='80' y='" & ${r1(Y("_bull"))} & "' width='840' height='1' fill='${C.ink}'/><rect x='80' y='" & ${r1(`${Y("_bear")} - 1`)} & "' width='840' height='1' fill='${C.ink}'/>"
-        & "<rect x='932' y='" & ${r1(Y("_gHi"))} & "' width='18' height='" & ${r1("(_gHi - _gLo) * 11.4286")} & "' fill='${C.green}'/>"
-        & "<rect x='924' y='" & ${r1(`${Y("_gHi")} - 1`)} & "' width='34' height='2' fill='${C.green}'/><rect x='924' y='" & ${r1(`${Y("_gLo")} - 1`)} & "' width='34' height='2' fill='${C.green}'/>"
-        & "<text x='1000' y='" & ${r1(`${Y("_bull")} - 12`)} & "' text-anchor='end' font-size='13' font-weight='bold' fill='${C.green}'>Guidance</text>"
-        & "<rect x='80' y='" & ${r1(`${Y("_peak")} - 1.5`)} & "' width='840' height='3' fill='${C.ink}'/>"
-        & "<text x='920' y='" & ${r1(`${Y("_peak")} - 10`)} & "' text-anchor='end' font-size='13' font-weight='bold' fill='${C.ink}'>FY" & [Peak EPS Year] & " record, " & FORMAT(_peak, "$0.00") & "</text>"
+        & "<rect x='80' y='" & ${r1(Y("_bull"))} & "' width='780' height='" & ${r1("(_bull - _bear) * 11.4286")} & "' fill='url(%23s)'/>"
+        & "<rect x='80' y='" & ${r1(Y("_bull"))} & "' width='780' height='1' fill='${C.ink}'/><rect x='80' y='" & ${r1(`${Y("_bear")} - 1`)} & "' width='780' height='1' fill='${C.ink}'/>"
+        & "<rect x='870' y='" & ${r1(`${Y("_gHi")} - 1.5`)} & "' width='4' height='" & ${r1("(_gHi - _gLo) * 11.4286 + 3")} & "' fill='${C.green}'/>"
+        & "<rect x='864' y='" & ${r1(`${Y("_gHi")} - 1.5`)} & "' width='16' height='3' fill='${C.green}'/><rect x='864' y='" & ${r1(`${Y("_gLo")} - 1.5`)} & "' width='16' height='3' fill='${C.green}'/>"
+        & "<text x='886' y='" & ${r1(`${Y("_gHi")} - 6`)} & "' font-size='14' font-weight='bold' fill='${C.green}'>Guidance</text>"
+        & "<text x='886' y='" & ${r1(`${Y("_gLo")} + 16`)} & "' font-size='13' font-weight='bold' fill='${C.green}'>" & FORMAT(_gLo, "$0.00") & "-" & FORMAT(_gHi, "0.00") & "</text>"
+        & "<rect x='80' y='" & ${r1(`${Y("_peak")} - 1.5`)} & "' width='780' height='3' fill='${C.ink}'/>"
+        & "<text x='860' y='" & ${r1(`${Y("_peak")} - 10`)} & "' text-anchor='end' font-size='13' font-weight='bold' fill='${C.ink}'>FY" & [Peak EPS Year] & " record, " & FORMAT(_peak, "$0.00") & "</text>"
         & "<polyline fill='none' stroke='${C.ink}' stroke-width='4' points='" & _curve & "'/>"
         & "<rect x='" & (_closeX - 5) & "' y='" & (_closeY - 5) & "' width='10' height='10' fill='${C.ink}'/>"
         & "<text x='" & (_closeX + 14) & "' y='" & (_closeY - 6) & "' font-size='14' font-weight='bold' fill='${C.ink}'>Close " & FORMAT(_price, "$0.00") & " at each multiple</text>"

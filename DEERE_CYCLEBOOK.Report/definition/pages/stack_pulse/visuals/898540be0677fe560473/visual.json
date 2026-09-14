@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
-  "name": "50c7ae024f932cf6b907",
+  "name": "898540be0677fe560473",
   "position": {
-    "x": 1276,
-    "y": 264,
-    "z": 130,
-    "height": 496,
-    "width": 400,
-    "tabOrder": 130
+    "x": 256,
+    "y": 172,
+    "z": 110,
+    "height": 84,
+    "width": 1420,
+    "tabOrder": 110
   },
   "visual": {
     "visualType": "image",
@@ -30,7 +30,7 @@
                       "Entity": "_Measures"
                     }
                   },
-                  "Property": "SVG Valuation Ledger"
+                  "Property": "SVG Pulse Finding"
                 }
               }
             }
@@ -157,7 +157,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Share price, market cap, trailing P/E and scenario outputs'"
+                  "Value": "'Finding: large ag shrinking again while small ag and construction still grow'"
                 }
               }
             }

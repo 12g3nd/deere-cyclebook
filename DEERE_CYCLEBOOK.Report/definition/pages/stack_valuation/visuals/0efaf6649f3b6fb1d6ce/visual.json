@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Sources: Deere Q3 FY2026 news release (20 Aug 2026); Nasdaq daily close. Green = management guidance. Stipple = CYCLEBOOK model.",
+                    "value": "Sources: Deere Q3 FY2026 release (20 Aug 2026); Nasdaq daily close. Green = guidance. Stipple = model.",
                     "textStyle": {
                       "fontFamily": "Verdana",
                       "fontSize": "12px",

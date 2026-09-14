@@ -1,13 +1,13 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
-  "name": "18ce9923e922ccc61102",
+  "name": "ca522bd74e8396edd9b7",
   "position": {
-    "x": 1076,
-    "y": 946,
-    "z": 331,
+    "x": 1316,
+    "y": 912,
+    "z": 305,
     "height": 56,
-    "width": 220,
-    "tabOrder": 331
+    "width": 360,
+    "tabOrder": 305
   },
   "visual": {
     "visualType": "actionButton",
@@ -437,7 +437,7 @@
             "navigationSection": {
               "expr": {
                 "Literal": {
-                  "Value": "'stack_pulse'"
+                  "Value": "'stack_valuation'"
                 }
               }
             }
@@ -450,7 +450,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Back to PULSE'"
+                  "Value": "'What the price assumes'"
                 }
               }
             }
