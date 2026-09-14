@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "In Power BI Desktop, Refresh updates the FRED and Nasdaq data from the web; Deere figures are entered from the releases listed.",
+                    "value": "FRED and Nasdaq series refresh from the web; Deere figures come from the releases listed above.",
                     "textStyle": {
                       "fontFamily": "Verdana",
                       "fontSize": "12px",

@@ -41,12 +41,12 @@ table 'Source Registry'
 									{"Actual", "Deere FY2023 earnings release", "https://www.deere.com/en/news/all-news/fy23-fourth-quarter-earnings/", "Company earnings", "FY2023 actuals and FY2022 comparisons"},
 									{"Actual", "Deere FY2024 earnings release", "https://www.deere.com/en/news/all-news/fy24-fourth-quarter-earnings/", "Company earnings", "FY2024 actuals and FY2023 comparisons"},
 									{"Actual", "Deere FY2025 annual report", "https://investor.deere.com/sec-filings/sec-filings-details/default.aspx?FilingId=19004831", "SEC filing / annual report", "FY2025 audited historical financials"},
-									{"Actual", "Deere FY2025 quarterly earnings releases", "Bundled in sources/", "Company earnings PDFs", "FY2024 comparatives and FY2025 quarters"},
-									{"Actual", "Deere FY2026 quarterly earnings releases", "Bundled in sources/", "Company earnings PDFs", "FY2026 Q1-Q3 actuals and guidance"},
-									{"Actual", "FRED macroeconomic series", "https://fred.stlouisfed.org/", "Federal Reserve Bank of St. Louis", "Live-refresh macroeconomic and commodity series"},
-									{"Actual", "DE daily share price", "https://api.nasdaq.com/api/quote/DE/historical", "Nasdaq public quote history", "Five years of daily open, high, low, close and volume; live refresh"},
-								{"Actual", "Deere Q3 FY2026 news release", "Bundled: DE-3Q26-News-Release.pdf", "Company earnings PDF", "Segment operating profit, reconciling items, income taxes; 269.8M diluted average shares"},
-								{"Guidance", "Deere Q3 FY2026 guidance", "Bundled: DE-3Q26-News-Release.pdf", "Management guidance", "FY2026 net income $4.75B-$5.00B; segment sales outlook"},
+									{"Actual", "Deere FY2025 quarterly earnings releases", "investor.deere.com", "Company earnings PDFs", "FY2024 comparatives and FY2025 quarters"},
+									{"Actual", "Deere FY2026 quarterly earnings releases", "investor.deere.com", "Company earnings PDFs", "FY2026 Q1-Q3 actuals and guidance"},
+									{"Actual", "FRED macroeconomic series", "https://fred.stlouisfed.org/", "Federal Reserve Bank of St. Louis", "Macroeconomic and commodity series"},
+									{"Actual", "DE daily share price", "https://api.nasdaq.com/api/quote/DE/historical", "Nasdaq public quote history", "Five years of daily open, high, low, close and volume"},
+								{"Actual", "Deere Q3 FY2026 news release", "investor.deere.com, Q3 FY2026 release", "Company earnings PDF", "Segment operating profit, reconciling items, income taxes; 269.8M diluted average shares"},
+								{"Guidance", "Deere Q3 FY2026 guidance", "investor.deere.com, Q3 FY2026 release", "Management guidance", "FY2026 net income $4.75B-$5.00B; segment sales outlook"},
 									{"Model", "CYCLEBOOK analyst scenarios", "Internal assumptions", "Analyst model", "Bear/Base/Bull assumptions are explicitly modeled, never presented as actuals"}
 								})
 				in

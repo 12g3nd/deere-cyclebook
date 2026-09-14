@@ -3,11 +3,13 @@ const { C, svgOpen, svgDefs, daxStr } = require("./stack_lib");
 const { ledger, ledgerHeight, header, finding2, tag } = require("./stack_measures_a");
 
 const finding = finding2("VAR _none = 0",
-  `"Every number in this stack carries a tag that says where it came from."`,
+  `"Every ledger figure in this stack carries a tag that says where it came from."`,
   `"ACTUAL: reported by Deere, FRED or Nasdaq. GUIDANCE: management's outlook. MODEL: an assumption made here."`);
 
 // Exhibit (960x620): one 50px row per registry entry, ACTUAL first, then GUIDANCE, then MODEL.
 const safe = (dax) => `SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(${dax}, "&", "&amp;"), "%", "%25"), "#", "%23")`;
+// Reader-facing wording for registry text written for the author (matches the updated Source Registry rows once refreshed).
+const reader = (dax) => `SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(${dax}, "Bundled: DE-3Q26-News-Release.pdf", "investor.deere.com, Q3 FY2026 release"), "Bundled in sources/", "investor.deere.com"), "; live refresh", ""), "Live-refresh macroeconomic", "Macroeconomic")`;
 const key = `SWITCH('Source Registry'[Classification], "Actual", "1", "Guidance", "2", "3") & 'Source Registry'[Source]`;
 const exhibitStatic = svgOpen(960, 620) + svgDefs +
   `<text x='0' y='22' font-size='16' font-weight='bold' fill='${C.ink}'>Where every figure comes from</text>` +
@@ -22,7 +24,7 @@ RETURN
             RETURN "<g transform='translate(0," & _y & ")'>"
                 & SWITCH(_cls, "Actual", ${daxStr(tag("ACTUAL", 0, 17))}, "Guidance", ${daxStr(tag("GUIDANCE", 0, 17))}, ${daxStr(tag("MODEL", 0, 17))})
                 & "<text x='92' y='21' font-size='14' font-weight='bold' fill='${C.ink}'>" & ${safe("'Source Registry'[Source]")} & "<tspan font-size='12' font-weight='normal'>  &%23183;  " & ${safe("'Source Registry'[Source Type]")} & "</tspan></text>"
-                & "<text x='92' y='40' font-size='12' fill='${C.ink}'>" & ${safe("'Source Registry'[Notes]")} & "  &%23183;  " & ${safe(`SUBSTITUTE(SUBSTITUTE('Source Registry'[URL / Location], "https://", ""), "www.", "")`)} & "</text>"
+                & "<text x='92' y='40' font-size='12' fill='${C.ink}'>" & ${safe(reader("'Source Registry'[Notes]"))} & "  &%23183;  " & ${safe(reader(`SUBSTITUTE(SUBSTITUTE('Source Registry'[URL / Location], "https://", ""), "www.", "")`))} & "</text>"
                 & "<rect x='0' y='49' width='960' height='1' fill='${C.ink}'/></g>",
             "", [@i], ASC)
         & "</svg>"`;

@@ -19,7 +19,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "Sources: FRED series PMAIZMTUSDM, PSOYBUSDM, FEDFUNDS, HOUST, TTLCONS, DEXCAUS and B1448C1A027NBEA (BEA net farm income).",
+                    "value": "Sources: FRED series PMAIZMTUSDM, PSOYBUSDM, FEDFUNDS, HOUST and B1448C1A027NBEA (BEA net farm income).",
                     "textStyle": {
                       "fontFamily": "Verdana",
                       "fontSize": "12px",

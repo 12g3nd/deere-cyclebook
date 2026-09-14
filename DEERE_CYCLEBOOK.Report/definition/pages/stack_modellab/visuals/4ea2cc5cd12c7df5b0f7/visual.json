@@ -3,9 +3,9 @@
   "name": "4ea2cc5cd12c7df5b0f7",
   "position": {
     "x": 660,
-    "y": 844,
+    "y": 848,
     "z": 150,
-    "height": 64,
+    "height": 80,
     "width": 480,
     "tabOrder": 150
   },
@@ -157,7 +157,7 @@
             "altText": {
               "expr": {
                 "Literal": {
-                  "Value": "'Sales adjustment for every segment, minus 10 to plus 10 percent'"
+                  "Value": "'Sales adjustment for every segment, minus 10 to plus 10 percent, with FY2026 EPS at each step'"
                 }
               }
             }

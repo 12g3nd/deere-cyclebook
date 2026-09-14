@@ -78,21 +78,23 @@ RETURN
         & "<text x='890' y='529' text-anchor='middle' font-size='14' fill='${C.ink}'>" & SUBSTITUTE(FORMAT(DIVIDE(_op, _sales), "0.0%"), "%", "%25") & "</text>"
         & "</svg>"`;
 
-// Adjustment strips: square cells like the P/E strip; the stipple swatch marks each setting as model; the selected cell inverts.
-function strip(table, column, selDax, width, pitch, cellW, labelDax) {
+// Adjustment strips, built like the P/E test strip: each cell names its setting and shows the FY2026 EPS that setting
+// produces with everything else held; the stipple swatch marks the outcome as model; the selected cell inverts.
+function strip(table, column, selDax, width, pitch, cellW, labelDax, labelSize) {
   const col = `'${table}'[${column}]`;
   return `
 VAR _sel = ${selDax}
-VAR _steps = ADDCOLUMNS(ALL(${col}), "@i", RANKX(ALL(${col}), ${col}, , ASC) - 1)
+VAR _steps = ADDCOLUMNS(ALL(${col}), "@i", RANKX(ALL(${col}), ${col}, , ASC) - 1, "@eps", CALCULATE([Projected EPS]))
 RETURN
-    ${daxStr(svgOpen(width, 64) + svgDefs)}
+    ${daxStr(svgOpen(width, 80) + svgDefs)}
         & CONCATENATEX(_steps,
             VAR _x = [@i] * ${pitch}
             VAR _on = ${col} = _sel
             VAR _ink = IF(_on, "${C.paper}", "${C.ink}")
-            RETURN "<rect x='" & (_x + 1.5) & "' y='1.5' width='${cellW}' height='61' fill='" & IF(_on, "${C.ink}", "${C.paper}") & "' stroke='${C.ink}' stroke-width='3'/>"
-                & IF(_on, "", "<rect x='" & (_x + 10) & "' y='44' width='${cellW - 20}' height='10' fill='url(%23s)'/>")
-                & "<text x='" & (_x + ${cellW / 2 + 1.5}) & "' y='32' text-anchor='middle' font-size='17' font-weight='bold' fill='" & _ink & "'>" & ${labelDax} & "</text>",
+            RETURN "<rect x='" & (_x + 1.5) & "' y='1.5' width='${cellW}' height='77' fill='" & IF(_on, "${C.ink}", "${C.paper}") & "' stroke='${C.ink}' stroke-width='3'/>"
+                & IF(_on, "", "<rect x='" & (_x + 8) & "' y='60' width='${cellW - 16}' height='12' fill='url(%23s)'/>")
+                & "<text x='" & (_x + ${cellW / 2 + 1.5}) & "' y='28' text-anchor='middle' font-size='${labelSize}' font-weight='bold' fill='" & _ink & "'>" & ${labelDax} & "</text>"
+                & "<text x='" & (_x + ${cellW / 2 + 1.5}) & "' y='52' text-anchor='middle' font-size='14' fill='" & _ink & "'>" & FORMAT([@eps], "$0.00") & "</text>",
             "", ${col}, ASC)
         & "</svg>"`;
 }
@@ -114,7 +116,7 @@ module.exports = {
     { name: "SVG Model Lab Finding", doc: "The Stack: MODEL LAB finding, modeled operating profit against FY2025 and net income against guidance, for the current settings.", expr: finding, svg: true },
     { name: "SVG Model Lab Exhibit", doc: "The Stack: bridge from FY2025 reported operating profit to the FY2026 model by segment, with the growth and margin assumptions.", expr: exhibit, svg: true },
     { name: "SVG Model Lab Ledger", doc: "The Stack: MODEL LAB ledger of modeled outputs against guidance and FY2025.", expr: `${vars}\nRETURN\n    ${ledger(400, rows, "ml")}`, svg: true },
-    { name: "SVG Sales Strip", doc: "The Stack: painted sales-adjustment cells; the transparent slicer sits on top.", expr: strip("Sales Adjustment", "Sales Adjustment", "[Selected Sales Adjustment]", 480, 96, 88, `SUBSTITUTE(FORMAT('Sales Adjustment'[Sales Adjustment], "+0%;-0%;0%"), "%", "%25")`), svg: true },
-    { name: "SVG Margin Strip", doc: "The Stack: painted operating-margin adjustment cells; the transparent slicer sits on top.", expr: strip("Margin Adjustment", "Margin Adjustment (bps)", "[Selected Margin Adjustment Bps]", 500, 100, 92, `FORMAT('Margin Adjustment'[Margin Adjustment (bps)], "+0;-0;0") & " bp"`), svg: true },
+    { name: "SVG Sales Strip", doc: "The Stack: painted sales-adjustment cells; the transparent slicer sits on top.", expr: strip("Sales Adjustment", "Sales Adjustment", "[Selected Sales Adjustment]", 480, 96, 88, `SUBSTITUTE(FORMAT('Sales Adjustment'[Sales Adjustment], "+0%;-0%;0%"), "%", "%25")`, 17), svg: true },
+    { name: "SVG Margin Strip", doc: "The Stack: painted operating-margin adjustment cells; the transparent slicer sits on top.", expr: strip("Margin Adjustment", "Margin Adjustment (bps)", "[Selected Margin Adjustment Bps]", 500, 100, 92, `FORMAT('Margin Adjustment'[Margin Adjustment (bps)], "+0;-0;0") & "bp"`, 15), svg: true },
   ],
 };

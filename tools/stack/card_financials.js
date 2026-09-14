@@ -77,12 +77,12 @@ RETURN
 const margin = (n, d) => `SUBSTITUTE(FORMAT(DIVIDE(${n}, ${d}), "0.0%"), "%", "%25")`;
 const rows = [
   { label: `"Net income, " & _thru`, tag: "ACTUAL", value: `"$" & FORMAT(_ni, "#,##0") & "M"`, note: `${pct("DIVIDE(_ni, _niP) - 1")} & " vs the same quarters of FY" & (_fy - 1)` },
-  { label: `"Net sales and revenues, " & _thru`, tag: "ACTUAL", value: `"$" & FORMAT(_rev, "#,##0") & "M"`, note: `${pct("DIVIDE(_rev, _revP) - 1")} & " vs a year earlier"` },
+  { label: `"Net sales, FY" & _fy & " to Q" & _q`, tag: "ACTUAL", value: `"$" & FORMAT(_rev, "#,##0") & "M"`, note: `${pct("DIVIDE(_rev, _revP) - 1")} & " vs a year earlier"` },
   { label: `"Net margin, " & _thru`, tag: "ACTUAL", value: margin("_ni", "_rev"), note: `${margin("_niP", "_revP")} & " a year earlier"` },
   { label: `"Net income, FY" & _lastYr`, tag: "ACTUAL", value: `"$" & FORMAT(_lastNi, "#,##0") & "M"`, note: `"Diluted EPS " & FORMAT(_lastEps, "$0.00")` },
   { label: `"Net income, FY" & _peakYr & " record"`, tag: "ACTUAL", value: `"$" & FORMAT(_peak, "#,##0") & "M"`, note: `"Diluted EPS " & FORMAT(_peakEps, "$0.00")` },
   { label: `"Net income guidance, FY" & _fy`, tag: "GUIDANCE", value: `"$4.75B-5.00B"`, note: `"Management range"` },
-  { label: `"Q4 net income implied by guidance"`, tag: "GUIDANCE", value: `"$" & FORMAT(_gLo - _ni, "#,##0") & "M-" & FORMAT(_gHi - _ni, "#,##0") & "M"`, note: `"Q4 FY" & _lastYr & ": $" & FORMAT(_lastQ4, "#,##0") & "M"` },
+  { label: `"Q4 net income guidance implies"`, tag: "GUIDANCE", value: `"$" & FORMAT(_gLo - _ni, "#,##0") & "M-" & FORMAT(_gHi - _ni, "#,##0") & "M"`, note: `"Q4 FY" & _lastYr & ": $" & FORMAT(_lastQ4, "#,##0") & "M"` },
 ];
 
 module.exports = {

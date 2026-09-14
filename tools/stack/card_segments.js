@@ -18,13 +18,13 @@ VAR _cf = ${bridge(3)}
 VAR _prior = ${ytdPrior("PPA")} + ${ytdPrior("SAT")} + ${ytdPrior("CF")}
 VAR _quarters = FILTER(ALL('Period'[Period Key]), 'Period'[Period Key] > _fy * 100 && 'Period'[Period Key] <= _k)
 VAR _satAhead = COUNTROWS(FILTER(_quarters, ${op("'Period'[Period Key]", "SAT")} > ${op("'Period'[Period Key]", "PPA")}))
-VAR _peakYr = [Peak EPS Year]
-VAR _peakPpa = ${annualOp("PPA", "_peakYr")}
-VAR _peakAll = ${annualOp(null, "_peakYr")}`;
+VAR _prev = FILTER(ALL('Period'[Period Key]), 'Period'[Period Key] > (_fy - 2) * 100 && 'Period'[Period Key] < _fy * 100)
+VAR _nPrev = COUNTROWS(_prev)
+VAR _ppaAhead = COUNTROWS(FILTER(_prev, ${op("'Period'[Period Key]", "PPA")} > ${op("'Period'[Period Key]", "SAT")}))`;
 
 const finding = finding2(vars,
   `IF(_satAhead = _q, "Small ag and turf has out-earned large ag in every quarter of fiscal " & _fy & " so far.", "Small ag and turf out-earned large ag in " & _satAhead & " of " & _q & " quarters of fiscal " & _fy & ".")`,
-  `"Operating profit through Q" & _q & ": SAT $" & FORMAT(_sat, "#,##0") & "M, PPA $" & FORMAT(_ppa, "#,##0") & "M, C&amp;F $" & FORMAT(_cf, "#,##0") & "M. In FY" & _peakYr & ", PPA earned $" & FORMAT(_peakPpa, "#,##0") & "M, " & SUBSTITUTE(FORMAT(DIVIDE(_peakPpa, _peakAll), "0%"), "%", "%25") & " of the total."`);
+  `"PPA out-earned SAT in " & IF(_ppaAhead = _nPrev, "every one of the " & _nPrev, _ppaAhead & " of " & _nPrev) & " quarters of FY" & (_fy - 2) & "-FY" & (_fy - 1) & "; through Q" & _q & ", SAT leads $" & FORMAT(_sat, "#,##0") & "M to $" & FORMAT(_ppa, "#,##0") & "M."`);
 
 // Exhibit (960x620): operating profit by quarter, last eleven quarters. $0 at y 510, 0.2278px per $1M ($1.8B at y 100).
 const segs = [
@@ -54,6 +54,13 @@ RETURN
         & CONCATENATEX(FILTER(_pts, 'Period'[Fiscal Quarter] = "Q1" && [@x] > 70), "<line x1='" & ([@x] - 37.5) & "' y1='100' x2='" & ([@x] - 37.5) & "' y2='580' stroke='${C.ink}' stroke-width='1' stroke-dasharray='2 5'/>", "")
         & CONCATENATEX(_pts, "<text x='" & [@x] & "' y='536' text-anchor='middle' font-size='13' fill='${C.ink}'>" & 'Period'[Fiscal Quarter] & "</text>", "", [@x], ASC)
         & CONCATENATEX(DISTINCT(SELECTCOLUMNS(_pts, "@fy", 'Period'[Fiscal Year])), VAR _f = [@fy] RETURN "<text x='" & AVERAGEX(FILTER(_pts, 'Period'[Fiscal Year] = _f), [@x]) & "' y='562' text-anchor='middle' font-size='14' font-weight='bold' fill='${C.ink}'>FY" & _f & "</text>", "")
+        & CONCATENATEX(FILTER(_pts, 'Period'[Fiscal Year] = _fy && 'Period'[Period Key] < _k),
+            VAR _s = ${op("'Period'[Period Key]", "SAT")}
+            VAR _p = ${op("'Period'[Period Key]", "PPA")}
+            VAR _top = MIN(${yPix("_s")}, ${yPix("_p")})
+            VAR _bot = MAX(${yPix("_s")}, ${yPix("_p")})
+            RETURN "<rect x='" & ([@x] - 46) & "' y='" & (_top - 27) & "' width='92' height='17' fill='${C.paper}'/><text x='" & [@x] & "' y='" & (_top - 13) & "' text-anchor='middle' font-size='12' font-weight='bold' fill='${C.ink}'>" & IF(_s >= _p, "SAT $" & _s, "PPA $" & _p) & "M</text>"
+                & "<rect x='" & ([@x] - 46) & "' y='" & (_bot + 9) & "' width='92' height='17' fill='${C.paper}'/><text x='" & [@x] & "' y='" & (_bot + 22) & "' text-anchor='middle' font-size='12' font-weight='bold' fill='${C.ink}'>" & IF(_s >= _p, "PPA $" & _p, "SAT $" & _s) & "M</text>", "")
         & IF(_satAhead = _q, "<rect x='" & (_x0 - 10) & "' y='76' width='" & (MAXX(_pts, [@x]) - _x0 + 20) & "' height='3' fill='${C.ink}'/><rect x='" & (_x0 - 10) & "' y='76' width='3' height='12' fill='${C.ink}'/><rect x='" & (MAXX(_pts, [@x]) + 7) & "' y='76' width='3' height='12' fill='${C.ink}'/><text x='" & (MAXX(_pts, [@x]) + 10) & "' y='70' text-anchor='end' font-size='14' font-weight='bold' fill='${C.ink}'>SAT above PPA every quarter</text>", "")
         & "</svg>"`;
 

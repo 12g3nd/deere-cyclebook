@@ -859,7 +859,7 @@ table _Measures
 			            )
 			    ) & "</g>"
 			        & "<rect x='0' y='112' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='146' width='54' height='16' fill='%230E0E0C'/><text x='27' y='158' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
-			        & "<text x='0' y='136' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Net sales and revenues, " & _thru & "</text>"
+			        & "<text x='0' y='136' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Net sales, FY" & _fy & " to Q" & _q & "</text>"
 			        & "<text x='62' y='159' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_rev, _revP) - 1, "+0%;-0%;0%"), "%", "%25") & " vs a year earlier" & "</text>"
 			        & "<text x='440' y='157' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_rev, "#,##0") & "M" & "</text>"
 			        & "<rect x='0' y='188' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='222' width='54' height='16' fill='%230E0E0C'/><text x='27' y='234' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
@@ -879,7 +879,7 @@ table _Measures
 			        & "<text x='80' y='463' font-size='12' fill='%230E0E0C'>" & "Management range" & "</text>"
 			        & "<text x='440' y='461' text-anchor='end' font-size='22' font-weight='bold' fill='%23367C2B'>" & "$4.75B-5.00B" & "</text>"
 			        & "<rect x='0' y='492' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='526' width='72' height='16' fill='%23367C2B'/><text x='36' y='538' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>GUIDANCE</text>"
-			        & "<text x='0' y='516' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Q4 net income implied by guidance" & "</text>"
+			        & "<text x='0' y='516' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Q4 net income guidance implies" & "</text>"
 			        & "<text x='80' y='539' font-size='12' fill='%230E0E0C'>" & "Q4 FY" & _lastYr & ": $" & FORMAT(_lastQ4, "#,##0") & "M" & "</text>"
 			        & "<text x='440' y='537' text-anchor='end' font-size='22' font-weight='bold' fill='%23367C2B'>" & "$" & FORMAT(_gLo - _ni, "#,##0") & "M-" & FORMAT(_gHi - _ni, "#,##0") & "M" & "</text>"
 			        & "<rect x='0' y='569' width='440' height='2' fill='%230E0E0C'/></svg>"
@@ -911,13 +911,13 @@ table _Measures
 			VAR _prior = CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "PPA", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100) + CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "SAT", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100) + CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "CF", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100)
 			VAR _quarters = FILTER(ALL('Period'[Period Key]), 'Period'[Period Key] > _fy * 100 && 'Period'[Period Key] <= _k)
 			VAR _satAhead = COUNTROWS(FILTER(_quarters, LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT") > LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA")))
-			VAR _peakYr = [Peak EPS Year]
-			VAR _peakPpa = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = _peakYr, 'Annual Segments'[Segment Code] = "PPA")
-			VAR _peakAll = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = _peakYr)
+			VAR _prev = FILTER(ALL('Period'[Period Key]), 'Period'[Period Key] > (_fy - 2) * 100 && 'Period'[Period Key] < _fy * 100)
+			VAR _nPrev = COUNTROWS(_prev)
+			VAR _ppaAhead = COUNTROWS(FILTER(_prev, LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA") > LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT")))
 			RETURN
 			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='84' viewBox='0 0 1420 84' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
 			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & IF(_satAhead = _q, "Small ag and turf has out-earned large ag in every quarter of fiscal " & _fy & " so far.", "Small ag and turf out-earned large ag in " & _satAhead & " of " & _q & " quarters of fiscal " & _fy & ".") & "</text>"
-			        & "<text x='0' y='70' font-size='22' fill='%230E0E0C'>" & "Operating profit through Q" & _q & ": SAT $" & FORMAT(_sat, "#,##0") & "M, PPA $" & FORMAT(_ppa, "#,##0") & "M, C&amp;F $" & FORMAT(_cf, "#,##0") & "M. In FY" & _peakYr & ", PPA earned $" & FORMAT(_peakPpa, "#,##0") & "M, " & SUBSTITUTE(FORMAT(DIVIDE(_peakPpa, _peakAll), "0%"), "%", "%25") & " of the total." & "</text>"
+			        & "<text x='0' y='70' font-size='22' fill='%230E0E0C'>" & "PPA out-earned SAT in " & IF(_ppaAhead = _nPrev, "every one of the " & _nPrev, _ppaAhead & " of " & _nPrev) & " quarters of FY" & (_fy - 2) & "-FY" & (_fy - 1) & "; through Q" & _q & ", SAT leads $" & FORMAT(_sat, "#,##0") & "M to $" & FORMAT(_ppa, "#,##0") & "M." & "</text>"
 			        & "</svg>"
 		dataCategory: ImageUrl
 		displayFolder: The Stack
@@ -934,9 +934,9 @@ table _Measures
 			VAR _prior = CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "PPA", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100) + CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "SAT", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100) + CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "CF", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100)
 			VAR _quarters = FILTER(ALL('Period'[Period Key]), 'Period'[Period Key] > _fy * 100 && 'Period'[Period Key] <= _k)
 			VAR _satAhead = COUNTROWS(FILTER(_quarters, LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT") > LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA")))
-			VAR _peakYr = [Peak EPS Year]
-			VAR _peakPpa = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = _peakYr, 'Annual Segments'[Segment Code] = "PPA")
-			VAR _peakAll = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = _peakYr)
+			VAR _prev = FILTER(ALL('Period'[Period Key]), 'Period'[Period Key] > (_fy - 2) * 100 && 'Period'[Period Key] < _fy * 100)
+			VAR _nPrev = COUNTROWS(_prev)
+			VAR _ppaAhead = COUNTROWS(FILTER(_prev, LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA") > LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT")))
 			VAR _last = TOPN(11, ALL('Period'[Period Key], 'Period'[Period Sort], 'Period'[Fiscal Year], 'Period'[Fiscal Quarter]), 'Period'[Period Sort], DESC)
 			VAR _minSort = MINX(_last, 'Period'[Period Sort])
 			VAR _pts = ADDCOLUMNS(_last, "@x", 70 + ('Period'[Period Sort] - _minSort) * 75)
@@ -958,6 +958,13 @@ table _Measures
 			        & CONCATENATEX(FILTER(_pts, 'Period'[Fiscal Quarter] = "Q1" && [@x] > 70), "<line x1='" & ([@x] - 37.5) & "' y1='100' x2='" & ([@x] - 37.5) & "' y2='580' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/>", "")
 			        & CONCATENATEX(_pts, "<text x='" & [@x] & "' y='536' text-anchor='middle' font-size='13' fill='%230E0E0C'>" & 'Period'[Fiscal Quarter] & "</text>", "", [@x], ASC)
 			        & CONCATENATEX(DISTINCT(SELECTCOLUMNS(_pts, "@fy", 'Period'[Fiscal Year])), VAR _f = [@fy] RETURN "<text x='" & AVERAGEX(FILTER(_pts, 'Period'[Fiscal Year] = _f), [@x]) & "' y='562' text-anchor='middle' font-size='14' font-weight='bold' fill='%230E0E0C'>FY" & _f & "</text>", "")
+			        & CONCATENATEX(FILTER(_pts, 'Period'[Fiscal Year] = _fy && 'Period'[Period Key] < _k),
+			            VAR _s = LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT")
+			            VAR _p = LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA")
+			            VAR _top = MIN(ROUND(MAX(100, MIN(510, 510 - (_s) * 0.2278)), 1), ROUND(MAX(100, MIN(510, 510 - (_p) * 0.2278)), 1))
+			            VAR _bot = MAX(ROUND(MAX(100, MIN(510, 510 - (_s) * 0.2278)), 1), ROUND(MAX(100, MIN(510, 510 - (_p) * 0.2278)), 1))
+			            RETURN "<rect x='" & ([@x] - 46) & "' y='" & (_top - 27) & "' width='92' height='17' fill='%23F4F4F0'/><text x='" & [@x] & "' y='" & (_top - 13) & "' text-anchor='middle' font-size='12' font-weight='bold' fill='%230E0E0C'>" & IF(_s >= _p, "SAT $" & _s, "PPA $" & _p) & "M</text>"
+			                & "<rect x='" & ([@x] - 46) & "' y='" & (_bot + 9) & "' width='92' height='17' fill='%23F4F4F0'/><text x='" & [@x] & "' y='" & (_bot + 22) & "' text-anchor='middle' font-size='12' font-weight='bold' fill='%230E0E0C'>" & IF(_s >= _p, "PPA $" & _p, "SAT $" & _s) & "M</text>", "")
 			        & IF(_satAhead = _q, "<rect x='" & (_x0 - 10) & "' y='76' width='" & (MAXX(_pts, [@x]) - _x0 + 20) & "' height='3' fill='%230E0E0C'/><rect x='" & (_x0 - 10) & "' y='76' width='3' height='12' fill='%230E0E0C'/><rect x='" & (MAXX(_pts, [@x]) + 7) & "' y='76' width='3' height='12' fill='%230E0E0C'/><text x='" & (MAXX(_pts, [@x]) + 10) & "' y='70' text-anchor='end' font-size='14' font-weight='bold' fill='%230E0E0C'>SAT above PPA every quarter</text>", "")
 			        & "</svg>"
 		dataCategory: ImageUrl
@@ -975,9 +982,9 @@ table _Measures
 			VAR _prior = CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "PPA", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100) + CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "SAT", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100) + CALCULATE(SUM('Quarterly Segments'[Operating Profit]), REMOVEFILTERS('Quarterly Segments'), REMOVEFILTERS('Period'), 'Quarterly Segments'[Segment Code] = "CF", 'Quarterly Segments'[Period Key] > (_fy - 1) * 100, 'Quarterly Segments'[Period Key] <= _k - 100)
 			VAR _quarters = FILTER(ALL('Period'[Period Key]), 'Period'[Period Key] > _fy * 100 && 'Period'[Period Key] <= _k)
 			VAR _satAhead = COUNTROWS(FILTER(_quarters, LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT") > LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA")))
-			VAR _peakYr = [Peak EPS Year]
-			VAR _peakPpa = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = _peakYr, 'Annual Segments'[Segment Code] = "PPA")
-			VAR _peakAll = CALCULATE(SUM('Annual Segments'[Operating Profit]), REMOVEFILTERS('Annual Segments'), 'Annual Segments'[Fiscal Year] = _peakYr)
+			VAR _prev = FILTER(ALL('Period'[Period Key]), 'Period'[Period Key] > (_fy - 2) * 100 && 'Period'[Period Key] < _fy * 100)
+			VAR _nPrev = COUNTROWS(_prev)
+			VAR _ppaAhead = COUNTROWS(FILTER(_prev, LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "PPA") > LOOKUPVALUE('Quarterly Segments'[Operating Profit], 'Quarterly Segments'[Period Key], 'Period'[Period Key], 'Quarterly Segments'[Segment Code], "SAT")))
 			RETURN
 			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='440' height='572' viewBox='0 0 440 572' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
 			        & "<rect x='0' y='0' width='440' height='3' fill='%230E0E0C'/><rect x='0' y='38' width='54' height='16' fill='%230E0E0C'/><text x='27' y='50' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
@@ -1040,7 +1047,7 @@ table _Measures
 		displayFolder: The Stack
 		lineageTag: cb5a7da6-bba4-468a-85dc-67547b1f224c
 
-	/// The Stack: THE CYCLE finding, how the outside drivers moved over the past year (authored claim shown only while the data supports it).
+	/// The Stack: THE CYCLE finding, how the outside drivers moved over the past year; always names each driver's direction.
 	measure 'SVG Cycle Finding' =
 			VAR _dC = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn")
 			VAR _vC = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Date] = _dC)
@@ -1054,11 +1061,8 @@ table _Measures
 			VAR _dH = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts")
 			VAR _vH = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] = _dH)
 			VAR _pH = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] = EDATE(_dH, -12))
-			VAR _dK = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending")
-			VAR _vK = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending", 'Macro Data'[Date] = _dK)
-			VAR _pK = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending", 'Macro Data'[Date] = EDATE(_dK, -12))
-			VAR _dX = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "CAD per USD")
-			VAR _vX = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "CAD per USD", 'Macro Data'[Date] = _dX)
+			VAR _cPk = CALCULATE(MAX('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn")
+			VAR _cPkD = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Value] = _cPk)
 			VAR _fiY = CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'))
 			VAR _fiV = CALCULATE(AVERAGE('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm Income'), 'Farm Income'[Date] = _fiY)
 			VAR _fiPk = CALCULATE(MAX('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm Income'))
@@ -1066,14 +1070,14 @@ table _Measures
 			VAR _month = FORMAT(_dC, "mmmm yyyy")
 			RETURN
 			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='84' viewBox='0 0 1420 84' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
-			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & IF(_vC >= _pC && _vS >= _pS && _vF < _pF && _vH < _pH, "Over the past year crop prices rose and interest rates fell, while housing starts kept dropping.", "How Deere's outside demand drivers moved over the past year.") & "</text>"
+			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & IF(_vC >= _pC && _vS >= _pS && _vF < _pF && _vH < _pH, "Over the past year crop prices rose and interest rates fell, while housing starts kept dropping.", "Over the past year corn " & IF(_vC >= _pC, "rose", "fell") & ", soybeans " & IF(_vS >= _pS, "rose", "fell") & ", interest rates " & IF(_vF >= _pF, "rose", "fell") & " and housing starts " & IF(_vH >= _pH, "rose", "fell") & ".") & "</text>"
 			        & "<text x='0' y='70' font-size='22' fill='%230E0E0C'>" & _month & " vs a year earlier: corn " & SUBSTITUTE(FORMAT(DIVIDE(_vC, _pC) - 1, "+0%;-0%"), "%", "%25") & ", soybeans " & SUBSTITUTE(FORMAT(DIVIDE(_vS, _pS) - 1, "+0%;-0%"), "%", "%25") & ", fed funds " & FORMAT(_vF, "0.00") & "%25 (was " & FORMAT(_pF, "0.00") & "%25), housing starts " & SUBSTITUTE(FORMAT(DIVIDE(_vH, _pH) - 1, "+0%;-0%"), "%", "%25") & "." & "</text>"
 			        & "</svg>"
 		dataCategory: ImageUrl
 		displayFolder: The Stack
 		lineageTag: ddc4d712-cee9-4aec-973c-173ba6e044ca
 
-	/// The Stack: corn and soybeans, net farm income, the fed funds rate and housing starts as four small panels.
+	/// The Stack: crop prices and the fed funds rate as the lead panels, with housing starts and net farm income on the same 2020-2026 axis.
 	measure 'SVG Cycle Exhibit' =
 			VAR _dC = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn")
 			VAR _vC = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Date] = _dC)
@@ -1087,50 +1091,48 @@ table _Measures
 			VAR _dH = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts")
 			VAR _vH = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] = _dH)
 			VAR _pH = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] = EDATE(_dH, -12))
-			VAR _dK = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending")
-			VAR _vK = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending", 'Macro Data'[Date] = _dK)
-			VAR _pK = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending", 'Macro Data'[Date] = EDATE(_dK, -12))
-			VAR _dX = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "CAD per USD")
-			VAR _vX = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "CAD per USD", 'Macro Data'[Date] = _dX)
+			VAR _cPk = CALCULATE(MAX('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn")
+			VAR _cPkD = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Value] = _cPk)
 			VAR _fiY = CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'))
 			VAR _fiV = CALCULATE(AVERAGE('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm Income'), 'Farm Income'[Date] = _fiY)
 			VAR _fiPk = CALCULATE(MAX('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm Income'))
 			VAR _fiPkY = CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'), 'Farm Income'[Net Farm Income] = _fiPk)
 			VAR _month = FORMAT(_dC, "mmmm yyyy")
 			VAR _maxD = MAX(MAX(_dC, _dF), _dH)
-			VAR _kx = 310 / DATEDIFF(DATE(2020, 1, 1), _maxD, MONTH)
+			VAR _n = DATEDIFF(DATE(2020, 1, 1), _maxD, MONTH)
+			VAR _kL = 510 / _n
+			VAR _kS = 130 / _n
 			RETURN
-			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='960' height='620' viewBox='0 0 960 620' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><text x='0' y='22' font-size='16' font-weight='bold' fill='%230E0E0C'>Crop prices, farm income, interest rates and housing</text><text x='0' y='78' font-size='15' font-weight='bold' fill='%230E0E0C'>Corn and soybeans, USD per tonne</text><line x1='50' y1='254.72727272727272' x2='360' y2='254.72727272727272' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='259.72727272727275' text-anchor='end' font-size='12' fill='%230E0E0C'>$200</text><line x1='50' y1='184.1818181818182' x2='360' y2='184.1818181818182' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='189.1818181818182' text-anchor='end' font-size='12' fill='%230E0E0C'>$400</text><line x1='50' y1='113.63636363636365' x2='360' y2='113.63636363636365' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='118.63636363636365' text-anchor='end' font-size='12' fill='%230E0E0C'>$600</text><rect x='50' y='289' width='310' height='3' fill='%230E0E0C'/><text x='500' y='78' font-size='15' font-weight='bold' fill='%230E0E0C'>U.S. net farm income, $ billions, yearly</text><line x1='550' y1='241.5' x2='860' y2='241.5' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='246.5' text-anchor='end' font-size='12' fill='%230E0E0C'>$50</text><line x1='550' y1='193' x2='860' y2='193' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='198' text-anchor='end' font-size='12' fill='%230E0E0C'>$100</text><line x1='550' y1='144.5' x2='860' y2='144.5' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='149.5' text-anchor='end' font-size='12' fill='%230E0E0C'>$150</text><line x1='550' y1='96' x2='860' y2='96' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='101' text-anchor='end' font-size='12' fill='%230E0E0C'>$200</text><rect x='550' y='289' width='310' height='3' fill='%230E0E0C'/><text x='0' y='358' font-size='15' font-weight='bold' fill='%230E0E0C'>Federal funds rate</text><line x1='50' y1='505.33333333333337' x2='360' y2='505.33333333333337' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='510.33333333333337' text-anchor='end' font-size='12' fill='%230E0E0C'>2%25</text><line x1='50' y1='440.6666666666667' x2='360' y2='440.6666666666667' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='445.6666666666667' text-anchor='end' font-size='12' fill='%230E0E0C'>4%25</text><line x1='50' y1='376' x2='360' y2='376' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='381' text-anchor='end' font-size='12' fill='%230E0E0C'>6%25</text><rect x='50' y='569' width='310' height='3' fill='%230E0E0C'/><text x='500' y='358' font-size='15' font-weight='bold' fill='%230E0E0C'>Housing starts, thousands a year</text><line x1='550' y1='534.7272727272727' x2='860' y2='534.7272727272727' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='539.7272727272727' text-anchor='end' font-size='12' fill='%230E0E0C'>1,000</text><line x1='550' y1='464.1818181818182' x2='860' y2='464.1818181818182' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='469.1818181818182' text-anchor='end' font-size='12' fill='%230E0E0C'>1,400</text><line x1='550' y1='393.6363636363636' x2='860' y2='393.6363636363636' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='542' y='398.6363636363636' text-anchor='end' font-size='12' fill='%230E0E0C'>1,800</text><rect x='550' y='569' width='310' height='3' fill='%230E0E0C'/>"
-			        & CONCATENATEX(GENERATESERIES(2020, YEAR(_maxD)), "<rect x='" & ROUND(50 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kx, 1) & "' y='292' width='1' height='6' fill='%230E0E0C'/><text x='" & ROUND(50 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kx, 1) & "' y='312' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & [Value] & "</text>", "")
-			        & CONCATENATEX(GENERATESERIES(2020, YEAR(_maxD)), "<rect x='" & ROUND(50 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kx, 1) & "' y='572' width='1' height='6' fill='%230E0E0C'/><text x='" & ROUND(50 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kx, 1) & "' y='592' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & [Value] & "</text>", "")
-			        & CONCATENATEX(GENERATESERIES(2020, YEAR(_maxD)), "<rect x='" & ROUND(550 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kx, 1) & "' y='572' width='1' height='6' fill='%230E0E0C'/><text x='" & ROUND(550 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kx, 1) & "' y='592' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & [Value] & "</text>", "")
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='960' height='620' viewBox='0 0 960 620' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><text x='0' y='22' font-size='16' font-weight='bold' fill='%230E0E0C'>Crop prices and interest rates, with housing and farm income beside them</text><text x='0' y='58' font-size='15' font-weight='bold' fill='%230E0E0C'>Corn and soybeans, USD per tonne</text><line x1='50' y1='239.63636363636363' x2='560' y2='239.63636363636363' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='244.63636363636363' text-anchor='end' font-size='12' fill='%230E0E0C'>$200</text><line x1='50' y1='166.90909090909093' x2='560' y2='166.90909090909093' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='171.90909090909093' text-anchor='end' font-size='12' fill='%230E0E0C'>$400</text><line x1='50' y1='94.18181818181819' x2='560' y2='94.18181818181819' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='99.18181818181819' text-anchor='end' font-size='12' fill='%230E0E0C'>$600</text><rect x='50' y='275' width='510' height='3' fill='%230E0E0C'/><text x='0' y='348' font-size='15' font-weight='bold' fill='%230E0E0C'>Federal funds rate</text><line x1='50' y1='499.33333333333337' x2='560' y2='499.33333333333337' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='504.33333333333337' text-anchor='end' font-size='12' fill='%230E0E0C'>2%25</text><line x1='50' y1='432.6666666666667' x2='560' y2='432.6666666666667' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='437.6666666666667' text-anchor='end' font-size='12' fill='%230E0E0C'>4%25</text><line x1='50' y1='366' x2='560' y2='366' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='42' y='371' text-anchor='end' font-size='12' fill='%230E0E0C'>6%25</text><rect x='50' y='565' width='510' height='3' fill='%230E0E0C'/><text x='680' y='58' font-size='14' font-weight='bold' fill='%230E0E0C'>Housing starts, thousands</text><line x1='730' y1='190.54545454545453' x2='860' y2='190.54545454545453' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='722' y='195.54545454545453' text-anchor='end' font-size='12' fill='%230E0E0C'>1,000</text><line x1='730' y1='139.63636363636363' x2='860' y2='139.63636363636363' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='722' y='144.63636363636363' text-anchor='end' font-size='12' fill='%230E0E0C'>1,400</text><line x1='730' y1='88.72727272727273' x2='860' y2='88.72727272727273' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='722' y='93.72727272727273' text-anchor='end' font-size='12' fill='%230E0E0C'>1,800</text><rect x='730' y='215' width='130' height='3' fill='%230E0E0C'/><text x='680' y='348' font-size='14' font-weight='bold' fill='%230E0E0C'>U.S. net farm income, $B</text><line x1='730' y1='436' x2='860' y2='436' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='722' y='441' text-anchor='end' font-size='12' fill='%230E0E0C'>$100</text><line x1='730' y1='366' x2='860' y2='366' stroke='%230E0E0C' stroke-width='1' stroke-dasharray='2 5'/><text x='722' y='371' text-anchor='end' font-size='12' fill='%230E0E0C'>$200</text><rect x='730' y='505' width='130' height='3' fill='%230E0E0C'/>"
+			        & CONCATENATEX(FILTER(GENERATESERIES(2020, YEAR(_maxD)), MOD([Value], 1) = 0), "<rect x='" & ROUND(50 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kL, 1) & "' y='278' width='1' height='6' fill='%230E0E0C'/><text x='" & ROUND(50 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kL, 1) & "' y='298' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & [Value] & "</text>", "")
+			        & CONCATENATEX(FILTER(GENERATESERIES(2020, YEAR(_maxD)), MOD([Value], 1) = 0), "<rect x='" & ROUND(50 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kL, 1) & "' y='568' width='1' height='6' fill='%230E0E0C'/><text x='" & ROUND(50 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kL, 1) & "' y='588' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & [Value] & "</text>", "")
+			        & CONCATENATEX(FILTER(GENERATESERIES(2020, YEAR(_maxD)), MOD([Value], 2) = 0), "<rect x='" & ROUND(730 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kS, 1) & "' y='218' width='1' height='6' fill='%230E0E0C'/><text x='" & ROUND(730 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kS, 1) & "' y='238' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & [Value] & "</text>", "")
+			        & CONCATENATEX(FILTER(GENERATESERIES(2020, YEAR(_maxD)), MOD([Value], 2) = 0), "<rect x='" & ROUND(730 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kS, 1) & "' y='508' width='1' height='6' fill='%230E0E0C'/><text x='" & ROUND(730 + DATEDIFF(DATE(2020, 1, 1), DATE([Value], 1, 1), MONTH) * _kS, 1) & "' y='528' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & [Value] & "</text>", "")
 			        & (VAR _r = CALCULATETABLE(SELECTCOLUMNS('Macro Data', "@d", 'Macro Data'[Date], "@v", 'Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Soybeans", 'Macro Data'[Date] >= DATE(2020, 1, 1))
 			           VAR _ld = MAXX(_r, [@d])
 			           VAR _lv = MAXX(FILTER(_r, [@d] = _ld), [@v])
-			           RETURN "<polyline fill='none' stroke='%230E0E0C' stroke-width='5' points='" & CONCATENATEX(_r, ROUND(50 + DATEDIFF(DATE(2020, 1, 1), [@d], MONTH) * _kx, 1) & "," & ROUND(290 - (MIN(MAX([@v], 100), 650) - 100) / 550 * 194, 1), " ", [@d], ASC) & "'/>"
-			               & "<text x='368' y='" & (ROUND(290 - (MIN(MAX(_lv, 100), 650) - 100) / 550 * 194, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Soy $" & FORMAT(_lv, "0") & "</text>")
+			           RETURN "<polyline fill='none' stroke='%230E0E0C' stroke-width='5' points='" & CONCATENATEX(_r, ROUND(50 + DATEDIFF(DATE(2020, 1, 1), [@d], MONTH) * _kL, 1) & "," & ROUND(276 - (MIN(MAX([@v], 100), 650) - 100) / 550 * 200, 1), " ", [@d], ASC) & "'/>"
+			               & "<text x='568' y='" & (ROUND(276 - (MIN(MAX(_lv, 100), 650) - 100) / 550 * 200, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Soy $" & FORMAT(_lv, "0") & "</text>")
 			        & (VAR _r = CALCULATETABLE(SELECTCOLUMNS('Macro Data', "@d", 'Macro Data'[Date], "@v", 'Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Date] >= DATE(2020, 1, 1))
 			           VAR _ld = MAXX(_r, [@d])
 			           VAR _lv = MAXX(FILTER(_r, [@d] = _ld), [@v])
-			           RETURN "<polyline fill='none' stroke='%230E0E0C' stroke-width='3' stroke-dasharray='8 5' points='" & CONCATENATEX(_r, ROUND(50 + DATEDIFF(DATE(2020, 1, 1), [@d], MONTH) * _kx, 1) & "," & ROUND(290 - (MIN(MAX([@v], 100), 650) - 100) / 550 * 194, 1), " ", [@d], ASC) & "'/>"
-			               & "<text x='368' y='" & (ROUND(290 - (MIN(MAX(_lv, 100), 650) - 100) / 550 * 194, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Corn $" & FORMAT(_lv, "0") & "</text>")
-			        & (VAR _fi = SELECTCOLUMNS(ALL('Farm Income'), "@y", YEAR('Farm Income'[Date]), "@v", 'Farm Income'[Net Farm Income])
-			           VAR _y0 = MINX(_fi, [@y])
-			           VAR _pitch = 310 / COUNTROWS(_fi)
-			           VAR _ly = MAXX(_fi, [@y])
-			           RETURN CONCATENATEX(_fi, "<rect x='" & ROUND(550 + ([@y] - _y0) * _pitch + _pitch * 0.15, 1) & "' y='" & ROUND(290 - (MIN(MAX([@v], 0), 200) - 0) / 200 * 194, 1) & "' width='" & ROUND(_pitch * 0.7, 1) & "' height='" & ROUND(290 - ROUND(290 - (MIN(MAX([@v], 0), 200) - 0) / 200 * 194, 1), 1) & "' fill='%230E0E0C'/>"
-			                   & IF(MOD([@y], 3) = MOD(_ly, 3), "<text x='" & ROUND(550 + ([@y] - _y0 + 0.5) * _pitch, 1) & "' y='312' text-anchor='middle' font-size='12' fill='%230E0E0C'>" & [@y] & "</text>", ""), "", [@y], ASC)
-			               & "<text x='868' y='" & (ROUND(290 - (MIN(MAX(_fiV, 0), 200) - 0) / 200 * 194, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_fiV, "$0") & "B</text>")
+			           RETURN "<polyline fill='none' stroke='%230E0E0C' stroke-width='3' stroke-dasharray='8 5' points='" & CONCATENATEX(_r, ROUND(50 + DATEDIFF(DATE(2020, 1, 1), [@d], MONTH) * _kL, 1) & "," & ROUND(276 - (MIN(MAX([@v], 100), 650) - 100) / 550 * 200, 1), " ", [@d], ASC) & "'/>"
+			               & "<text x='568' y='" & (ROUND(276 - (MIN(MAX(_lv, 100), 650) - 100) / 550 * 200, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Corn $" & FORMAT(_lv, "0") & "</text>")
 			        & (VAR _r = CALCULATETABLE(SELECTCOLUMNS('Macro Data', "@d", 'Macro Data'[Date], "@v", 'Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Federal Funds", 'Macro Data'[Date] >= DATE(2020, 1, 1))
 			           VAR _ld = MAXX(_r, [@d])
 			           VAR _lv = MAXX(FILTER(_r, [@d] = _ld), [@v])
-			           RETURN "<polyline fill='none' stroke='%230E0E0C' stroke-width='4' points='" & CONCATENATEX(_r, ROUND(50 + DATEDIFF(DATE(2020, 1, 1), [@d], MONTH) * _kx, 1) & "," & ROUND(570 - (MIN(MAX([@v], 0), 6) - 0) / 6 * 194, 1), " ", [@d], ASC) & "'/>"
-			               & "<text x='368' y='" & (ROUND(570 - (MIN(MAX(_lv, 0), 6) - 0) / 6 * 194, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_lv, "0.00") & "%25" & "</text>")
+			           RETURN "<polyline fill='none' stroke='%230E0E0C' stroke-width='4' points='" & CONCATENATEX(_r, ROUND(50 + DATEDIFF(DATE(2020, 1, 1), [@d], MONTH) * _kL, 1) & "," & ROUND(566 - (MIN(MAX([@v], 0), 6) - 0) / 6 * 200, 1), " ", [@d], ASC) & "'/>"
+			               & "<text x='568' y='" & (ROUND(566 - (MIN(MAX(_lv, 0), 6) - 0) / 6 * 200, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_lv, "0.00") & "%25" & "</text>")
 			        & (VAR _r = CALCULATETABLE(SELECTCOLUMNS('Macro Data', "@d", 'Macro Data'[Date], "@v", 'Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] >= DATE(2020, 1, 1))
 			           VAR _ld = MAXX(_r, [@d])
 			           VAR _lv = MAXX(FILTER(_r, [@d] = _ld), [@v])
-			           RETURN "<polyline fill='none' stroke='%230E0E0C' stroke-width='4' points='" & CONCATENATEX(_r, ROUND(550 + DATEDIFF(DATE(2020, 1, 1), [@d], MONTH) * _kx, 1) & "," & ROUND(570 - (MIN(MAX([@v], 800), 1900) - 800) / 1100 * 194, 1), " ", [@d], ASC) & "'/>"
-			               & "<text x='868' y='" & (ROUND(570 - (MIN(MAX(_lv, 800), 1900) - 800) / 1100 * 194, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_lv, "#,##0") & "K" & "</text>")
+			           RETURN "<polyline fill='none' stroke='%230E0E0C' stroke-width='3' points='" & CONCATENATEX(_r, ROUND(730 + DATEDIFF(DATE(2020, 1, 1), [@d], MONTH) * _kS, 1) & "," & ROUND(216 - (MIN(MAX([@v], 800), 1900) - 800) / 1100 * 140, 1), " ", [@d], ASC) & "'/>"
+			               & "<text x='868' y='" & (ROUND(216 - (MIN(MAX(_lv, 800), 1900) - 800) / 1100 * 140, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_lv, "#,##0") & "K" & "</text>")
+			        & (VAR _fi = FILTER(SELECTCOLUMNS(ALL('Farm Income'), "@y", YEAR('Farm Income'[Date]), "@v", 'Farm Income'[Net Farm Income]), [@y] >= 2020)
+			           VAR _bw = ROUND(12 * _kS * 0.7, 1)
+			           RETURN CONCATENATEX(_fi, "<rect x='" & ROUND(ROUND(730 + DATEDIFF(DATE(2020, 1, 1), DATE([@y], 7, 1), MONTH) * _kS, 1) - _bw / 2, 1) & "' y='" & ROUND(506 - (MIN(MAX([@v], 0), 200) - 0) / 200 * 140, 1) & "' width='" & _bw & "' height='" & ROUND(506 - ROUND(506 - (MIN(MAX([@v], 0), 200) - 0) / 200 * 140, 1), 1) & "' fill='%230E0E0C'/>", "", [@y], ASC)
+			               & "<text x='868' y='" & (ROUND(506 - (MIN(MAX(_fiV, 0), 200) - 0) / 200 * 140, 1) + 5) & "' font-size='14' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_fiV, "$0") & "B</text>"
+			               & "<text x='" & ROUND(ROUND(730 + DATEDIFF(DATE(2020, 1, 1), DATE(YEAR(_fiY) + 1, 1, 1), MONTH) * _kS, 1) + 4, 1) & "' y='496' font-size='11' fill='%230E0E0C'>no data after " & YEAR(_fiY) & "</text>")
 			        & "</svg>"
 		dataCategory: ImageUrl
 		displayFolder: The Stack
@@ -1150,18 +1152,15 @@ table _Measures
 			VAR _dH = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts")
 			VAR _vH = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] = _dH)
 			VAR _pH = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Housing Starts", 'Macro Data'[Date] = EDATE(_dH, -12))
-			VAR _dK = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending")
-			VAR _vK = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending", 'Macro Data'[Date] = _dK)
-			VAR _pK = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Construction Spending", 'Macro Data'[Date] = EDATE(_dK, -12))
-			VAR _dX = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "CAD per USD")
-			VAR _vX = CALCULATE(AVERAGE('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "CAD per USD", 'Macro Data'[Date] = _dX)
+			VAR _cPk = CALCULATE(MAX('Macro Data'[Value]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn")
+			VAR _cPkD = CALCULATE(MAX('Macro Data'[Date]), REMOVEFILTERS('Macro Data'), 'Macro Data'[Series] = "Corn", 'Macro Data'[Value] = _cPk)
 			VAR _fiY = CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'))
 			VAR _fiV = CALCULATE(AVERAGE('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm Income'), 'Farm Income'[Date] = _fiY)
 			VAR _fiPk = CALCULATE(MAX('Farm Income'[Net Farm Income]), REMOVEFILTERS('Farm Income'))
 			VAR _fiPkY = CALCULATE(MAX('Farm Income'[Date]), REMOVEFILTERS('Farm Income'), 'Farm Income'[Net Farm Income] = _fiPk)
 			VAR _month = FORMAT(_dC, "mmmm yyyy")
 			RETURN
-			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='440' height='572' viewBox='0 0 440 572' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='440' height='496' viewBox='0 0 440 496' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
 			        & "<rect x='0' y='0' width='440' height='3' fill='%230E0E0C'/><rect x='0' y='38' width='54' height='16' fill='%230E0E0C'/><text x='27' y='50' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
 			        & "<text x='0' y='26' font-size='15' font-weight='bold' fill='%230E0E0C'>" & "Corn, USD per tonne, " & FORMAT(_dC, "mmm yyyy") & "</text>"
 			        & "<text x='62' y='51' font-size='13' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_vC, _pC) - 1, "+0%;-0%;0%"), "%", "%25") & " vs a year earlier" & "</text>"
@@ -1193,18 +1192,14 @@ table _Measures
 			        & "<text x='62' y='311' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_vH, _pH) - 1, "+0%;-0%;0%"), "%", "%25") & " vs a year earlier" & "</text>"
 			        & "<text x='440' y='309' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_vH, "#,##0") & "K" & "</text>"
 			        & "<rect x='0' y='340' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='374' width='54' height='16' fill='%230E0E0C'/><text x='27' y='386' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
-			        & "<text x='0' y='364' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Construction spending, " & FORMAT(_dK, "mmm yyyy") & "</text>"
-			        & "<text x='62' y='387' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_vK, _pK) - 1, "+0%;-0%;0%"), "%", "%25") & " vs a year earlier" & "</text>"
-			        & "<text x='440' y='385' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_vK / 1000000, "0.00") & "T" & "</text>"
+			        & "<text x='0' y='364' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "U.S. net farm income, " & YEAR(_fiY) & "</text>"
+			        & "<text x='62' y='387' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_fiV, _fiPk) - 1, "+0%;-0%;0%"), "%", "%25") & " from the " & YEAR(_fiPkY) & " peak" & "</text>"
+			        & "<text x='440' y='385' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_fiV, "0.0") & "B" & "</text>"
 			        & "<rect x='0' y='416' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='450' width='54' height='16' fill='%230E0E0C'/><text x='27' y='462' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
-			        & "<text x='0' y='440' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "U.S. net farm income, " & YEAR(_fiY) & "</text>"
-			        & "<text x='62' y='463' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_fiV, _fiPk) - 1, "+0%;-0%;0%"), "%", "%25") & " from the " & YEAR(_fiPkY) & " peak" & "</text>"
-			        & "<text x='440' y='461' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & "$" & FORMAT(_fiV, "0.0") & "B" & "</text>"
-			        & "<rect x='0' y='492' width='440' height='1' fill='%230E0E0C'/><rect x='0' y='526' width='54' height='16' fill='%230E0E0C'/><text x='27' y='538' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>"
-			        & "<text x='0' y='516' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Canadian dollars per USD" & "</text>"
-			        & "<text x='62' y='539' font-size='12' fill='%230E0E0C'>" & "Daily, " & FORMAT(_dX, "d mmm yyyy") & "</text>"
-			        & "<text x='440' y='537' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & FORMAT(_vX, "0.000") & "</text>"
-			        & "<rect x='0' y='569' width='440' height='2' fill='%230E0E0C'/></svg>"
+			        & "<text x='0' y='440' font-size='14' font-weight='bold' fill='%230E0E0C'>" & "Corn, against its " & FORMAT(_cPkD, "mmm yyyy") & " peak" & "</text>"
+			        & "<text x='62' y='463' font-size='12' fill='%230E0E0C'>" & "$" & FORMAT(_cPk, "0") & " a tonne at the peak" & "</text>"
+			        & "<text x='440' y='461' text-anchor='end' font-size='22' font-weight='bold' fill='%230E0E0C'>" & SUBSTITUTE(FORMAT(DIVIDE(_vC, _cPk) - 1, "+0%;-0%;0%"), "%", "%25") & "</text>"
+			        & "<rect x='0' y='493' width='440' height='2' fill='%230E0E0C'/></svg>"
 		dataCategory: ImageUrl
 		displayFolder: The Stack
 		lineageTag: 25c3ab30-6b51-4205-8e0e-cc44639dd158
@@ -1327,11 +1322,13 @@ table _Measures
 			RETURN
 			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='496' viewBox='0 0 400 496' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
 			        & "<rect x='0' y='0' width='400' height='3' fill='%230E0E0C'/><rect x='0.75' y='38.75' width='58.5' height='14.5' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='1.5'/><rect x='4' y='42' width='8' height='8' fill='url(%23s)'/><text x='36' y='50' text-anchor='middle' font-size='10' font-weight='bold' fill='%230E0E0C'>MODEL</text>"
+			        & "<rect x='" & (400 - (LEN(FORMAT(_ni / 1000, "$0.00") & "B") * 30 - 5) - 34) & "' y='58' width='" & ((LEN(FORMAT(_ni / 1000, "$0.00") & "B") * 30 - 5) + 34) & "' height='50' fill='url(%23g)'/>"
+			        & "<rect x='" & (388 - (LEN(FORMAT(_ni / 1000, "$0.00") & "B") * 30 - 5) - 6) & "' y='62' width='" & ((LEN(FORMAT(_ni / 1000, "$0.00") & "B") * 30 - 5) + 12) & "' height='43' fill='%23F4F4F0'/>"
 			        & "<text x='0' y='26' font-size='15' font-weight='bold' fill='%230E0E0C'>" & "Net income, FY2026, " & LOWER(_sc) & " case" & "</text>"
 			        & "<text x='68' y='51' font-size='13' fill='%230E0E0C'>" & "EPS " & FORMAT(_eps, "$0.00") & " on 269.8M diluted shares" & "</text>"
 			        & "<g fill='%230E0E0C'>" & (
 			        VAR _ptml0 = FORMAT(_ni / 1000, "$0.00") & "B"
-			        VAR _pxml0 = (400 - (LEN(FORMAT(_ni / 1000, "$0.00") & "B") * 30 - 5))
+			        VAR _pxml0 = (388 - (LEN(FORMAT(_ni / 1000, "$0.00") & "B") * 30 - 5))
 			        VAR _pyml0 = 66
 			        RETURN
 			            CONCATENATEX(
@@ -1372,16 +1369,17 @@ table _Measures
 	/// The Stack: painted sales-adjustment cells; the transparent slicer sits on top.
 	measure 'SVG Sales Strip' =
 			VAR _sel = [Selected Sales Adjustment]
-			VAR _steps = ADDCOLUMNS(ALL('Sales Adjustment'[Sales Adjustment]), "@i", RANKX(ALL('Sales Adjustment'[Sales Adjustment]), 'Sales Adjustment'[Sales Adjustment], , ASC) - 1)
+			VAR _steps = ADDCOLUMNS(ALL('Sales Adjustment'[Sales Adjustment]), "@i", RANKX(ALL('Sales Adjustment'[Sales Adjustment]), 'Sales Adjustment'[Sales Adjustment], , ASC) - 1, "@eps", CALCULATE([Projected EPS]))
 			RETURN
-			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='480' height='64' viewBox='0 0 480 64' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='480' height='80' viewBox='0 0 480 80' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
 			        & CONCATENATEX(_steps,
 			            VAR _x = [@i] * 96
 			            VAR _on = 'Sales Adjustment'[Sales Adjustment] = _sel
 			            VAR _ink = IF(_on, "%23F4F4F0", "%230E0E0C")
-			            RETURN "<rect x='" & (_x + 1.5) & "' y='1.5' width='88' height='61' fill='" & IF(_on, "%230E0E0C", "%23F4F4F0") & "' stroke='%230E0E0C' stroke-width='3'/>"
-			                & IF(_on, "", "<rect x='" & (_x + 10) & "' y='44' width='68' height='10' fill='url(%23s)'/>")
-			                & "<text x='" & (_x + 45.5) & "' y='32' text-anchor='middle' font-size='17' font-weight='bold' fill='" & _ink & "'>" & SUBSTITUTE(FORMAT('Sales Adjustment'[Sales Adjustment], "+0%;-0%;0%"), "%", "%25") & "</text>",
+			            RETURN "<rect x='" & (_x + 1.5) & "' y='1.5' width='88' height='77' fill='" & IF(_on, "%230E0E0C", "%23F4F4F0") & "' stroke='%230E0E0C' stroke-width='3'/>"
+			                & IF(_on, "", "<rect x='" & (_x + 8) & "' y='60' width='72' height='12' fill='url(%23s)'/>")
+			                & "<text x='" & (_x + 45.5) & "' y='28' text-anchor='middle' font-size='17' font-weight='bold' fill='" & _ink & "'>" & SUBSTITUTE(FORMAT('Sales Adjustment'[Sales Adjustment], "+0%;-0%;0%"), "%", "%25") & "</text>"
+			                & "<text x='" & (_x + 45.5) & "' y='52' text-anchor='middle' font-size='14' fill='" & _ink & "'>" & FORMAT([@eps], "$0.00") & "</text>",
 			            "", 'Sales Adjustment'[Sales Adjustment], ASC)
 			        & "</svg>"
 		dataCategory: ImageUrl
@@ -1391,16 +1389,17 @@ table _Measures
 	/// The Stack: painted operating-margin adjustment cells; the transparent slicer sits on top.
 	measure 'SVG Margin Strip' =
 			VAR _sel = [Selected Margin Adjustment Bps]
-			VAR _steps = ADDCOLUMNS(ALL('Margin Adjustment'[Margin Adjustment (bps)]), "@i", RANKX(ALL('Margin Adjustment'[Margin Adjustment (bps)]), 'Margin Adjustment'[Margin Adjustment (bps)], , ASC) - 1)
+			VAR _steps = ADDCOLUMNS(ALL('Margin Adjustment'[Margin Adjustment (bps)]), "@i", RANKX(ALL('Margin Adjustment'[Margin Adjustment (bps)]), 'Margin Adjustment'[Margin Adjustment (bps)], , ASC) - 1, "@eps", CALCULATE([Projected EPS]))
 			RETURN
-			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='64' viewBox='0 0 500 64' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
+			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='500' height='80' viewBox='0 0 500 80' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'><defs><pattern id='d' width='4' height='4' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='2' y='2' width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='s' width='6' height='6' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/></pattern><pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='2' height='2' fill='%230E0E0C'/><rect x='4' y='4' width='2' height='2' fill='%230E0E0C'/></pattern></defs>"
 			        & CONCATENATEX(_steps,
 			            VAR _x = [@i] * 100
 			            VAR _on = 'Margin Adjustment'[Margin Adjustment (bps)] = _sel
 			            VAR _ink = IF(_on, "%23F4F4F0", "%230E0E0C")
-			            RETURN "<rect x='" & (_x + 1.5) & "' y='1.5' width='92' height='61' fill='" & IF(_on, "%230E0E0C", "%23F4F4F0") & "' stroke='%230E0E0C' stroke-width='3'/>"
-			                & IF(_on, "", "<rect x='" & (_x + 10) & "' y='44' width='72' height='10' fill='url(%23s)'/>")
-			                & "<text x='" & (_x + 47.5) & "' y='32' text-anchor='middle' font-size='17' font-weight='bold' fill='" & _ink & "'>" & FORMAT('Margin Adjustment'[Margin Adjustment (bps)], "+0;-0;0") & " bp" & "</text>",
+			            RETURN "<rect x='" & (_x + 1.5) & "' y='1.5' width='92' height='77' fill='" & IF(_on, "%230E0E0C", "%23F4F4F0") & "' stroke='%230E0E0C' stroke-width='3'/>"
+			                & IF(_on, "", "<rect x='" & (_x + 8) & "' y='60' width='76' height='12' fill='url(%23s)'/>")
+			                & "<text x='" & (_x + 47.5) & "' y='28' text-anchor='middle' font-size='15' font-weight='bold' fill='" & _ink & "'>" & FORMAT('Margin Adjustment'[Margin Adjustment (bps)], "+0;-0;0") & "bp" & "</text>"
+			                & "<text x='" & (_x + 47.5) & "' y='52' text-anchor='middle' font-size='14' fill='" & _ink & "'>" & FORMAT([@eps], "$0.00") & "</text>",
 			            "", 'Margin Adjustment'[Margin Adjustment (bps)], ASC)
 			        & "</svg>"
 		dataCategory: ImageUrl
@@ -1425,7 +1424,7 @@ table _Measures
 			VAR _none = 0
 			RETURN
 			    "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1420' height='84' viewBox='0 0 1420 84' shape-rendering='crispEdges' font-family='Verdana,Geneva,sans-serif'>"
-			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & "Every number in this stack carries a tag that says where it came from." & "</text>"
+			        & "<text x='0' y='30' font-size='24' font-weight='bold' fill='%230E0E0C'>" & "Every ledger figure in this stack carries a tag that says where it came from." & "</text>"
 			        & "<text x='0' y='70' font-size='22' fill='%230E0E0C'>" & "ACTUAL: reported by Deere, FRED or Nasdaq. GUIDANCE: management's outlook. MODEL: an assumption made here." & "</text>"
 			        & "</svg>"
 		dataCategory: ImageUrl
@@ -1443,7 +1442,7 @@ table _Measures
 			            RETURN "<g transform='translate(0," & _y & ")'>"
 			                & SWITCH(_cls, "Actual", "<rect x='0' y='17' width='54' height='16' fill='%230E0E0C'/><text x='27' y='29' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>ACTUAL</text>", "Guidance", "<rect x='0' y='17' width='72' height='16' fill='%23367C2B'/><text x='36' y='29' text-anchor='middle' font-size='10' font-weight='bold' fill='%23F4F4F0'>GUIDANCE</text>", "<rect x='0.75' y='17.75' width='58.5' height='14.5' fill='%23F4F4F0' stroke='%230E0E0C' stroke-width='1.5'/><rect x='4' y='21' width='8' height='8' fill='url(%23s)'/><text x='36' y='29' text-anchor='middle' font-size='10' font-weight='bold' fill='%230E0E0C'>MODEL</text>")
 			                & "<text x='92' y='21' font-size='14' font-weight='bold' fill='%230E0E0C'>" & SUBSTITUTE(SUBSTITUTE(SUBSTITUTE('Source Registry'[Source], "&", "&amp;"), "%", "%25"), "#", "%23") & "<tspan font-size='12' font-weight='normal'>  &%23183;  " & SUBSTITUTE(SUBSTITUTE(SUBSTITUTE('Source Registry'[Source Type], "&", "&amp;"), "%", "%25"), "#", "%23") & "</tspan></text>"
-			                & "<text x='92' y='40' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(SUBSTITUTE(SUBSTITUTE('Source Registry'[Notes], "&", "&amp;"), "%", "%25"), "#", "%23") & "  &%23183;  " & SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE('Source Registry'[URL / Location], "https://", ""), "www.", ""), "&", "&amp;"), "%", "%25"), "#", "%23") & "</text>"
+			                & "<text x='92' y='40' font-size='12' fill='%230E0E0C'>" & SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE('Source Registry'[Notes], "Bundled: DE-3Q26-News-Release.pdf", "investor.deere.com, Q3 FY2026 release"), "Bundled in sources/", "investor.deere.com"), "; live refresh", ""), "Live-refresh macroeconomic", "Macroeconomic"), "&", "&amp;"), "%", "%25"), "#", "%23") & "  &%23183;  " & SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE(SUBSTITUTE('Source Registry'[URL / Location], "https://", ""), "www.", ""), "Bundled: DE-3Q26-News-Release.pdf", "investor.deere.com, Q3 FY2026 release"), "Bundled in sources/", "investor.deere.com"), "; live refresh", ""), "Live-refresh macroeconomic", "Macroeconomic"), "&", "&amp;"), "%", "%25"), "#", "%23") & "</text>"
 			                & "<rect x='0' y='49' width='960' height='1' fill='%230E0E0C'/></g>",
 			            "", [@i], ASC)
 			        & "</svg>"

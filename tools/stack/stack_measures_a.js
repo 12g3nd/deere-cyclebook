@@ -91,11 +91,18 @@ function ledger(width, rows, idBase) {
     const noteX = TAG_W[r.tag] + 8;
     if (i === 0) {
       const p = 5;
+      const figW = `(LEN(${r.value}) * ${6 * p} - ${p})`;
+      // A MODEL lead figure sits on its stipple mat, knocked out in paper, like the MODEL rows below it.
+      const model = r.tag === "MODEL";
+      const right = model ? width - 12 : width;
+      const mat = model ? `
+        & "<rect x='" & (${width} - ${figW} - 34) & "' y='58' width='" & (${figW} + 34) & "' height='50' fill='url(%23g)'/>"
+        & "<rect x='" & (${right} - ${figW} - 6) & "' y='62' width='" & (${figW} + 12) & "' height='43' fill='${C.paper}'/>"` : "";
       dax += `
-        & ${daxStr(`<rect x='0' y='0' width='${width}' height='3' fill='${C.ink}'/>` + tag(r.tag, 0, 38))}
+        & ${daxStr(`<rect x='0' y='0' width='${width}' height='3' fill='${C.ink}'/>` + tag(r.tag, 0, 38))}${mat}
         & "<text x='0' y='26' font-size='15' font-weight='bold' fill='${C.ink}'>" & ${r.label} & "</text>"
         & "<text x='${noteX}' y='51' font-size='13' fill='${C.ink}'>" & ${r.note} & "</text>"
-        & "<g fill='${fill}'>" & ${daxPixel(r.value, `(${width} - (LEN(${r.value}) * ${6 * p} - ${p}))`, "66", p, `${idBase}${i}`)} & "</g>"`;
+        & "<g fill='${fill}'>" & ${daxPixel(r.value, `(${right} - ${figW})`, "66", p, `${idBase}${i}`)} & "</g>"`;
       return;
     }
     const y = LEAD_H + (i - 1) * ROW_H;

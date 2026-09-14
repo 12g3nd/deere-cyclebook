@@ -67,12 +67,12 @@ const segments = standard("Segments", "SEGMENTS", S,
 
 const cycle = standard("Cycle", "THE CYCLE", Y,
   { finding: "over the past year crop prices rose and rates fell while housing starts kept dropping", exhibit: "Corn and soybean prices, U.S. net farm income, the federal funds rate and housing starts", ledger: "Latest FRED readings for each demand driver" },
-  "Sources: FRED series PMAIZMTUSDM, PSOYBUSDM, FEDFUNDS, HOUST, TTLCONS, DEXCAUS and B1448C1A027NBEA (BEA net farm income).",
+  "Sources: FRED series PMAIZMTUSDM, PSOYBUSDM, FEDFUNDS, HOUST and B1448C1A027NBEA (BEA net farm income).",
   [["Segments", NEW.segments]], ["Model fiscal 2026", NEW.modelLab]);
 
 const sources = standard("Sources", "SOURCES", P,
   { finding: "every number in the stack carries a tag saying where it came from", exhibit: "Source registry with each source's provenance tag, type, notes and location", ledger: "How current each input is" },
-  "In Power BI Desktop, Refresh updates the FRED and Nasdaq data from the web; Deere figures are entered from the releases listed.",
+  "FRED and Nasdaq series refresh from the web; Deere figures come from the releases listed above.",
   [["Back to PULSE", NEW.pulse]], null);
 
 const modelLab = [
@@ -81,14 +81,14 @@ const modelLab = [
   R.image({ x: 256, y: 264, w: 1000, h: 540, z: 120 }, "SVG Model Lab Exhibit", "Bridge from FY2025 reported operating profit to the FY2026 model by segment, with growth and margin assumptions"),
   R.image({ x: 1276, y: 264, w: 400, h: M.ledgerHeight, z: 130 }, "SVG Model Lab Ledger", "Modeled net income, sales and operating profit against guidance and FY2025"),
   R.textbox({ x: 256, y: 818, w: 380, h: 26, z: 141 }, [{ text: "Scenario", size: 13, bold: true }]),
-  R.textbox({ x: 660, y: 818, w: 480, h: 26, z: 142 }, [{ text: "Sales, every segment", size: 13, bold: true }]),
-  R.textbox({ x: 1176, y: 818, w: 500, h: 26, z: 143 }, [{ text: "Operating margin, every segment", size: 13, bold: true }]),
+  R.textbox({ x: 660, y: 818, w: 480, h: 26, z: 142 }, [{ text: "Sales, every segment: FY2026 EPS at each step", size: 13, bold: true }]),
+  R.textbox({ x: 1176, y: 818, w: 500, h: 26, z: 143 }, [{ text: "Operating margin, every segment: EPS at each step", size: 13, bold: true }]),
   R.image({ x: 256, y: 844, w: 372, h: 64, z: 145 }, "SVG Scenario Keys", "Scenario keys: Bear, Base, Bull"),
   R.buttonSlicer({ x: 256, y: 844, w: 372, h: 64, z: 310 }, "Scenario", "Scenario", 3, "overlay", { sync: SYNC.scenario }),
-  R.image({ x: 660, y: 844, w: 480, h: 64, z: 150 }, "SVG Sales Strip", "Sales adjustment for every segment, minus 10 to plus 10 percent"),
-  R.buttonSlicer({ x: 660, y: 844, w: 480, h: 64, z: 320 }, "Sales Adjustment", "Sales Adjustment", 5, "overlay", { sync: SYNC.sales }),
-  R.image({ x: 1176, y: 844, w: 500, h: 64, z: 155 }, "SVG Margin Strip", "Operating margin adjustment for every segment, minus 200 to plus 200 basis points"),
-  R.buttonSlicer({ x: 1176, y: 844, w: 500, h: 64, z: 330 }, "Margin Adjustment", "Margin Adjustment (bps)", 5, "overlay", { sync: SYNC.margin }),
+  R.image({ x: 660, y: 848, w: 480, h: 80, z: 150 }, "SVG Sales Strip", "Sales adjustment for every segment, minus 10 to plus 10 percent, with FY2026 EPS at each step"),
+  R.buttonSlicer({ x: 660, y: 848, w: 480, h: 80, z: 320 }, "Sales Adjustment", "Sales Adjustment", 5, "overlay", { sync: SYNC.sales }),
+  R.image({ x: 1176, y: 848, w: 500, h: 80, z: 155 }, "SVG Margin Strip", "Operating margin adjustment for every segment, minus 200 to plus 200 basis points, with FY2026 EPS at each step"),
+  R.buttonSlicer({ x: 1176, y: 848, w: 500, h: 80, z: 330 }, "Margin Adjustment", "Margin Adjustment (bps)", 5, "overlay", { sync: SYNC.margin }),
   note({ x: 256, y: 968, w: 780, h: 44 }, "Scenario, sales and margin settings are CYCLEBOOK assumptions and carry over to VALUATION. FY2025 actuals from Deere's annual report. Stipple = model."),
   ...foot(946, [["The cycle", NEW.cycle]], ["What the price assumes", NEW.valuation]),
   ...stackIndex(NEW.modelLab),
