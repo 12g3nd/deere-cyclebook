@@ -3,3 +3,4 @@
 # impeccable decision-page runtime state
 .impeccable/questions/
 .impeccable/config.local.json
+tools/stack/stack_test/
