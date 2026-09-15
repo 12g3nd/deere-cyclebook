@@ -364,7 +364,7 @@ One pattern for three controls: the P/E strip (VALUATION) and the sales and marg
 
 ### Synced Controls
 - Scenario, sales and margin choices are slicer sync groups (cbScenario, cbSales, cbMargin), so a setting made on MODEL LAB carries to VALUATION and back. VALUATION holds hidden synced copies of the two adjustment slicers, so it prices the same model without showing the strips. Sales and margin changes reach scenario net income after tax at the FY2026 year-to-date effective rate, and the MODEL LAB ledger shows that rate as a MODEL row.
-- A card that carries settings over says so in its foot note ("carry over to VALUATION").
+- A card that carries settings over says so in its foot note ("VALUATION uses whatever you pick here").
 
 ### Source Registry Row (SOURCES)
 - One 50px row per source under a 3px rule, sorted ACTUAL, then GUIDANCE, then MODEL. The tag sits at left; at x 92 the source name in 14px bold is followed by its type in 12px regular after a middle dot; the line below carries notes and location in 12px regular (scheme and "www." stripped). A 1px rule closes each row.
@@ -391,3 +391,17 @@ One pattern for three controls: the P/E strip (VALUATION) and the sales and marg
 - **Don't** add OS costume: Mac title bars, close boxes, menu bars or window chrome.
 - **Don't** round cards, index mini cards, tags or strip cells. Only pressable painted buttons and keys are rounded (12px).
 - **Don't** set type below 10px, or put Outspace grey on the card.
+
+## Web Edition (`web/`)
+
+The static web page carries the same seven cards, exported from the open model by `tools/web/export_web.js`. Nothing on a card is redrawn: every card surface is its measure's own SVG for the current control state, and the page only places them and runs the controls.
+
+- **Desk:** the page background is the desk dither, drawn by CSS at screen resolution. The exported desk measure keeps only the card stack, so the canvas sits on one continuous desk.
+- **Canvas:** the 1920x1080 page scales as one piece: to the desk width, and on screens 760px and wider to the window height too, up to 1.5x.
+- **Controls are HTML over the paintings.** Page buttons and the stack index take their fill, outline, lift and label from the PBIR button states. Slicer tiles are transparent buttons over the painted keys and strips, with the 2px hover outline.
+- **Cover note:** one paper card with a 4px outline above the stack, lined up with the report card's left and right edges (full width below 760px). It is built like a card header: the bitmap masthead "DEERE // CYCLEBOOK" (4px pixel, 28px tall) at left, a 16px bold line and a 15px line at right, and a 4px rule. Under it sit "Why Deere?" (22px bold, the ramp's row-value step, then 15px/1.6 text to 66ch) and a side column with the painted GitHub button and 12px notes.
+- **The masthead is the web's one extra bitmap slot.** On the cards, the Two Bitmap Slots Rule holds unchanged.
+- **Card change:** the new card wipes in from the side it comes from, 240ms in 8 hard steps, as HyperCard's wipe did. With reduced motion there is no wipe.
+- **Focus:** a 4px ink outline set 4px out, with a 4px paper ring inside it, so focus reads on paper, ink and dither alike. Text selection inverts to ink with paper lettering.
+- **Keys and links:** the left and right arrow keys change cards. The URL hash names the card and any control moved off its start state (`#valuation&scenario=Bull&pe=34`).
+- **Phones:** the canvas stays whole and scales to the width, and a paper strip above it says to turn the phone sideways or pinch to zoom.

@@ -6,11 +6,11 @@
 
 web
 
-A Power BI report (PBIR project) read through a published web link. The Power BI service renders it in the viewer's browser as a fixed 1920x1080 canvas scaled to fit the window; there is no HTML or CSS of our own, so layout, type and color are set through report JSON and DAX-generated SVG.
+A Power BI report (PBIR project), read on the web as a static page. `tools/web/export_web.js` exports every card's DAX-generated SVG at every control state from the open model, and `web/` places them on a fixed 1920x1080 canvas scaled to fit the window, with HTML controls over the paintings. There is no live Power BI service behind the page; anyone who wants the live report clones the repo and opens the .pbip in Power BI Desktop (decided 2026-09-14).
 
 ## Users
 
-Primary: finance hiring managers (equity research, investment banking, corporate finance) evaluating the author as an analyst candidate. They open a published Power BI web link on their own, with no presenter, usually on a laptop between other work. They read research notes, 10-Ks and valuation models every day. Their job: decide within minutes whether the author thinks like an analyst: the numbers are right, the thesis is clear, the assumptions are labeled.
+Primary: finance hiring managers (equity research, investment banking, corporate finance) evaluating the author as an analyst candidate. They open the report's web page on their own, with no presenter, usually on a laptop between other work. They read research notes, 10-Ks and valuation models every day. Their job: decide within minutes whether the author thinks like an analyst: the numbers are right, the thesis is clear, the assumptions are labeled.
 
 The bar is set by the most senior reader: a high-finance executive who has seen every pitch book and research deck. It has to wow them, not merely look competent (author's steer, 2026-09-14).
 
@@ -28,7 +28,7 @@ Every figure declares where it came from: ACTUAL (reported), GUIDANCE (managemen
 
 ## Operating Context
 
-- Explored alone through a published web link: navigation, slicers and tooltips must explain themselves.
+- Explored alone through the web page: navigation and controls must explain themselves.
 - Also the author's vehicle for learning Power BI; plain-language documentation ships with it.
 - Deere fiscal periods (fiscal year ends around November 1) stay distinct from calendar-dated macro series.
 
@@ -37,9 +37,9 @@ Every figure declares where it came from: ACTUAL (reported), GUIDANCE (managemen
 - Power BI report authored as PBIP/PBIR/TMDL, 1920×1080 pages. Validated with `powerbi-report-author`; verified with Power BI Desktop Bridge screenshots. The surface is a Power BI report, not HTML/CSS.
 - Currency: USD everywhere, matching Deere's filings (confirmed).
 - Data in the model: Deere annual FY2022–FY2025, quarterly FY2024 Q1–FY2026 Q3, segment sales and operating profit; FRED corn, soybeans, federal funds rate, housing starts, construction spending, CAD/USD, U.S. net farm income.
-- Data available but not yet modeled: daily DE share price from Nasdaq's public quote endpoint (verified 2026-09-13; close $675.74 on 2026-09-11).
+- Daily DE share price from Nasdaq's public quote endpoint (close $675.74 on 2026-09-11).
 - Management guidance on hand: FY2026 net income $4.75B–$5.00B; segment sales outlook PPA about −10%, SAT about +15%, C&F about +20% (Q3 FY2026 release, 2026-08-20).
-- Unconfirmed: whether the author's Power BI account can publish to the web (UofT tenant policy).
+- Hosting: the static page needs no Power BI license or tenant. Each data refresh or report change needs a re-export from Power BI Desktop on the author's PC. The GitHub link only works once the repo is public.
 - Fonts: published reports render in the viewer's browser. Power BI defaults to Segoe UI and DIN, which Microsoft notes may fall back on macOS; Bahnschrift is Windows-only. Arial, Verdana, Tahoma and Courier New render reliably on both platforms.
 - No custom visuals assumed (tenant policy unknown). Native visuals and DAX-generated SVG only.
 - Scenarios are the author's assumptions, not investment advice.
